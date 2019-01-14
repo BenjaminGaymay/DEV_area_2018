@@ -1,8 +1,15 @@
 version: '2'
 services:
-  web:
-    build: .
+  client:
+    build: ./WebApp/FrontEnd/
     ports:
-     - "8080:8080"
+      - "8080:8080"
     volumes:
-     - ./node/public/:/app/public/
+      #- ./Mobile/:/app/Client/
+      - ./WebApp/FrontEnd/:/app/Client/
+  api:
+    build: ./WebApp/BackEnd/Api
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./WebApp/BackEnd/Api/:/app/Api/
