@@ -12,13 +12,14 @@ RUN curl -LO "https://nodejs.org/dist/v10.11.0/node-v10.11.0-linux-x64.tar.gz" \
 
 #ADD ./WebApp/BackEnd/Api/server.js  /app/Api/
 
-WORKDIR /app/
+WORKDIR /app/Client
 
 # Install express
 RUN npm i babel-cli -g
 RUN npm i babel-preset-es2015 -g
 RUN npm i express
+RUN npm install
 
 EXPOSE 8081
 
-CMD babel-node ./Api/server.js
+CMD npm start
