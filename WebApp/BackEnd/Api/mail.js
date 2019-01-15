@@ -17,7 +17,7 @@ async function run(json) {
     let obj2 =
         {
             subject: "Epitech c'est nul",
-            html: "<b>Hello world?</b>",
+            html: '<div style="margin-left:auto;margin-right:auto;width:50%;"><img class="logo" alt="mdr" src="http://www.fourfrontgroup.co.uk/assets/uploads/images/Area_Primary_Logo_rgb_1.png"/><div><p style="text-align:center;"><a style="color:#282c34;font-size:20px;" href="#">Confirm your account</a></p></div></div>',
             to: ["poubelleapipoubelle@gmail.com", "poubelleapipoubelle@gmail.com"],
         };
     json = JSON.stringify(obj2);
@@ -54,7 +54,7 @@ async function run(json) {
 
     // send mail with defined transport object
     console.log(mailOptions);
-    return;
+//    return;
     let info = await transporter.sendMail(mailOptions);
 
     console.log("Message sent: %s", info.messageId);
