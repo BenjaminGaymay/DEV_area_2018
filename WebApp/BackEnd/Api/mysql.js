@@ -2,10 +2,15 @@ import mysql from 'mysql';
 import sha1 from 'sha1';
 
 const bdd = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Sm21ChaiseDeMerde",
-    database: "area"
+    host: "b7qwopagdzu8cljf9dtr-mysql.services.clever-cloud.com",
+    user: "uscw77drcqvxjvyzxe91",
+    password: "0mRr9qPZWeeBrcFU01R0",
+    database: "b7qwopagdzu8cljf9dtr"
+});
+
+bdd.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
 });
 
 /**
@@ -200,30 +205,30 @@ export async function getUserServices(user_id) {
         });
 }
 
-/* GOOD
+/* //GOOD
 register('admin', 'azertyqwerty').then(result => {
     console.log(result);
 }).catch(error => {
     console.log("error: " + error);
 });*/
 
-/* GOOD
+ //GOOD
 login('admin', 'azertyqwerty')
     .then(result => {
         console.log(result);
     })
     .catch(error => {
         console.log("error: " + error);
-    });*/
+    });
 
-/* GOOD
+/* //GOOD
 registerService('radio').then(result => {
     console.log(result);
 }).catch(error => {
     console.log("error: " + error);
 });*/
 
-/* GOOD
+/* //GOOD
 getUserByName('admin')
     .then(user => {
         getUserServices(user.id)
