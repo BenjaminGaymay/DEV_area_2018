@@ -5,7 +5,7 @@ export function router(app) {
 
     app.get('/test', function (req, res) {
         console.log(req.headers);
-        console.log(req.params);
+        console.log(req.query);
         res.send("coucou");
     });
 
