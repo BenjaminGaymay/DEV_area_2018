@@ -2,6 +2,7 @@ import express from "express";
 import {router} from "./router";
 import http from "http";
 import {rootDir} from "./constant";
+import * as bdd from "./mysql";
 
 const app = express();
 
