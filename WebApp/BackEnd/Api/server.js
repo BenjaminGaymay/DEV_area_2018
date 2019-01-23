@@ -1,9 +1,11 @@
 import express from "express";
 import {router} from "./router";
+import {run} from "./ServiceHTTP";
 import http from "http";
 import {rootDir} from "./constant";
 
 const app = express();
+app.use(express.json());
 
 app.use(express.static(rootDir + '/assets'));
 
@@ -13,3 +15,4 @@ server.listen(8081, function () {
 });
 
 router(app);
+run();
