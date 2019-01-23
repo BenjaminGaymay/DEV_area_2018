@@ -2,10 +2,14 @@ import mysql from 'mysql';
 import sha1 from 'sha1';
 
 const bdd = mysql.createConnection({
-    host: "b7qwopagdzu8cljf9dtr-mysql.services.clever-cloud.com",
-    user: "uscw77drcqvxjvyzxe91",
-    password: "0mRr9qPZWeeBrcFU01R0",
-    database: "b7qwopagdzu8cljf9dtr"
+    // host: "b7qwopagdzu8cljf9dtr-mysql.services.clever-cloud.com",
+    // user: "uscw77drcqvxjvyzxe91",
+    // password: "0mRr9qPZWeeBrcFU01R0",
+    // database: "b7qwopagdzu8cljf9dtr"
+    host: "localhost",
+    user: "root",
+    password: "Sm21ChaiseDeMerde",
+    database: "area"
 });
 
 bdd.connect(function(err) {
@@ -33,7 +37,6 @@ export async function register(username, password, callback) {
         .then(result => {
             return true;
         });
-
 }
 
 
