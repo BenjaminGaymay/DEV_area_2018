@@ -15,4 +15,10 @@ server.listen(8081, function () {
 });
 
 router(app);
-run();
+run().then(data => {
+    console.log('OK');
+    console.log(data);
+}).catch(error => {
+    console.log('KO');
+    console.log(error);
+});
