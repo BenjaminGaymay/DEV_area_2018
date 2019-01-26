@@ -1,11 +1,19 @@
-import mysql from 'mysql';
-import sha1 from 'sha1';
+import mysql from 'mysql'; // mysql nodejs lib is better than mariadb lib
+import sha1 from 'sha1'; // gnégnégné j'encrypte en sha1, go me hack
+
+// mariadb 10.2 autorise le json: du coup youpi on peut faire un select avec
+// comparaison dans un text json ex: action_date = {"nom" : "bob", "id": 2}
+//SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
+// et boom ça marche.
+// Par contre MDR chez vous ça marchera pas car vous avez mariadb 10.1 ahha lol
 
 const bdd = mysql.createConnection({
+    /* prod*/
     // host: "b7qwopagdzu8cljf9dtr-mysql.services.clever-cloud.com",
     // user: "uscw77drcqvxjvyzxe91",
     // password: "0mRr9qPZWeeBrcFU01R0",
     // database: "b7qwopagdzu8cljf9dtr"
+    /* dev */
     host: "localhost",
     user: "root",
     password: "Sm21ChaiseDeMerde",
@@ -161,11 +169,12 @@ export async function registerService(name, callback) {
 
 /**
  *
+ * @param row
  * @param action_id
  * @param reaction_id
- * @returns {Promise<void>}
+ * @returns {Promise<*>}
  */
-async function getActionReaction(action_id, reaction_id) {
+async function getActionReaction(row, action_id, reaction_id) {
     let array = {};
 
     return getServiceById(action_id)//)action_id)
@@ -174,6 +183,7 @@ async function getActionReaction(action_id, reaction_id) {
                 console.log(`Service action ${action_id} not found`);
             } else {
                 array.action = result[0];
+                array.action.data = row.action_data;
             }
             return getServiceById(reaction_id);
         })
@@ -183,6 +193,7 @@ async function getActionReaction(action_id, reaction_id) {
                 array = {};
             } else if (array.action) {
                 array.reaction = result[0];
+                array.reaction.data = row.reaction_data;
             }
             return array;
         });
@@ -199,12 +210,13 @@ export async function getUserServices(user_id) {
             let promises = [];
 
             for (let i in result) {
-                promises.push(getActionReaction(result[i].action_service_id, result[i].reaction_service_id));
+                let item = getActionReaction(result[i], result[i].action_service_id, result[i].reaction_service_id);
+                promises.push(item);
             }
             return Promise.all(promises);
         })
         .catch(error => {
-            return Promise.reject("getUserServices: " + error);
+            return Promise.reject("Aucun abonnement valide");
         });
 }
 
