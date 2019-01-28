@@ -67,9 +67,10 @@ export async function login(username, password, callback) {
             return Promise.reject(`Login unknown error.`);
         })
         .then(result => {
-            if (typeof result[0] != "undefined" && result[0].password === sha1(password))
-                return true;
-            else
+            if (typeof result[0] != "undefined" && result[0].password === sha1(password)) {
+                delete result[0].password;
+                return result[0];
+            } else
                 return Promise.reject(`Username or password not match.`); //override exception
         });
 
@@ -118,6 +119,7 @@ export async function getUserSuscribe(userId) {
         });
 }
 
+
 /**
  *
  * @param sql
@@ -134,9 +136,9 @@ function query(sql) {
 }
 
 /**
- * requester
+ *
  * @param id
- * @returns {boolean}
+ * @returns {Promise<*>}
  */
 export async function getServiceById(id) {
     if (!(typeof id === "number")) {
@@ -150,10 +152,9 @@ export async function getServiceById(id) {
 /**
  *
  * @param name
- * @param callback
  * @returns {Promise<*>}
  */
-export async function registerService(name, callback) {
+export async function registerService(name) {
 
     if (!(typeof name == "string")) {
         return Promise.reject('registerService fail with param.');
@@ -223,6 +224,56 @@ export async function getUserServices(user_id) {
         });
 }
 
+
+/**
+ *
+ * @param user
+ * @param data Subscribe
+ * @returns {Promise<void>}
+ */
+export async function subscribe(user, data) {
+    if (!data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
+        || !data.hasOwnProperty("actionServiceData") || !data.hasOwnProperty("reactionServiceData")) {
+        return Promise.reject('Missing parameters');
+    }
+    getServiceById(data.actionServiceId).then(result => {
+        getServiceById(data.reactionServiceId).then(result => {
+
+            return query(`INSERT INTO subscribe (user_id, action_service_id, reaction_service_id, action_data, reaction_data) value ('${user.id}', '${data.actionServiceId}', '${data.reactionServiceId}', '${data.actionServiceData}', '${data.reactionServiceData}')`)
+                .catch(error => {
+                    return Promise.reject('subscribe unknown error.');
+                })
+                .then(result => {
+                    return true;
+                });
+        }).catch(error => {
+            return Promise.reject("Service not found.");
+        });
+    }).catch(error => {
+        return Promise.reject("Service not found.");
+    });
+}
+
+/**
+ *
+ * @param user
+ * @param data Subscribe
+ * @returns {Promise<void>}
+ */
+export async function unsubscribe(user, data) {
+    if (!data.hasOwnProperty("subscribeId") || typeof data.subscribeId != "number") {
+        return Promise.reject('Missing parameters');
+    }
+
+    return query(`DELETE FROM 'subscribe' WHERE user_id = ${user.id} AND id = ${data.subscribeId};`)
+        .catch(error => {
+            return Promise.reject('subscribe unknown error.');
+        })
+        .then(result => {
+            return true;
+        });
+}
+
 /* //GOOD
 register('admin', 'azertyqwerty').then(result => {
     console.log(result);
@@ -231,13 +282,13 @@ register('admin', 'azertyqwerty').then(result => {
 });*/
 
 //GOOD
-login('admin', 'azertyqwerty')
-    .then(result => {
-        console.log(result);
-    })
-    .catch(error => {
-        console.log("error: " + error);
-    });
+// login('admin', 'azertyqwerty')
+//     .then(result => {
+//         console.log(result);
+//     })
+//     .catch(error => {
+//         console.log("error: " + error);
+//     });
 
 /* //GOOD
 registerService('radio').then(result => {

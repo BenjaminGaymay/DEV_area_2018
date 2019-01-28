@@ -3,12 +3,17 @@ import dotenv from "dotenv";
 import express from "express";
 import {rootDir} from "./constant";
 import {router} from "./router"
+import bodyParser from 'body-parser';
+
 // import authRouter from "./auth";
 
 dotenv.config();
 const port = 8081;
 const app = express();
-app.use(express.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 app.use(express.static(rootDir + "/assets"));
 
 // authRouter(app);

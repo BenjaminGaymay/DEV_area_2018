@@ -15,6 +15,7 @@ let mailJson = {
     to: ["poubelleapipoubelle@gmail.com", "poubelleapipoubelle@gmail.com"],
 };
 
+
 export function router(app) {
     // fs.readFile('./template/mail.html', 'utf8', function (err, content) {
     //     mailJson.html = content;
@@ -30,6 +31,43 @@ export function router(app) {
     // }).catch(error => {
     //     console.log(error);
     // });
+
+    app.post('/subscribe', (req, res) => {
+        bdd.login(req.headers.login, req.headers.password).then(result => {
+            bdd.subscribe(result, req.body).then(result => {
+                console.log(result);
+                res.status(200);
+                res.send("OK");
+            }).catch(error => {
+                console.log(error);
+                res.status(500);
+                res.send("KO");
+            });
+        }).catch(error => {
+            console.log(error);
+            res.status(500);
+            res.send("KO");
+        });
+    });
+
+    app.post('/unsubscribe', (req, res) => {
+        bdd.login(req.headers.login, req.headers.password).then(result => {
+            bdd.unsubscribe(result, req.body).then(result => {
+                console.log(result);
+                res.status(200);
+                res.send("OK");
+            }).catch(error => {
+                console.log(error);
+                res.status(500);
+                res.send("KO");
+            });
+        }).catch(error => {
+            console.log(error);
+            res.status(500);
+            res.send("KO");
+        });
+    });
+
 
     app.post('/login', (req, res) => {
         bdd.login(req.body.login, req.body.password).then(result => {
@@ -51,7 +89,7 @@ export function router(app) {
         }).catch(error => {
             console.log(error);
             res.status(500);
-            res.send(error);
+            res.send("KO");
         });
     });
 
