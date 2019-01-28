@@ -1,15 +1,10 @@
 version: '2'
 services:
-  client:
+  front-end:
     build: ./WebApp/FrontEnd/
     ports:
       - "8080:8080"
-    volumes:
-      #- ./Mobile/:/app/Client/
-      - ./WebApp/FrontEnd/:/app/Client/
-  api:
+  back-end:
     build: ./WebApp/BackEnd/Api
     ports:
       - "8081:8081"
-    volumes:
-      - ./WebApp/BackEnd/Api/:/app/Api/
