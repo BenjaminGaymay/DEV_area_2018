@@ -1,4 +1,6 @@
+"use strict";
 import request from "request";
+import {jsonCompare as compare} from "./jsonSchemaCompare";
 
 function createGetUrl(data) {
     let url = data.url + '?';
@@ -10,11 +12,18 @@ function createGetUrl(data) {
     return url;
 }
 
+const schemaMail = {
+    url: "",
+    method: "",
+};
+
+const schema = JSON.stringify(schemaMail);
+
 export async function run(data) {
     return new Promise(function (resolve, reject) {
         data = {
-            method: 'get',
-            url: 'http://localhost:8081/test',
+            method: 'post',
+            url: 'https://hookb.in/zrQdZOBlkks1Z1GRmXz2',
             urlExtra: {
                 firstnom: 'bob',
                 lastname: "mdr",
@@ -23,10 +32,10 @@ export async function run(data) {
             body: {mdr: 'lol'},
         };
 
-        if (!data.hasOwnProperty('url') || !data.hasOwnProperty('method')) {
+        let tmp = JSON.stringify(data);
+
+        if (!compare(tmp, schema)) {
             return reject('ServiceHTTP: Some params in bundle are missing.');
-            //console.log('ServiceHTTP: Some params in bundle are missing.');
-            //return;
         }
 
         let clientServerOptions = {};

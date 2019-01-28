@@ -1,6 +1,6 @@
 import mysql from 'mysql'; // mysql nodejs lib is better than mariadb lib
 import sha1 from 'sha1'; // gnégnégné j'encrypte en sha1, go me hack
-import {bddHost, bddName, bddUser, bddPassword } from "../constant";
+import {bddHost, bddName, bddUser, bddPassword} from "../constant";
 
 // mariadb 10.2 autorise le json: du coup youpi on peut faire un select avec
 // comparaison dans un text json ex: action_date = {"nom" : "bob", "id": 2}
@@ -28,18 +28,19 @@ bdd.connect(function (err) {
 
 /**
  *
+ * @param email
  * @param username
  * @param password
  * @param callback
  * @returns {Promise<*>}
  */
-export async function register(username, password, callback) {
+export async function register(email, username, password, callback) {
 
-    if (!(typeof username === "string" && typeof password === "string")) {
+    if (!(typeof email === "string" && typeof username === "string" && typeof password === "string")) {
         return Promise.reject(`Register fail with param.`);
     }
 
-    return query(`INSERT INTO user (username, password) values ('${username}', sha1('${password}'))`)
+    return query(`INSERT INTO user (email, username, password) values ('${email}', ${username}', sha1('${password}'))`)
         .catch(error => {
             return Promise.reject(`User ${username} already exist`); //override exception
         })
