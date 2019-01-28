@@ -9,6 +9,7 @@ import authRouter from "./auth";
 const port = 3000;
 
 const app = express();
+app.use(express.json());
 
 app.use(express.static(rootDir + "/assets"));
 
