@@ -1,15 +1,25 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
-import {router} from "./router";
-import http from "http";
-import {rootDir} from "./constant";
+import { rootDir } from "./constant";
+
+import authRouter from "./auth";
+
+
+const port = 3000;
 
 const app = express();
 
-app.use(express.static(rootDir + '/assets'));
+app.use(express.static(rootDir + "/assets"));
 
-const server = http.createServer(app);
-server.listen(8081, function () {
-    console.log('Example app listening on port 8081 !')
+authRouter(app);
+
+app.get("/", (req, res) => {
+  res.send(`
+    <a href="/auth/reddit">Reddit</a>
+    <a href="/auth/facebook">Facebook</a>
+    <a href="/auth/github">Github</a>
+    `);
 });
 
-router(app);
+app.listen(port, () => console.log(`Server is listening on port ${port}`));
