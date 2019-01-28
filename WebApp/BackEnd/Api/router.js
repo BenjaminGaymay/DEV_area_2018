@@ -3,6 +3,7 @@
 import * as bdd from './src/mysql';
 import * as mail from './src/mail';
 import * as http from './src/ServiceHTTP';
+import ejs from 'ejs';
 import fs from 'fs';
 
 function getUnixTime() {
@@ -11,13 +12,34 @@ function getUnixTime() {
 
 let mailJson = {
     subject: "Epitech c'est nul",
-    html: '<div style="margin-left:auto;margin-right:auto;width:50%;"><img class="logo" alt="mdr" src="http://www.fourfrontgroup.co.uk/assets/uploads/images/Area_Primary_Logo_rgb_1.png"/><div><p style="text-align:center;"><a style="color:#282c34;font-size:20px;" href="#">Confirm your account</a></p></div></div>',
+    html: "",
     to: ["poubelleapipoubelle@gmail.com", "poubelleapipoubelle@gmail.com"],
 };
 
+async function createToken() {
+    let rand = function () {
+        return Math.random().toString(36).substr(2); // remove 0.
+    };
+
+    let token = function () {
+        return rand() + rand(); // to make it longer
+    };
+    let value = token();
+    let myBreak = false;
+    while (!myBreak) {
+        try {
+            await bdd.isTokenExist(value);
+            value = token();
+        } catch (e) {
+            myBreak = true;
+        }
+    }
+    return value;
+}
+
 
 export function router(app) {
-    // fs.readFile('./template/mail.html', 'utf8', function (err, content) {
+    // fs.readFile('./template/mail.ejs', 'utf8', function (err, content) {
     //     mailJson.html = content;
     //     mail.run(JSON.stringify(mailJson)).then(result => {
     //         console.log(result);
@@ -81,8 +103,12 @@ export function router(app) {
         });
     });
 
-    app.post('/register', (req, res) => {
-        bdd.register(req.body.email, req.body.login, req.body.password).then(result => {
+    app.get('/validationAccount/:login/:token', (req, res) => {
+        if (typeof req.params.login !== "string" && typeof req.params.token !== "string") {
+            res.status(500);
+            res.send("KO");
+        }
+        bdd.register(req.params.login, req.params.token).then(result => {
             console.log(result);
             res.status(200);
             res.send("OK");
@@ -90,6 +116,44 @@ export function router(app) {
             console.log(error);
             res.status(500);
             res.send("KO");
+        });
+    });
+
+    app.post('/register', (req, res) => {
+
+        createToken().then(token => {
+            bdd.registerIntoTmp(req.body.email, req.body.login, req.body.password, token)
+                .then(result => {
+                    console.log('MDR');
+                    console.log(result);
+
+                    fs.readFile('./template/mail.ejs', 'utf8', function (err, content) {
+                        if (err) return err;
+                        let html = ejs.render(content, {
+                            token: result.token,
+                            login: result.login,
+                        });
+
+                        let mailJson = {
+                            subject: "Validation inscription",
+                            html: html,
+                            to: [result.email],
+                        };
+
+                        mail.run(JSON.stringify(mailJson)).then(result => {
+                            console.log(result);
+                        }).catch(error => {
+                            console.log(error);
+                        });
+                    });
+                    res.status(200);
+                    res.send("OK");
+                })
+                .catch(error => {
+                    console.log(error);
+                    res.status(500);
+                    res.send("KO");
+                });
         });
     });
 

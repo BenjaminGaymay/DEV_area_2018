@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(express.static(rootDir + "/assets"));
+app.set('view_engine', 'ejs');
 
 // authRouter(app);
 
