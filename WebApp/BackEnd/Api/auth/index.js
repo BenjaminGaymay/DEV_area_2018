@@ -1,8 +1,9 @@
 import RedditOauth2 from "./reddit";
 import { github } from "./github";
 import { facebook } from "./facebook";
+import { readFileSync } from "fs";
 
-export default function(app) {
+export default function (app) {
   const reddit = new RedditOauth2(
     process.env.REDDIT_CLIENT_ID,
     process.env.REDDIT_CLIENT_SECRET
@@ -11,8 +12,8 @@ export default function(app) {
   app.get("/auth/reddit", reddit.authorizeUrl());
 
   app.get("/auth/reddit/callback", reddit.accessToken(), (req, res) => {
-    console.log('token: '+ req.token.token.access_token);
-    return res.status(200).json(req.token);
+    const data = readFileSync('./auth/template.html', { encoding: 'utf-8' }).replace('ACCESS_TOKEN', req.token.token.access_token);
+    return res.status(200).send(data);
   });
 
   app.get("/auth/github", (req, res) => {
@@ -37,7 +38,9 @@ export default function(app) {
       );
       console.log("The resulting token: ", result);
       const token = github.githubOauth2.accessToken.create(result);
-      return res.status(200).json(token);
+
+      const data = readFileSync('./auth/template.html', { encoding: 'utf-8' }).replace('ACCESS_TOKEN', token.token.access_token);
+      return res.status(200).send(data);
     } catch (error) {
       console.error("Access Token Error", error.message);
       return res.status(500).json("Authentication failed");
@@ -71,8 +74,8 @@ export default function(app) {
 
       // Exchange for the access token.
       const token = facebook.facebookOauth2.accessToken.create(result);
-
-      return res.status(200).json(token);
+      const data = readFileSync('./auth/template.html', { encoding: 'utf-8' }).replace('ACCESS_TOKEN', token);
+      return res.status(200).send(data);
     } catch (error) {
       console.error("Access Token Error", error.message);
       return res.status(500).json("Authentication failed");

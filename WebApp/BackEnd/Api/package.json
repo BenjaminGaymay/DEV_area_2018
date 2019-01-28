@@ -24,7 +24,6 @@
     "node": "^11.7.0",
     "nodemailer": "^5.1.1",
     "nodemon": "^1.18.7",
-    "react-oauth-popup": "^0.1.0",
     "request": "^2.88.0",
     "sha1": "^1.1.1",
     "striptags": "^3.1.1"

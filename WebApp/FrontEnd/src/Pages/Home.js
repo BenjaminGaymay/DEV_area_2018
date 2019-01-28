@@ -1,57 +1,63 @@
-import React from "react";
+import React from 'react';
 
-import { Button, Grid } from "@material-ui/core";
-import {  } from 'react-oauth-popup';
+import { Button, Grid } from '@material-ui/core';
 
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      urlOauth: ''
+      urlOauth: '',
     };
   }
+
   oauth = service => {
     this.setState({
-      urlOauth: `http://localhost:3000/${service}`
-    });
-    const oauthWin = window.open(this.state.urlOauth);
-
-    window.setInterval(() => {
-        if (oauthWin.closed) {
-            window.clearInterval();
-        }
-    });
-    console.log(service);
+      urlOauth: `http://localhost:3000/auth/${service}`,
+    }, () => {
+      const oauthWin = window.open(this.state.urlOauth);
+    }
+    );
   };
+
+  componentDidMount() {
+    window.addEventListener('message', this.handleOauthResponse);
+  }
+
+  handleOauthResponse = (e) => {
+    if (e.origin !== 'http://localhost:3000') {
+      return;
+    }
+    console.log(e.data);
+  }
 
   render() {
     return (
       <div>
         <Grid container spacing={16}>
           <Grid item xs={12}>
-            <Grid container justify="center" spacing={16}>
+            <Grid container justify='center' spacing={16}>
               <Grid item>
                 <Button
-                  onClick={() => this.oauth("reddit")}
-                  variant="contained"
-                  color="secondary"
+                  onClick={() => this.oauth('reddit')}
+                  variant='contained'
+                  color='secondary'
                 >
                   Reddit
                 </Button>
               </Grid>
               <Grid item>
                 <Button
-                  onClick={() => this.oauth("facebook")}
-                  variant="contained"
-                  color="primary"
+                  onClick={() => this.oauth('facebook')}
+                  variant='contained'
+                  color='primary'
                 >
                   Facebook
                 </Button>
               </Grid>
               <Grid item>
                 <Button
-                  onClick={() => this.oauth("github")}
-                  variant="contained"
+                  onClick={() => this.oauth('github')}
+                  variant='contained'
                 >
                   Github
                 </Button>
