@@ -40,13 +40,23 @@ export async function registerIntoTmp(email, username, password, token) {
         return Promise.reject(`RegisterIntoTmp fail with param.`);
     }
 
-    return query(`INSERT INTO user_tmp (email, username, password, token) values ('${email}', '${username}', sha1('${password}'), '${token}')`)
-        .catch(error => {
-            return Promise.reject(`User ${username} already exist`); //override exception
-        })
-        .then(result => {
-            return {token: token, login: username, email: email};
-        });
+    console.log(username);
+    return getUserByName(username).then(result => {
+        console.log('HERE');
+        return Promise.reject({msg: `User ${username} already exist`}); //override exception
+    }).catch(error => {
+        if (typeof error === "object") {
+            return Promise.reject(error.msg); //override exception
+        }
+        console.log('THERE');
+        return query(`INSERT INTO user_tmp (email, username, password, token) values ('${email}', '${username}', sha1('${password}'), '${token}')`)
+            .catch(error => {
+                return Promise.reject(`User ${username} already exist`); //override exception
+            })
+            .then(result => {
+                return {token: token, login: username, email: email};
+            });
+    });
 }
 
 /**
