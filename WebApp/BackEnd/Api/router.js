@@ -12,8 +12,6 @@ export function router(app) {
     app.get('/', function (req, res) {
         bdd.getUserByName('admin').then(user => {
             bdd.getUserServices(user.id).then(result => {
-                console.log("Taille du tableau result: " + result.length);
-                console.log(result);
                 res.send(result);
             }).catch(error => {
                 console.log(error); // aucun abonnement
