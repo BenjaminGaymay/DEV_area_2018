@@ -1,6 +1,6 @@
 'use strict';
 
-import * as bdd from './mysql.js';
+import * as bdd from './src/mysql.js';
 import fs from 'fs';
 
 function getUnixTime() {
