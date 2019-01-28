@@ -28,16 +28,4 @@ export function router(app) {
         about.server.current_time = getUnixTime();
         res.send(about);
     });
-
-    app.get('/test', function (req, res) {
-        console.log(req.headers);
-        console.log(req.query);
-        res.send("coucou");
-    });
-
-    app.post('/test', function (req, res) {
-        console.log(req.headers);
-        console.log(req.body);
-        res.send("coucou");
-    });
 }
