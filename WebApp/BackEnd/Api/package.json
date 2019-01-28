@@ -17,16 +17,18 @@
     "@babel/preset-env": "^7.3.1",
     "babel-preset-es2015": "^6.24.1",
     "body-parser": "^1.18.3",
+    "curl-request": "^1.1.1",
+    "curlrequest": "^1.0.1",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
+    "json-schema-compare": "^0.2.2",
+    "mysql": "^2.16.0",
     "node": "^11.7.0",
+    "nodemailer": "^5.1.1",
     "nodemon": "^1.18.7",
     "request": "^2.88.0",
-    "json-schema-compare": "^0.2.2",
-    "nodemailer": "^5.1.1",
-    "striptags": "^3.1.1",
     "sha1": "^1.1.1",
-    "mysql": "^2.16.0"
+    "striptags": "^3.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -36,7 +38,7 @@
     "mysql": "^2.16.0",
     "node": "^11.3.0",
     "nodemon": "^1.18.7",
-    "sha1": "^1.1.1"
+    "sha1": "^1.1.1",
     "simple-oauth2": "^2.2.1",
     "simple-oauth2-reddit": "^0.5.1"
   }
