@@ -19,7 +19,6 @@ const bdd = mysql.createConnection({
     password: process.env.BDD_PASSWORD,
     database: process.env.BDD_NAME
 });
-console.log(process.env.BDD_HOST);
 
 bdd.connect(function (err) {
     if (err) throw err;
