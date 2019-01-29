@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from "axios";
 import { Paper, Grid, TextField, Button } from '@material-ui/core';
 import { AccountCircle, Lock } from '@material-ui/icons';
 import './Login.css';
@@ -8,8 +9,20 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: 'login'
+      form: 'login',
+      login: '',
+      mail: '',
+      password: '',
+      confPassword: ''
     };
+  }
+
+  handleChange = (e) => {
+    e.preventDefault();
+    this.setState({
+        [e.target.name]: e.target.value,
+    });
+    console.log(e.target.name, " => ", e.target.value);
   }
 
   registerForm = () => {
@@ -21,7 +34,7 @@ export default class Login extends React.Component {
               <AccountCircle />
             </Grid>
             <Grid item>
-              <TextField fullWidth label="Nom d'utilisateur" />
+              <TextField fullWidth label="Nom d'utilisateur" name="login" onChange={ this.handleChange } />
             </Grid>
           </Grid>
           <Grid container spacing={16} alignItems="center" justify="center">
@@ -29,7 +42,7 @@ export default class Login extends React.Component {
               <AccountCircle />
             </Grid>
             <Grid item>
-              <TextField fullWidth label="Email" type="email" />
+              <TextField fullWidth label="Email" type="email" name="email" onChange={ this.handleChange } />
             </Grid>
           </Grid>
           <Grid container spacing={16} alignItems="center" justify="center">
@@ -37,7 +50,7 @@ export default class Login extends React.Component {
               <Lock />
             </Grid>
             <Grid item >
-              <TextField fullWidth label="Mot de passe" type="password" />
+              <TextField fullWidth label="Mot de passe" type="password" name="password" onChange={ this.handleChange }/>
             </Grid>
           </Grid>
           <Grid container spacing={16} alignItems="center" justify="center">
@@ -45,7 +58,7 @@ export default class Login extends React.Component {
               <Lock />
             </Grid>
             <Grid item >
-              <TextField fullWidth label="Répéter" type="password" />
+              <TextField fullWidth label="Répéter" type="password" name="confPassword" onChange={ this.handleChange }/>
             </Grid>
           </Grid>
         <Grid style={{ marginTop: 25 }} container justify="center" direction="column" alignItems="center">
@@ -70,7 +83,7 @@ export default class Login extends React.Component {
               <AccountCircle />
             </Grid>
             <Grid item>
-              <TextField fullWidth label="Nom d'utilisateur" />
+              <TextField fullWidth label="Nom d'utilisateur" name="login" onChange={ this.handleChange } />
             </Grid>
           </Grid>
           <Grid container spacing={16} alignItems="center" justify="center">
@@ -78,7 +91,7 @@ export default class Login extends React.Component {
               <Lock />
             </Grid>
             <Grid item >
-              <TextField fullWidth label="Mot de passe" type="password" />
+              <TextField fullWidth label="Mot de passe" type="password" name="password" onChange={ this.handleChange } />
             </Grid>
           </Grid>
         <Grid style={{ marginTop: 25 }} container justify="center" direction="column" alignItems="center">
@@ -94,12 +107,39 @@ export default class Login extends React.Component {
     );
   }
 
-  handleRegisterSubmit = () => {
+  handleRegisterSubmit = (e) => {
+    e.preventDefault();
 
+    let user = {
+      login: this.login,
+      email: this.email,
+      password: this.password
+    };
+  
+    axios.post("http://localhost:8081/register", { user })
+      .then(res => {
+        console.log(res.status);
+      })
+      .catch(res => {
+        console.log(res.status);
+      });
   }
 
-  handleLoginSubmit = () => {
+  handleLoginSubmit = (e) => {
+    e.preventDefault();
 
+    let user = {
+      login: this.login,
+      password: this.password
+    };
+
+    axios.post("http://localhost:8081/login", { user })
+    .then(res => {
+      console.log(res.status);
+    })
+    .catch(res => {
+      console.log(res.status);
+    });
   }
 
   render() {

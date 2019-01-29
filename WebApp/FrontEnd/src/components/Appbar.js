@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -37,7 +38,8 @@ function ButtonAppBar(props) {
           <Typography variant="h6" color="inherit" className={classes.grow}>
             Area
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit"><Link to = "/">Home</Link></Button>
+          <Button color="inherit"><Link to = "/login">Login</Link></Button>
         </Toolbar>
       </AppBar>
     </div>

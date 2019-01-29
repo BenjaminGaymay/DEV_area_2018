@@ -10,15 +10,17 @@ class App extends React.Component {
 	render() {
 		return (
 			<div className="App">
-			<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
-			<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-			<ButtonAppBar></ButtonAppBar>
+				<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+				<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 				<BrowserRouter>
+					<div>
+					<ButtonAppBar />
 					<Switch>
 						<Route exact path = "/" component = { Home } />
-            <Route path="/login" component = { Login } />
+						<Route path="/login" component = { Login } />
 						<Route component = { Error } />
 					</Switch>
+					</div>
 				</BrowserRouter>
 			</div>
 		);
