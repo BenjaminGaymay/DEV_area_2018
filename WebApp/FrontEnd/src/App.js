@@ -10,12 +10,13 @@ class App extends React.Component {
 	render() {
 		return (
 			<div className="App">
+				{/* NIQUE TA RACE, QUAND YA PLUS DE WIFI, METS TA MERDE EN LOCAL */}
 				<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
 				<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 				<BrowserRouter>
 					<div>
 					<ButtonAppBar />
-					<Switch>
+					<Switch>h
 						<Route exact path = "/" component = { Home } />
 						<Route path="/login" component = { Login } />
 						<Route component = { Error } />
