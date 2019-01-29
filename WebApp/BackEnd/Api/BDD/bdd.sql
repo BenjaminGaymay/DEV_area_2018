@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost:3306
--- Généré le :  Mar 29 Janvier 2019 à 10:00
+-- Généré le :  Mar 29 Janvier 2019 à 12:56
 -- Version du serveur :  10.2.21-MariaDB-10.2.21+maria~stretch
 -- Version de PHP :  7.2.14-1+0~20190113100742.14+stretch~1.gbpd83c69
 
@@ -100,7 +100,7 @@ CREATE TABLE `user_tmp` (
   `username` varchar(40) NOT NULL,
   `email` varchar(40) NOT NULL,
   `password` varchar(40) NOT NULL,
-  `date` date DEFAULT current_timestamp(),
+  `date` timestamp NULL DEFAULT current_timestamp(),
   `token` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
