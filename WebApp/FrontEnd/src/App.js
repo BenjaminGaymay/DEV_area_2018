@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ButtonAppBar from './components/Appbar';
 import Error from "../src/Pages/Error";
 import Home from "../src/Pages/Home";
+import Login from './Pages/Login';
 
 class App extends React.Component {
 	render() {
@@ -15,6 +16,7 @@ class App extends React.Component {
 				<BrowserRouter>
 					<Switch>
 						<Route exact path = "/" component = { Home } />
+            <Route path="/login" component = { Login } />
 						<Route component = { Error } />
 					</Switch>
 				</BrowserRouter>

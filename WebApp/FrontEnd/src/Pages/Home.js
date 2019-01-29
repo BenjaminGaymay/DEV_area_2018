@@ -14,7 +14,7 @@ export default class Home extends React.Component {
     this.setState({
       urlOauth: `http://localhost:3000/auth/${service}`,
     }, () => {
-      const oauthWin = window.open(this.state.urlOauth);
+      window.open(this.state.urlOauth);
     }
     );
   };
