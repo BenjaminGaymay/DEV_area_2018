@@ -13,33 +13,7 @@ export default function(app) {
   app.get("/auth/reddit/callback", reddit.accessToken(), (req, res) => {
     console.log('token: '+ req.token.token.access_token);
 
-    var request = require('request');
-
-    var headers = {
-        'Authorization': 'bearer ' + req.token.token.access_token,
-        'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
-    };
-
-    var options = {
-        url: 'https://oauth.reddit.com/api/v1/me',
-        headers: headers
-    };
-
-    function callback(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(body);
-        }
-        else
-          console.log('asazd')
-    }
-
-    request(options, callback);
-
-    // res.headers('Authorization: bearer ', req.token.access_token);
-    // res.headers('ChangeMeClient/0.1 by YourUsername', User-Agent);
-
-    // return res.redirect("https://oauth.reddit.com/api/v1/me");
-    return res.status(200).json(req.token);
+    reddit.getTrophies(req.token.token.access_token, req, res)
   });
 
   app.get("/auth/github", (req, res) => {
