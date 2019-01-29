@@ -46,6 +46,7 @@ export async function run(json) {
 
         // send mail with defined transport object
         /*console.log(mailOptions);*/
-        transporter.sendMail(mailOptions);
+        transporter.sendMail(mailOptions, (err, result) => { // catch invalid email
+        });
     });
 }
