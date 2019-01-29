@@ -39,21 +39,6 @@ async function createToken() {
 
 
 export function router(app) {
-    // fs.readFile('./template/mail.ejs', 'utf8', function (err, content) {
-    //     mailJson.html = content;
-    //     mail.run(JSON.stringify(mailJson)).then(result => {
-    //         console.log(result);
-    //     }).catch(error => {
-    //         console.log(error);
-    //     });
-    // });
-
-    // http.run("").then(result => {
-    //     console.log(result);
-    // }).catch(error => {
-    //     console.log(error);
-    // });
-
     app.post('/subscribe', (req, res) => {
         bdd.login(req.headers.login, req.headers.password).then(result => {
             bdd.subscribe(result, req.body).then(result => {
@@ -120,7 +105,6 @@ export function router(app) {
     });
 
     app.post('/register', (req, res) => {
-
         createToken().then(token => {
             bdd.registerIntoTmp(req.body.email, req.body.login, req.body.password, token)
                 .then(result => {
@@ -133,13 +117,11 @@ export function router(app) {
                             token: result.token,
                             login: result.login,
                         });
-
                         let mailJson = {
                             subject: "Validation inscription",
                             html: html,
                             to: [result.email],
                         };
-
                         mail.run(JSON.stringify(mailJson)).then(result => {
                             console.log(result);
                         }).catch(error => {

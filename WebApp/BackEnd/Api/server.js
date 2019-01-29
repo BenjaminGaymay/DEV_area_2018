@@ -1,4 +1,5 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
+
 dotenv.config();
 
 import express from "express";
@@ -8,9 +9,7 @@ import bodyParser from 'body-parser';
 // import authRouter from "./auth";
 
 const app = express();
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/assets"));
 app.set('view_engine', 'ejs');
