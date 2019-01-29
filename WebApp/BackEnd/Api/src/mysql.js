@@ -1,6 +1,5 @@
 import mysql from 'mysql'; // mysql nodejs lib is better than mariadb lib
 import sha1 from 'sha1'; // gnégnégné j'encrypte en sha1, go me hack
-import {bddHost, bddName, bddUser, bddPassword } from "../constant";
 
 // mariadb 10.2 autorise le json: du coup youpi on peut faire un select avec
 // comparaison dans un text json ex: action_date = {"nom" : "bob", "id": 2}
@@ -10,16 +9,17 @@ import {bddHost, bddName, bddUser, bddPassword } from "../constant";
 
 const bdd = mysql.createConnection({
     /* prod*/
-    // host: "b7qwopagdzu8cljf9dtr-mysql.services.clever-cloud.com",
-    // user: "uscw77drcqvxjvyzxe91",
-    // password: "0mRr9qPZWeeBrcFU01R0",
-    // database: "b7qwopagdzu8cljf9dtr"
+    host: "b7qwopagdzu8cljf9dtr-mysql.services.clever-cloud.com",
+    user: "uscw77drcqvxjvyzxe91",
+    password: "0mRr9qPZWeeBrcFU01R0",
+    database: "b7qwopagdzu8cljf9dtr"
     /* dev */
-    host: bddHost,
-    user: bddUser,
-    password: bddPassword,
-    database: bddName
+    // host: process.env.BDD_HOST,
+    // user: process.env.BDD_USER,
+    // password: process.env.BDD_PASSWORD,
+    // database: process.env.BDD_NAME
 });
+console.log(process.env.BDD_HOST);
 
 bdd.connect(function (err) {
     if (err) throw err;
@@ -28,23 +28,65 @@ bdd.connect(function (err) {
 
 /**
  *
+ * @param email
  * @param username
  * @param password
- * @param callback
+ * @param token
  * @returns {Promise<*>}
  */
-export async function register(username, password, callback) {
+export async function registerIntoTmp(email, username, password, token) {
+    if (!(typeof email === "string" && typeof username === "string"
+        && typeof password === "string" && typeof token === "string")) {
+        return Promise.reject(`RegisterIntoTmp fail with param.`);
+    }
 
-    if (!(typeof username === "string" && typeof password === "string")) {
+    return getUserByName(username).then(result => {
+        return Promise.reject({msg: `User ${username} already exist`}); //override exception
+    }).catch(error => {
+        if (typeof error === "object") {
+            return Promise.reject(error.msg); //override exception
+        }
+        return query(`INSERT INTO user_tmp (email, username, password, token) values ('${email}', '${username}', sha1('${password}'), '${token}')`)
+            .catch(error => {
+                return Promise.reject(`User ${username} already exist`); //override exception
+            })
+            .then(result => {
+                return {token: token, login: username, email: email};
+            });
+    });
+}
+
+/**
+ *
+ * @param login
+ * @param token
+ * @returns {Promise<*>}
+ */
+export async function register(login, token) {
+
+    if (!(typeof login === "string" && typeof token === "string")) {
         return Promise.reject(`Register fail with param.`);
     }
 
-    return query(`INSERT INTO user (username, password) values ('${username}', sha1('${password}'))`)
+    return query(`SELECT * FROM user_tmp WHERE user_tmp.username = '${login}' AND user_tmp.token = '${token}'`)
         .catch(error => {
-            return Promise.reject(`User ${username} already exist`); //override exception
-        })
-        .then(result => {
-            return true;
+            console.log(error);
+            return Promise.reject('Register unknown error.');
+        }).then(result => {
+            if (typeof result[0] === "undefined") {
+                return Promise.reject(`Register ${login} not found`); //override exception
+            }
+            let user = result[0];
+            return query(`INSERT INTO user (email, username, password) values ('${user.email}', '${user.username}', '${user.password}')`)
+                .catch(error => {
+                    return Promise.reject(`User ${user.username} already exist`); //override exception
+                })
+                .then(result => {
+                    return query(`DELETE FROM user_tmp WHERE user_tmp.id = '${user.id}'`).catch(error =>
+                        console.log("Register: DELETE: OMFG comment c'est possible !")).then(result => {
+                        return "Ok";
+                    });
+                });
         });
 }
 
@@ -66,9 +108,10 @@ export async function login(username, password, callback) {
             return Promise.reject(`Login unknown error.`);
         })
         .then(result => {
-            if (typeof result[0] != "undefined" && result[0].password === sha1(password))
-                return true;
-            else
+            if (typeof result[0] != "undefined" && result[0].password === sha1(password)) {
+                delete result[0].password;
+                return result[0];
+            } else
                 return Promise.reject(`Username or password not match.`); //override exception
         });
 
@@ -117,6 +160,7 @@ export async function getUserSuscribe(userId) {
         });
 }
 
+
 /**
  *
  * @param sql
@@ -133,9 +177,9 @@ function query(sql) {
 }
 
 /**
- * requester
+ *
  * @param id
- * @returns {boolean}
+ * @returns {Promise<*>}
  */
 export async function getServiceById(id) {
     if (!(typeof id === "number")) {
@@ -149,10 +193,9 @@ export async function getServiceById(id) {
 /**
  *
  * @param name
- * @param callback
  * @returns {Promise<*>}
  */
-export async function registerService(name, callback) {
+export async function registerService(name) {
 
     if (!(typeof name == "string")) {
         return Promise.reject('registerService fail with param.');
@@ -222,6 +265,67 @@ export async function getUserServices(user_id) {
         });
 }
 
+
+/**
+ *
+ * @param user
+ * @param data Subscribe
+ * @returns {Promise<void>}
+ */
+export async function subscribe(user, data) {
+    if (!data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
+        || !data.hasOwnProperty("actionServiceData") || !data.hasOwnProperty("reactionServiceData")) {
+        return Promise.reject('Missing parameters');
+    }
+    getServiceById(data.actionServiceId).then(result => {
+        getServiceById(data.reactionServiceId).then(result => {
+
+            return query(`INSERT INTO subscribe (user_id, action_service_id, reaction_service_id, action_data, reaction_data) value ('${user.id}', '${data.actionServiceId}', '${data.reactionServiceId}', '${data.actionServiceData}', '${data.reactionServiceData}')`)
+                .catch(error => {
+                    return Promise.reject('subscribe unknown error.');
+                })
+                .then(result => {
+                    return true;
+                });
+        }).catch(error => {
+            return Promise.reject("Service not found.");
+        });
+    }).catch(error => {
+        return Promise.reject("Service not found.");
+    });
+}
+
+/**
+ *
+ * @param user
+ * @param data Subscribe
+ * @returns {Promise<void>}
+ */
+export async function unsubscribe(user, data) {
+    if (!data.hasOwnProperty("subscribeId") || typeof data.subscribeId != "number") {
+        return Promise.reject('Missing parameters');
+    }
+
+    return query(`DELETE FROM 'subscribe' WHERE user_id = ${user.id} AND id = ${data.subscribeId};`)
+        .catch(error => {
+            return Promise.reject('subscribe unknown error.');
+        })
+        .then(result => {
+            return true;
+        });
+}
+
+export async function isTokenExist(token) {
+    return query(`SELECT * FROM 'user_tmp' WHERE token = ${token};`)
+        .catch(error => {
+            return Promise.reject('Token not exist.');
+        })
+        .then(result => {
+            return true;
+        });
+
+}
+
 /* //GOOD
 register('admin', 'azertyqwerty').then(result => {
     console.log(result);
@@ -230,13 +334,13 @@ register('admin', 'azertyqwerty').then(result => {
 });*/
 
 //GOOD
-login('admin', 'azertyqwerty')
-    .then(result => {
-        console.log(result);
-    })
-    .catch(error => {
-        console.log("error: " + error);
-    });
+// login('admin', 'azertyqwerty')
+//     .then(result => {
+//         console.log(result);
+//     })
+//     .catch(error => {
+//         console.log("error: " + error);
+//     });
 
 /* //GOOD
 registerService('radio').then(result => {
