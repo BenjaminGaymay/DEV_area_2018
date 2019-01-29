@@ -77,6 +77,7 @@ export function router(app) {
 
 
     app.post('/login', (req, res) => {
+        console.log(req.body);
         bdd.login(req.body.login, req.body.password).then(result => {
             console.log(result);
             res.status(200);
