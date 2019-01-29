@@ -1,11 +1,12 @@
-
 import express from "express";
+import cors from "cors";
 import {router} from "./router"
 import bodyParser from 'body-parser';
 
 // import authRouter from "./auth";
 
 const app = express();
+app.use(cors({origin: '*'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/assets"));
