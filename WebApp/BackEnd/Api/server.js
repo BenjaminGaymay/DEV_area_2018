@@ -1,9 +1,8 @@
 import express from "express";
 import cors from "cors";
 import {router} from "./router"
+import authRouter from './auth';
 import bodyParser from 'body-parser';
-
-// import authRouter from "./auth";
 
 const app = express();
 app.use(cors({origin: '*'}));
@@ -12,7 +11,8 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + "/assets"));
 app.set('view_engine', 'ejs');
 
-// authRouter(app);
+authRouter(app);
+router(app);
 
 // app.get("/", (req, res) => {
 //   res.send(`
@@ -23,5 +23,3 @@ app.set('view_engine', 'ejs');
 // });
 
 app.listen(process.env.PORT, () => console.log(`Server is listening on port ${process.env.PORT}`));
-
-router(app);

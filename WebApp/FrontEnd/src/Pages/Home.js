@@ -24,7 +24,7 @@ export default class Home extends React.Component {
   }
 
   handleOauthResponse = (e) => {
-    if (e.origin !== 'http://localhost:3000') {
+    if (e.origin !== 'http://localhost:8081') {
       return;
     }
     console.log(e.data);
