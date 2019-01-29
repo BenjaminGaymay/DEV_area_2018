@@ -1,6 +1,5 @@
 import mysql from 'mysql'; // mysql nodejs lib is better than mariadb lib
 import sha1 from 'sha1'; // gnégnégné j'encrypte en sha1, go me hack
-import {bddHost, bddName, bddUser, bddPassword} from "../constant";
 
 // mariadb 10.2 autorise le json: du coup youpi on peut faire un select avec
 // comparaison dans un text json ex: action_date = {"nom" : "bob", "id": 2}
@@ -15,11 +14,12 @@ const bdd = mysql.createConnection({
     // password: "0mRr9qPZWeeBrcFU01R0",
     // database: "b7qwopagdzu8cljf9dtr"
     /* dev */
-    host: bddHost,
-    user: bddUser,
-    password: bddPassword,
-    database: bddName
+    host: process.env.BDD_HOST,
+    user: process.env.BDD_USER,
+    password: process.env.BDD_PASSWORD,
+    database: process.env.BDD_NAME
 });
+console.log(process.env.BDD_HOST);
 
 bdd.connect(function (err) {
     if (err) throw err;
