@@ -1,5 +1,6 @@
 const simpleOauth2Reddit = require('simple-oauth2-reddit');
 
+
 class RedditOauth2 {
   constructor(id, secret) {
     this.id = id;
@@ -8,7 +9,7 @@ class RedditOauth2 {
     this.reddit = simpleOauth2Reddit.create({
       clientId: this.id,
       clientSecret: this.secret,
-      callbackURL: `http://localhost:3000/auth/reddit/callback`,
+      callbackURL: `${process.env.IP}/auth/reddit/callback`,
       state: this.state
     });
   }

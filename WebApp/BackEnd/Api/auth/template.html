@@ -1,0 +1,12 @@
+<script>
+    const access_token = 'ACCESS_TOKEN';
+
+    if (access_token !== 'ACCESS_TOKEN' && access_token.length > 0) {
+        try {
+            window.opener.postMessage({ success: true, access_token }, '*');
+        } catch (err) { }
+    } else {
+        window.opener.postMessage({success: false}, '*');
+    }
+    window.close();
+</script>
