@@ -26,7 +26,7 @@ export default function(app) {
   app.get("/auth/github", (req, res) => {
     const authorizationUri = github.githubOauth2.authorizationCode.authorizeURL(
       {
-        redirect_uri: `${process.env.IP}/callback`,
+        redirect_uri: `${process.env.IP}/auth/github/callback`,
         scope: "notifications",
         state: "3(#0/!~"
       }
@@ -34,7 +34,7 @@ export default function(app) {
     res.redirect(authorizationUri);
   });
 
-  app.get("/callback", async (req, res) => {
+  app.get("/auth/github/callback", async (req, res) => {
     const code = req.query.code;
     const options = {
       code
@@ -45,7 +45,10 @@ export default function(app) {
       );
       console.log("The resulting token: ", result);
       const token = github.githubOauth2.accessToken.create(result);
-      return res.status(200).json(token);
+      console.log('token ' + token.token.access_token)
+
+      github.getRepos(token.token.access_token, req, res)
+      // return res.status(500).json(token.token.access_token);
     } catch (error) {
       console.error("Access Token Error", error.message);
       return res.status(500).json("Authentication failed");
