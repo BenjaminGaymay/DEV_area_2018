@@ -1,11 +1,11 @@
-FROM alpine:3.8
+FROM phpmyadmin/phpmyadmin
 
-WORKDIR /app/Api/
+WORKDIR /app/Api
 
-ADD . /app/Api/
+ADD . /app/Api
 
-RUN apk add --update nodejs nodejs-npm python make g++ && npm install
+RUN apk add --update nodejs nodejs-npm && npm i --only=prod
 
 EXPOSE 8081
 
-CMD ["npm", "start"]
+CMD npm run start
