@@ -45,6 +45,25 @@ class RedditOauth2 {
     request(options, callbackTrophies);
   }
 
+  async getLastPostWithName(name) {
+    return new Promise((resolve, reject) => {
+      request.get('https://www.reddit.com/r/' + name + '/new/.json', (error, response) => {
+        // console.log(error);
+        response = JSON.parse(response.body);
+        if (response.data.dist != 0) {
+          response = response.data.children[0].data;
+          console.log({'title': response.title, 'author': response.author, 'url': response.url});
+          resolve({'title': response.title, 'author': response.author, 'url': response.url});
+        }
+        else {
+          console.log('vide')
+          resolve(null);
+        }
+      });
+      // res.redirect('https://www.reddit.com/r/node/new/.json?count=20');
+    });
+  }
+
 }
 
 

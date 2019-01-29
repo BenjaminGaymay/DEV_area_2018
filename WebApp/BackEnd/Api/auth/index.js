@@ -8,6 +8,13 @@ export default function(app) {
     process.env.REDDIT_CLIENT_SECRET
   );
 
+  app.get("/auth/try", (req, res) => {
+		reddit.getLastPostWithName('node').then(results => {
+      console.log(results);
+      res.send(results);
+		});
+  });
+
   app.get("/auth/reddit", reddit.authorizeUrl());
 
   app.get("/auth/reddit/callback", reddit.accessToken(), (req, res) => {

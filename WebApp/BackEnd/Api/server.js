@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
     <a href="/auth/reddit">Reddit</a>
     <a href="/auth/facebook">Facebook</a>
     <a href="/auth/github">Github</a>
+    <a href="/auth/try">Try</a>
     `);
 });
 
