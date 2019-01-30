@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from "axios";
 import { Paper, Grid, TextField, Button, CircularProgress } from '@material-ui/core';
+import { Redirect } from 'react-router';
 import { AccountCircle, Lock } from '@material-ui/icons';
 import './Login.css';
 
@@ -14,7 +15,8 @@ export default class Login extends React.Component {
       mail: '',
       password: '',
       confPassword: '',
-      animation: false
+      animation: false,
+      isAuth: false
     };
   }
 
@@ -141,20 +143,25 @@ export default class Login extends React.Component {
       axios.post('http://localhost:8081/login', { login: this.state.login, password: this.state.password })
         .then(res => {
           this.setState({
-            animation: false
+            animation: false,
+            isAuth: true
           });
-          console.log(res.status);
         })
         .catch(res => {
           this.setState({
             animation: false
           });
-          console.log(res.status);
         });
     });
   }
 
   render() {
+    if (this.state.isAuth === true) {
+      return (
+        <Redirect to="/dashboard" />
+      );
+    }
+
     const loginForm = this.state.form === 'login';
 
     return (

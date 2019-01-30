@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Button, Grid } from '@material-ui/core';
-import "../components/Appbar";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -66,6 +65,7 @@ export default class Home extends React.Component {
             </Grid>
           </Grid>
         </Grid>
+        <img src='./../assets/images/home.png' />
       </div>
     );
   }
