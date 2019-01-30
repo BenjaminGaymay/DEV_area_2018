@@ -17,10 +17,11 @@ export default function(app) {
 
   app.get("/auth/reddit", reddit.authorizeUrl());
 
-  app.get("/auth/reddit/callback", reddit.accessToken(), (req, res) => {
+  app.get("/auth/reddit/callback", reddit.accessToken(), async (req, res) => {
     console.log('token: '+ req.token.token.access_token);
 
-    reddit.getTrophies(req.token.token.access_token, req, res)
+    const response = await reddit.getTrophies(req.token.token.access_token, req, res)
+    return res.status(200).json(response);
   });
 
   app.get("/auth/github", (req, res) => {

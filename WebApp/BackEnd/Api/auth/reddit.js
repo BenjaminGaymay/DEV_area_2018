@@ -37,7 +37,12 @@ class RedditOauth2 {
     const response = new Promise((resolve, reject) => {
       request(options, (error, response, body) => {
         if (!error && response.statusCode == 200) {
-          resolve(JSON.parse(body));
+          body = JSON.parse(body).data.trophies;
+          const trophies = []
+          for (const i in body) {
+            trophies.push({name:body[i].data.name, image:body[i].data.icon_40});
+          }
+          resolve(trophies);
         } else {
           resolve(error);
         }
