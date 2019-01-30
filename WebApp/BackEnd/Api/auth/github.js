@@ -17,75 +17,67 @@ class Github {
         });
     }
 
-    getRepos(access_token, req, res) {
-      var request = require('request');
+    async getRepos(access_token, req, res) {
+      const request = require('request');
 
-      var headers = {
-        'Authorization': 'token ' + access_token,
+      const headers = {
+        Authorization: 'token ' + access_token,
         'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
       };
 
-      var options = {
+      const options = {
             url: 'https://api.github.com/user/repos',
             headers: headers
       };
 
-    //   function callback(error, response, body) {
-    //     if (!error && response.statusCode == 200) {
-    //         body = JSON.parse(body);
-    //         const repos = []
-    //         for (const i in body) {
-    //             repos.push({ 'name':body[i].name, 'url':body[i].html_url});
-    //         }
-    //         return res.status(500).json(repos);
-    //       }
-    //       else {
-    //         return res.status(500).json("raté la");
-    //       }
-    //   }
-
-
-        // request(options, callback);
-        request(options, (error, response, body) => {
+      const response = new Promise((resolve, reject) => {
+          request(options, (error, response, body) => {
               if (!error && response.statusCode == 200) {
-                  body = JSON.parse(body);
                   const repos = []
+                  body = JSON.parse(body);
                   for (const i in body) {
                       repos.push({ 'name':body[i].name, 'url':body[i].html_url});
                   }
-                  return repos;
+                  resolve(repos);
                 }
                 else {
-                  return "raté la";
+                  resolve(error);
                 }
             });
+        });
+        return await response;
     }
 
-    getNotifs(access_token, req, res) {
-        var request = require('request');
+    async getNotifs(access_token, req, res) {
+        const request = require('request');
 
-        var headers = {
-          'Authorization': 'token ' + access_token,
+        const headers = {
+          Authorization: 'token ' + access_token,
           'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
         };
 
-        var options = {
+        const options = {
               url: 'https://api.github.com/notifications',
               headers: headers
         };
 
-        function callback(error, response, body) {
-            if (!error && response.statusCode == 200) {
-                let a = JSON.parse(body);
-                a = {'id':a[0].id, 'reason': a[0].reason, 'subject':a[0].subject};
-                return res.status(500).json(a);
-            }
-            else {
-                return res.status(500).json("raté la");
-            }
-        }
-
-        request(options, callback);
+        const response = new Promise((resolve, reject) => {
+            request(options, (error, response, body) => {
+                if (!error && response.statusCode == 200) {
+                    let a = JSON.parse(body);
+                    a = {
+                        id: a[0].id,
+                        reason: a[0].reason,
+                        subject: a[0].subject
+                    };
+                    resolve(a);
+                }
+                else {
+                    resolve(error);
+                }
+              });
+          });
+          return await response;
       }
 
 }

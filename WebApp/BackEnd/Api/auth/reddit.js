@@ -5,7 +5,7 @@ class RedditOauth2 {
   constructor(id, secret) {
     this.id = id;
     this.secret = secret;
-    this.state = "random-stringzer";
+    this.state = 'random-stringzer';
     this.reddit = simpleOauth2Reddit.create({
       clientId: this.id,
       clientSecret: this.secret,
@@ -22,7 +22,7 @@ class RedditOauth2 {
     return this.reddit.accessToken;
   }
 
-  getTrophies(access_token, req, res) {
+  async getTrophies(access_token, req, res) {
     var headers = {
         'Authorization': 'bearer ' + access_token,
         'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
@@ -33,16 +33,17 @@ class RedditOauth2 {
         headers: headers
     };
 
-    function callbackTrophies(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          return res.status(200).json(JSON.parse(body));
-        }
-        else {
-          return res.status(200).json(error);
-        }
-    }
 
-    request(options, callbackTrophies);
+    const response = new Promise((resolve, reject) => {
+      request(options, (error, response, body) => {
+        if (!error && response.statusCode == 200) {
+          resolve(JSON.parse(body));
+        } else {
+          resolve(error);
+        }
+        });
+    });
+    return await response;
   }
 
   async getLastPostWithName(name) {
@@ -54,10 +55,9 @@ class RedditOauth2 {
           response = response.data.children[0].data;
           console.log({'title': response.title, 'author': response.author, 'url': response.url});
           resolve({'title': response.title, 'author': response.author, 'url': response.url});
-        }
-        else {
+        } else {
           console.log('vide')
-          resolve(null);
+          resolve(undefined);
         }
       });
       // res.redirect('https://www.reddit.com/r/node/new/.json?count=20');
@@ -65,7 +65,5 @@ class RedditOauth2 {
   }
 
 }
-
-
 
 module.exports = RedditOauth2;
