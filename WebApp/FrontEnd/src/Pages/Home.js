@@ -10,26 +10,6 @@ export default class Home extends React.Component {
     };
   }
 
-  oauth = service => {
-    this.setState({
-      urlOauth: `http://localhost:3000/auth/${service}`,
-    }, () => {
-      window.open(this.state.urlOauth);
-    }
-    );
-  };
-
-  componentDidMount() {
-    window.addEventListener('message', this.handleOauthResponse);
-  }
-
-  handleOauthResponse = (e) => {
-    if (e.origin !== 'http://localhost:8081') {
-      return;
-    }
-    console.log(e.data);
-  }
-
   render() {
     return (
       <div>
