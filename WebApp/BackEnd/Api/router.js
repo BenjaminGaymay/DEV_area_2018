@@ -1,6 +1,6 @@
 'use strict';
 
-import * as bdd from './src/mysql';
+import * as bdd from './src/bdd/mysql';
 import * as mail from './src/services/mail';
 import * as http from './src/services/http';
 import ejs from 'ejs';
@@ -37,11 +37,52 @@ async function createToken() {
     return value;
 }
 
+function fusion(dic1, dic2) {
+    let result = dic1;
+    for (let i in dic2) {
+        if (!result.hasOwnProperty(i)) {
+            result[i] = dic2[i];
+        } else if (result.hasOwnProperty(i) && typeof dic2[i] == "object") {
+            result[i] = {...result[i], ...dic2[i]};
+        }
+    }
+    return result;
+}
+
+/**
+ * @return {boolean}
+ */
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+function convertData(data) {
+    for (let i in data) {
+        if (IsJsonString(data[i])) {
+            data[i] = JSON.parse(data[i]);
+        }
+    }
+    return data;
+}
+
 function manageHttp(services, req, res) {
-    services['http'].run('action', 'default', {request: req, response: res}).then(result => {
-        console.log(result);
-        res.status(200);
-        res.send("OK");
+    services['http'].run('action', 'default', {request: req, response: res}).then(data => {
+        data.subscribe.reaction.data = convertData(data.subscribe.reaction.data);
+        data.bucket = fusion(data.bucket, data.subscribe.reaction.data);
+        services['http'].run('reaction', 'default', data).then(result => {
+            console.log(result);
+            res.status(200);
+            res.send("OK");
+        }).catch(error => {
+            console.log(error);
+            res.status(500);
+            res.send("KO");
+        });
     }).catch(error => {
         console.log(error);
         res.status(500);

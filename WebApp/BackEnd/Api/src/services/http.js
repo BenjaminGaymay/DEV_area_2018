@@ -1,7 +1,7 @@
 "use strict";
 import request from "request";
 import {jsonCompare as compare} from "../jsonSchemaCompare";
-import * as bdd from "../mysql";
+import * as bdd from "../bdd/mysql";
 
 function createGetUrl(data) {
     let url = data.url + '?';
@@ -30,7 +30,17 @@ async function action(widget, data, resolve, reject) {
     }
     bdd.findUrlToken(req.params.token).then(result => {
         bdd.getActionReaction(result).then(subscribe => {
-            let bucket = {...req.params, ...req.body, ...req.headers, ...subscribe.action.data};
+            // epur header
+            delete req.headers['content-type'];
+            delete req.headers['cache-control'];
+            delete req.headers['postman-token'];
+            delete req.headers['user-agent'];
+            delete req.headers['accept'];
+            delete req.headers['host'];
+            delete req.headers['accept-encoding'];
+            delete req.headers['content-length'];
+            delete req.headers['connection'];
+            let bucket = {...req.params, body: req.body, headers: req.headers};
             return resolve({bucket: bucket, subscribe: subscribe});
         }).catch(error => {
             return reject(error);
@@ -41,7 +51,9 @@ async function action(widget, data, resolve, reject) {
 }
 
 async function reaction(widget, data, resolve, reject) {
-    return sendRequest(data, resolve, reject);
+    //console.log(data);
+    resolve('OK');
+    return sendRequest(data.bucket, resolve, reject);
 }
 
 export async function run(type, widget, data) {
@@ -58,7 +70,7 @@ export async function run(type, widget, data) {
 }
 
 async function sendRequest(data, resolve, reject) {
-    data = {
+    /*data = {
         method: 'post',
         url: 'https://hookb.in/zrQdZOBlkks1Z1GRmXz2',
         urlExtra: {
@@ -67,8 +79,9 @@ async function sendRequest(data, resolve, reject) {
         },
         headers: {'Content-Type': 'application/json'},
         body: {mdr: 'lol'},
-    };
+    };*/
 
+    //console.log(data);
     let tmp = JSON.stringify(data);
 
     if (!compare(tmp, schema)) {
@@ -93,6 +106,10 @@ async function sendRequest(data, resolve, reject) {
 
     } else if (data.method.toUpperCase() === 'POST') {
         let body = data.body;
+        if (typeof data.headers == "undefined") {
+            data.headers = {};
+        }
+        data.headers['content-type'] = 'application/json';
         if (typeof body !== "string") {
             body = JSON.stringify(data.body);
         }
@@ -107,6 +124,7 @@ async function sendRequest(data, resolve, reject) {
 
     request(clientServerOptions, function (error, response) {
         if (error || response.statusCode !== 200) {
+            console.log(data.headers);
             console.log('Error: ' + (error ? error.errno : response.statusCode));
             return reject('et merde');
         } else {

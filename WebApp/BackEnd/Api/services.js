@@ -1,4 +1,4 @@
-import * as bdd from './src/mysql';
+import * as bdd from './src/bdd/mysql';
 
 export async function services() {
     let services = [];
