@@ -37,22 +37,25 @@ async function createToken() {
     return value;
 }
 
+function manageHttp(services, req, res) {
+    services['http'].run('action', 'default', {request: req, response: res}).then(result => {
+        console.log(result);
+        res.status(200);
+        res.send("OK");
+    }).catch(error => {
+        console.log(error);
+        res.status(500);
+        res.send("KO");
+    });
+}
+
 
 export function router(app, services) {
     app.get('/http/:token', (req, res) => {
-        services['http'].run('action', 'default', {request: req, response: res}).then(result => {
-            console.log(result);
-            res.status(200);
-            res.send("OK");
-        }).catch(error => {
-            console.log(error);
-            res.status(500);
-            res.send("KO");
-        });
+        manageHttp(services, req, res);
     });
     app.post('/http/:token', (req, res) => {
-        res.status(200);
-        res.send("OK");
+        manageHttp(services, req, res);
     });
 
     app.post('/subscribe', (req, res) => {
