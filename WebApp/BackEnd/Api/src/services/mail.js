@@ -1,7 +1,7 @@
 "use strict";
 import nodemailer from 'nodemailer';
 import striptags from 'striptags';
-import {jsonCompare as compare} from "./jsonSchemaCompare";
+import {jsonCompare as compare} from "../jsonSchemaCompare";
 
 const schemaMail = {
     subject: "",

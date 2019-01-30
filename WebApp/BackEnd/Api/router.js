@@ -1,8 +1,8 @@
 'use strict';
 
 import * as bdd from './src/mysql';
-import * as mail from './src/mail';
-import * as http from './src/ServiceHTTP';
+import * as mail from './src/services/mail';
+import * as http from './src/services/http';
 import ejs from 'ejs';
 import fs from 'fs';
 
@@ -37,8 +37,34 @@ async function createToken() {
     return value;
 }
 
+function HttpService(req, res) {
+    if (!req.params.hasOwnProperty('token')) {
+        console.log('HTTP missing parameter');
+        res.status(500);
+        res.send("KO");
+    }
+    bdd.findUrlToken(req.params.token).then(result => {
+        bdd.getActionReaction(result).then(subscribe => {
+            console.log(subscribe);
+            res.status(200);
+            res.send("OK");
+        }).catch(error => {
+            console.log(error);
+            res.status(500);
+            res.send("KO");
+        });
+    }).catch(error => {
+        console.log(error);
+        res.status(500);
+        res.send("URl do not exist");
+    });
+}
+
 
 export function router(app) {
+    app.post('/http/:token', HttpService);
+    app.get('/http/:token', HttpService);
+
     app.post('/subscribe', (req, res) => {
         bdd.login(req.headers.login, req.headers.password).then(result => {
             bdd.subscribe(result, req.body).then(result => {
@@ -77,7 +103,6 @@ export function router(app) {
 
 
     app.post('/login', (req, res) => {
-        console.log(req.body);
         bdd.login(req.body.login, req.body.password).then(result => {
             console.log(result);
             res.status(200);

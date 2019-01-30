@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import {router} from "./router"
+import {services} from "./services"
 import authRouter from './auth';
 import bodyParser from 'body-parser';
 
