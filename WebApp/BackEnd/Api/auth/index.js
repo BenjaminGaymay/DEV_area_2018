@@ -49,7 +49,7 @@ export default function(app) {
 
       github.getRepos(token.token.access_token, req, res)
       // github.getNotifs(token.token.access_token, req, res)
-      // return res.status(500).json(token.token.access_token);
+      return res.status(500).json(token.token.access_token);
     } catch (error) {
       console.error("Access Token Error", error.message);
       return res.status(500).json("Authentication failed");

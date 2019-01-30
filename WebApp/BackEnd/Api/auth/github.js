@@ -30,22 +30,35 @@ class Github {
             headers: headers
       };
 
-      function callback(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            body = JSON.parse(body);
-            const repos = []
-            for (const i in body) {
-                repos.push({ 'name':body[i].name, 'url':body[i].html_url});
-            }
-            return res.status(500).json(repos);
-          }
-          else {
-            return res.status(500).json("raté la");
+    //   function callback(error, response, body) {
+    //     if (!error && response.statusCode == 200) {
+    //         body = JSON.parse(body);
+    //         const repos = []
+    //         for (const i in body) {
+    //             repos.push({ 'name':body[i].name, 'url':body[i].html_url});
+    //         }
+    //         return res.status(500).json(repos);
+    //       }
+    //       else {
+    //         return res.status(500).json("raté la");
+    //       }
+    //   }
 
-          }
-      }
 
-      request(options, callback);
+        // request(options, callback);
+        request(options, (error, response, body) => {
+              if (!error && response.statusCode == 200) {
+                  body = JSON.parse(body);
+                  const repos = []
+                  for (const i in body) {
+                      repos.push({ 'name':body[i].name, 'url':body[i].html_url});
+                  }
+                  return repos;
+                }
+                else {
+                  return "raté la";
+                }
+            });
     }
 
     getNotifs(access_token, req, res) {
