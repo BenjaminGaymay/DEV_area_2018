@@ -8,12 +8,10 @@ export async function services() {
             for (let service of result) {
                 const path = './src/services/' + service.name;
                 let run = require(path).run;
-                let item = {
+                services[service.name] = {
                     id: service.id,
-                    name: service.name,
                     run: run,
                 };
-                services.push(item);
             }
             resolve(services);
         }).catch(error => {

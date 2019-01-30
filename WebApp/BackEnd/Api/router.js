@@ -37,15 +37,11 @@ async function createToken() {
     return value;
 }
 
-function HttpService(req, res) {
-    if (!req.params.hasOwnProperty('token')) {
-        console.log('HTTP missing parameter');
-        res.status(500);
-        res.send("KO");
-    }
-    bdd.findUrlToken(req.params.token).then(result => {
-        bdd.getActionReaction(result).then(subscribe => {
-            console.log(subscribe);
+
+export function router(app, services) {
+    app.get('/http/:token', (req, res) => {
+        services['http'].run('action', 'default', {request: req, response: res}).then(result => {
+            console.log(result);
             res.status(200);
             res.send("OK");
         }).catch(error => {
@@ -53,17 +49,11 @@ function HttpService(req, res) {
             res.status(500);
             res.send("KO");
         });
-    }).catch(error => {
-        console.log(error);
-        res.status(500);
-        res.send("URl do not exist");
     });
-}
-
-
-export function router(app) {
-    app.post('/http/:token', HttpService);
-    app.get('/http/:token', HttpService);
+    app.post('/http/:token', (req, res) => {
+        res.status(200);
+        res.send("OK");
+    });
 
     app.post('/subscribe', (req, res) => {
         bdd.login(req.headers.login, req.headers.password).then(result => {

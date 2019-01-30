@@ -13,7 +13,12 @@ app.use(express.static(__dirname + "/assets"));
 app.set('view_engine', 'ejs');
 
 authRouter(app);
-router(app);
+services().then(services => {
+    console.log(services);
+    router(app, services);
+}).catch(error => {
+    console.log(error);
+});
 
 // app.get("/", (req, res) => {
 //   res.send(`

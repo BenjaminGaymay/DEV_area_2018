@@ -1,6 +1,7 @@
 "use strict";
 import request from "request";
 import {jsonCompare as compare} from "../jsonSchemaCompare";
+import * as bdd from "../mysql";
 
 function createGetUrl(data) {
     let url = data.url + '?';
@@ -20,7 +21,23 @@ const schemaMail = {
 const schema = JSON.stringify(schemaMail);
 
 async function action(widget, data, resolve, reject) {
-    return sendRequest(data, resolve, reject);
+    const req = data.request;
+    const res = data.response;
+
+    if (!req.params.hasOwnProperty('token')) {
+        console.log('HTTP missing parameter');
+        return reject('HTTP missing parameter');
+    }
+    bdd.findUrlToken(req.params.token).then(result => {
+        bdd.getActionReaction(result).then(subscribe => {
+            let bucket = {...req.params, ...req.body, ...req.headers, ...subscribe.action.data};
+            return resolve({bucket: bucket, subscribe: subscribe});
+        }).catch(error => {
+            return reject(error);
+        });
+    }).catch(error => {
+        return reject(error);
+    });
 }
 
 async function reaction(widget, data, resolve, reject) {
@@ -28,7 +45,7 @@ async function reaction(widget, data, resolve, reject) {
 }
 
 export async function run(type, widget, data) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
         switch (type) {
             case 'action':
                 return action(widget, data, resolve, reject);
