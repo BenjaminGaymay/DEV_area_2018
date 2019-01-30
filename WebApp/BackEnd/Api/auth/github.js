@@ -25,14 +25,19 @@ class Github {
         'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
       };
 
-      var mdr = {
-          url: 'https://api.github.com/user/repos',
-          headers: headers
+      var options = {
+            url: 'https://api.github.com/user/repos',
+            headers: headers
       };
 
       function callback(error, response, body) {
         if (!error && response.statusCode == 200) {
-              return res.status(500).json(JSON.parse(body));
+            body = JSON.parse(body);
+            const repos = []
+            for (const i in body) {
+                repos.push({ 'name':body[i].name, 'url':body[i].html_url});
+            }
+            return res.status(500).json(repos);
           }
           else {
             return res.status(500).json("raté la");
@@ -40,8 +45,36 @@ class Github {
           }
       }
 
-      request(mdr, callback);
+      request(options, callback);
     }
+
+    getNotifs(access_token, req, res) {
+        var request = require('request');
+
+        var headers = {
+          'Authorization': 'token ' + access_token,
+          'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
+        };
+
+        var options = {
+              url: 'https://api.github.com/notifications',
+              headers: headers
+        };
+
+        function callback(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                let a = JSON.parse(body);
+                a = {'id':a[0].id, 'reason': a[0].reason, 'subject':a[0].subject};
+                return res.status(500).json(a);
+            }
+            else {
+                return res.status(500).json("raté la");
+            }
+        }
+
+        request(options, callback);
+      }
+
 }
 
 const github = new Github();

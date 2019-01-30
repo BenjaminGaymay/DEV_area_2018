@@ -48,6 +48,7 @@ export default function(app) {
       console.log('token ' + token.token.access_token)
 
       github.getRepos(token.token.access_token, req, res)
+      // github.getNotifs(token.token.access_token, req, res)
       // return res.status(500).json(token.token.access_token);
     } catch (error) {
       console.error("Access Token Error", error.message);
