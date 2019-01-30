@@ -22,7 +22,7 @@ export async function run(json) {
         param.text = striptags(param.html);
 
         let user = "poubelleapipoubelle@gmail.com";
-        let pass = "SpTr5WhcVSjJswa";
+        let pass = "vZmX5JKQDBur9bi";
         let from = `"📧 AREA 📧" <${user}>`;
 
         let transporter = nodemailer.createTransport({
