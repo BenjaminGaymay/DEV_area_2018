@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost:3306
--- Généré le :  Mar 29 Janvier 2019 à 12:56
+-- Généré le :  Sam 02 Février 2019 à 16:27
 -- Version du serveur :  10.2.21-MariaDB-10.2.21+maria~stretch
 -- Version de PHP :  7.2.14-1+0~20190113100742.14+stretch~1.gbpd83c69
 
@@ -37,6 +37,7 @@ CREATE TABLE `service` (
 
 INSERT INTO `service` (`id`, `name`) VALUES
 (6, 'fortnite'),
+(9, 'http'),
 (8, 'radio'),
 (5, 'rss'),
 (1, 'weather');
@@ -61,7 +62,7 @@ CREATE TABLE `subscribe` (
 --
 
 INSERT INTO `subscribe` (`id`, `user_id`, `action_service_id`, `reaction_service_id`, `action_data`, `reaction_data`) VALUES
-(1, 1, 1, 6, '{\"nom\": \"bob\", \"prenom\": \"duchamps\"}', '{\"nom\": \"alain\", \"prenom\": \"bernard\"}'),
+(1, 1, 9, 9, '{\"token\": \"azerty12345\"}', '{\"method\": \"post\", \"body\": \"{\\\"name\\\": \\\"bob\\\", \\\"phone\\\": \\\"0011002233\\\"}\", \"headers\": null, \"url\": \"https://hookb.in/xYQ6MoQmN1UdOdY1j2WB\", \"bucket\": \"[\\\"school\\\"]\"}'),
 (2, 1, 1, 5, '', ''),
 (3, 33, 1, 6, NULL, NULL);
 
@@ -87,7 +88,9 @@ INSERT INTO `user` (`id`, `username`, `email`, `password`) VALUES
 (33, 'bob', 'poubelleapipoubelle@gmail.com', '1288426f72c0e95d1c03023ec8853ca200724c86'),
 (35, 'jack', 'poubelleapipoubelle@gmail.com', '1288426f72c0e95d1c03023ec8853ca200724c86'),
 (36, 'Enzo', 'poubelleapipoubelle@gmail.com', '9712514327aa8a076ee7c2db398085610dfbdec0'),
-(37, 'Robin', 'poubelleapipoubelle@gmail.com', '9712514327aa8a076ee7c2db398085610dfbdec0');
+(37, 'Robin', 'poubelleapipoubelle@gmail.com', '9712514327aa8a076ee7c2db398085610dfbdec0'),
+(38, 'Salut', 'poubelleapipoubelle@gmail.com', 'd1980e7b5ffd959bb5697591a53450c57d91e7b5'),
+(39, 'JeanPaul2', 'poubelleapipoubelle@gmail.com', '64a50932049ddff830412e0fd9edb30198bf17f3');
 
 -- --------------------------------------------------------
 
@@ -103,6 +106,17 @@ CREATE TABLE `user_tmp` (
   `date` timestamp NULL DEFAULT current_timestamp(),
   `token` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Contenu de la table `user_tmp`
+--
+
+INSERT INTO `user_tmp` (`id`, `username`, `email`, `password`, `date`, `token`) VALUES
+(14, 'PetitPierre', 'sddsfff', '9712514327aa8a076ee7c2db398085610dfbdec0', '2019-01-29 14:46:33', '17t1t21svcn6qmnzsteq9a'),
+(16, 'PetitPierresdfdf', 'sddsfff', '9712514327aa8a076ee7c2db398085610dfbdec0', '2019-01-29 14:47:23', 'nwt17dpdxeo3reu785xv6w'),
+(17, 'dffsf', 'sddsfff', '9712514327aa8a076ee7c2db398085610dfbdec0', '2019-01-29 14:47:52', 'zb85mwtmxah861qlxcgdws'),
+(19, 'JeanJack', 'poubelleapipoubelle@gmail.com', '64a50932049ddff830412e0fd9edb30198bf17f3', '2019-01-30 14:23:40', 't0h7y3m4oo84tejt34r6pm'),
+(20, 'JeanPaul', 'poubelleapipoubelle@gmail.com', '64a50932049ddff830412e0fd9edb30198bf17f3', '2019-01-30 14:26:31', 'iamig78qr62vvl97oqrsf');
 
 --
 -- Index pour les tables exportées
@@ -148,7 +162,7 @@ ALTER TABLE `user_tmp`
 -- AUTO_INCREMENT pour la table `service`
 --
 ALTER TABLE `service`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT pour la table `subscribe`
 --
@@ -158,12 +172,12 @@ ALTER TABLE `subscribe`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT pour la table `user_tmp`
 --
 ALTER TABLE `user_tmp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
