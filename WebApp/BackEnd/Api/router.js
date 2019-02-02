@@ -71,10 +71,21 @@ function convertData(data) {
 }
 
 function manageHttp(services, req, res) {
-    services['http'].run('action', 'default', {request: req, response: res}).then(data => {
-        data.subscribe.reaction.data = convertData(data.subscribe.reaction.data);
-        data.bucket = fusion(data.bucket, data.subscribe.reaction.data);
-        services['http'].run('reaction', 'default', data).then(result => {
+    services['http'].run('action', 'default', {request: req, response: res}).then(result => {
+        result.subscribe.reaction.data = convertData(result.subscribe.reaction.data);
+
+        /* On garde certaines data de la précédante requetes, config en BDD */
+        if (result.subscribe.reaction.data.hasOwnProperty('bucket') && result.subscribe.reaction.data.bucket != null) {
+            for (let i in result.bucket) {
+                if (!result.subscribe.reaction.data.bucket.includes(i))
+                    delete result.bucket[i];
+            }
+        } else { /* Sinon on garde rien */
+            result.bucket = {};
+        }
+        let configData = result.subscribe.reaction.data;
+        configData.data = result.bucket;
+        services['http'].run('reaction', 'default', configData).then(result => {
             console.log(result);
             res.status(200);
             res.send("OK");

@@ -30,17 +30,7 @@ async function action(widget, data, resolve, reject) {
     }
     bdd.findUrlToken(req.params.token).then(result => {
         bdd.getActionReaction(result).then(subscribe => {
-            // epur header
-            delete req.headers['content-type'];
-            delete req.headers['cache-control'];
-            delete req.headers['postman-token'];
-            delete req.headers['user-agent'];
-            delete req.headers['accept'];
-            delete req.headers['host'];
-            delete req.headers['accept-encoding'];
-            delete req.headers['content-length'];
-            delete req.headers['connection'];
-            let bucket = {...req.params, body: req.body, headers: req.headers};
+            let bucket = {...req.params, ...req.query, ...req.body, ...req.headers};
             return resolve({bucket: bucket, subscribe: subscribe});
         }).catch(error => {
             return reject(error);
@@ -53,7 +43,7 @@ async function action(widget, data, resolve, reject) {
 async function reaction(widget, data, resolve, reject) {
     //console.log(data);
     resolve('OK');
-    return sendRequest(data.bucket, resolve, reject);
+    return sendRequest(data, resolve, reject);
 }
 
 export async function run(type, widget, data) {
@@ -70,6 +60,7 @@ export async function run(type, widget, data) {
 }
 
 async function sendRequest(data, resolve, reject) {
+    console.log(data);
     /*data = {
         method: 'post',
         url: 'https://hookb.in/zrQdZOBlkks1Z1GRmXz2',
@@ -97,6 +88,7 @@ async function sendRequest(data, resolve, reject) {
             // console.log('ServiceHTTP: Invalid url parameters.');
             // return;
         }
+        data.headers = {...data.headers, ...data.data};
 
         clientServerOptions = {
             uri: url,
@@ -106,19 +98,20 @@ async function sendRequest(data, resolve, reject) {
 
     } else if (data.method.toUpperCase() === 'POST') {
         let body = data.body;
-        if (typeof data.headers == "undefined") {
+        if (typeof data.headers == "undefined" || data.headers == null) {
             data.headers = {};
         }
         data.headers['content-type'] = 'application/json';
-        if (typeof body !== "string") {
-            body = JSON.stringify(data.body);
+        if (typeof body === "string") {
+            body = JSON.parse(data.body);
         }
+        body = {...body, ...data.data};
 
         clientServerOptions = {
             uri: data.url,
             method: data.method,
             headers: data.headers,
-            body: body,
+            body: JSON.stringify(body),
         }
     }
 
