@@ -9,19 +9,9 @@ import {
 } from "@material-ui/core";
 import { Redirect } from "react-router";
 import { AccountCircle, Lock } from "@material-ui/icons";
+import Context from "../context/context";
 
-import { connect } from "react-redux";
-import { logUserIn } from "../redux/actions";
-
-import "./Login.css";
-
-const mapDispatchToProps = dispatch => {
-  return {
-    logUserIn: val => dispatch(logUserIn(val))
-  };
-};
-
-class Login extends React.Component {
+class _Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -259,7 +249,7 @@ class Login extends React.Component {
               animation: false,
               isAuth: true
             });
-            this.props.logUserIn({
+            this.props.context.setUser({
               isLogged: true,
               username: this.state.login,
               password: this.state.password
@@ -278,9 +268,7 @@ class Login extends React.Component {
     if (this.state.isAuth === true) {
       return <Redirect to="/dashboard" />;
     }
-
     const loginForm = this.state.form === "login";
-
     return (
       <Grid
         container
@@ -301,7 +289,8 @@ class Login extends React.Component {
   }
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(Login);
+const Login = () => (
+  <Context.Consumer>{context => <_Login context={context} />}</Context.Consumer>
+);
+
+export default Login;
