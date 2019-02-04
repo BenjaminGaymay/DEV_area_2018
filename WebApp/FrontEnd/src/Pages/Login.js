@@ -20,7 +20,7 @@ class LoginConsumer extends React.Component {
       mail: "",
       password: "",
       confPassword: "",
-      animation: false,
+      animation: false
     };
   }
 
@@ -275,7 +275,7 @@ class LoginConsumer extends React.Component {
         alignContent="center"
         style={{ height: loginForm ? 400 : 515 }}
       >
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} sm={8} md={6}>
           <Paper elevation={10}>
             {this.state.form === "login"
               ? this.loginForm()
