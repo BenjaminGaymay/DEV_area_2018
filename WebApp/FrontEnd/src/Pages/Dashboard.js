@@ -23,46 +23,54 @@ import { Close } from "@material-ui/icons";
 const Transition = props => <Slide direction="up" {...props} />;
 
 export default class Dashboard extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      urlOauth: "",
-      services: [
-        {
-          name: "reddit",
+  state = {
+    services: [
+      {
+        name: "reddit",
+        options: {
           image:
-            "https://images-eu.ssl-images-amazon.com/images/I/418PuxYS63L.png"
-        },
-        {
-          name: "facebook",
-          image:
-            "https://geeko.lesoir.be/wp-content/uploads/sites/58/2018/11/Facebook-2.jpg"
-        },
-        {
-          name: "github",
-          image:
-            "https://dyw7ncnq1en5l.cloudfront.net/optim/news/75/75755/-c-github.jpg"
+            "https://images-eu.ssl-images-amazon.com/images/I/418PuxYS63L.png",
+          accessToken: ""
         }
-      ],
-      configuration: false
-    };
-  }
+      },
+      {
+        name: "facebook",
+        options: {
+          image:
+            "https://geeko.lesoir.be/wp-content/uploads/sites/58/2018/11/Facebook-2.jpg",
+          accessToken: ""
+        }
+      },
+      {
+        name: "github",
+        options: {
+          image:
+            "https://dyw7ncnq1en5l.cloudfront.net/optim/news/75/75755/-c-github.jpg",
+          accessToken: ""
+        }
+      }
+    ],
+    configuration: false,
+    selectedService: "zz"
+  };
 
   oauth = service => {
     this.setState(
       {
-        urlOauth: `http://localhost:8081/auth/${service}`,
-        configuration: true
+        urlOauth: `http://localhost:8081/auth/${service.name}`,
+        configuration: true,
+        selectedService: service.name
       },
-      () => {
-        window.open(this.state.urlOauth);
-      }
+      () => {}
     );
   };
 
   componentDidMount() {
     window.addEventListener("message", this.handleOauthResponse);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("message", this.handleOauthResponse);
   }
 
   handleOauthResponse(e) {
@@ -82,20 +90,14 @@ export default class Dashboard extends React.Component {
     return (
       <Grid container spacing={16} style={{ marginTop: 32 }}>
         <Grid item xs={12}>
-          <Grid
-            container
-            justify="center"
-            spacing={32}
-            direction="column"
-            alignItems="center"
-          >
+          <Grid container justify="center" spacing={32}>
             {this.state.services.map((item, index) => (
-              <Grid item xs={10} md={6} key={item.name}>
+              <Grid item key={item.name}>
                 <Card elevation={4}>
                   <CardActionArea>
                     <CardMedia
                       style={{ height: 150 }}
-                      image={`${item.image}`}
+                      image={`${item.options.image}`}
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
@@ -137,7 +139,7 @@ export default class Dashboard extends React.Component {
                 <Close />
               </IconButton>
               <Typography variant="h6" color="inherit" style={{ flex: 1 }}>
-                Put service name here!
+                {this.state.selectedService}
               </Typography>
               <Button color="inherit" onClick={this.handleCloseDialog}>
                 save
@@ -151,10 +153,13 @@ export default class Dashboard extends React.Component {
             <Divider />
             <ListItem button>
               <ListItemText
-                primary="Default notification ringtone"
-                secondary="Tethys"
+                primary={`${this.state.selectedService.charAt(0).toUpperCase() +
+                  this.state.selectedService.slice(1)} access token`}
+                onClick={() => {
+                  window.open(this.state.urlOauth);
+                }}
               />
-              <p>Some configuration...</p>
+              <p>{() => {}}</p>
             </ListItem>
           </List>
         </Dialog>

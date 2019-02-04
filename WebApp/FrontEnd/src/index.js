@@ -2,17 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-import Provider from './context';
+import Provider from "./context";
 
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
+String.prototype.capitalize = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
 
 ReactDOM.render(
   <Provider>
     <App />
-  </Provider>
-  ,
+  </Provider>,
   document.getElementById("root")
 );
 

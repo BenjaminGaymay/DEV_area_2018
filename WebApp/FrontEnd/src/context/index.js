@@ -11,6 +11,9 @@ export default class Provider extends React.Component {
         isLogged: payload.isLogged,
         username: payload.username,
         password: payload.password
+      }, () => {
+        localStorage.setItem('username', payload.username);
+        localStorage.setItem('password', payload.password);
       });
     }
   };
