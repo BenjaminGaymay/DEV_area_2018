@@ -32,6 +32,6 @@ export async function run(type, widget, data) {
     });
 }
 
-export async function update(widget) {
+export async function update() {
 
 }
