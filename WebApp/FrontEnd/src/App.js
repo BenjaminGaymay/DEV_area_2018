@@ -1,35 +1,43 @@
-import React from 'react';
+import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 //components
-import ButtonAppBar from './components/Appbar';
+import ButtonAppBar from "./components/Appbar/Appbar";
 
 //pages
-import Dashboard from './Pages/Dashboard';
+import Dashboard from "./Pages/Dashboard";
 import Error from "./Pages/Error";
 import Home from "./Pages/Home";
-import Login from './Pages/Login';
+import Login from "./Pages/Login";
+import Logout from "./Pages/Logout";
 
 class App extends React.Component {
-	render() {
-		return (
-			<div className="App">
-				<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
-				<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-				<BrowserRouter>
-					<div>
-						<ButtonAppBar />
-						<Switch>
-							<Route exact path="/dashboard" component={Dashboard} />
-							<Route exact path="/" component={Home} />
-							<Route exact path="/login" component={Login} />
-							<Route component={Error} />
-						</Switch>
-					</div>
-				</BrowserRouter>
-			</div>
-		);
-	}
+  render() {
+    return (
+      <div className="App">
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
+        <BrowserRouter>
+          <div>
+            <ButtonAppBar />
+            <Switch>
+              <Route exact path="/dashboard" component={Dashboard} />
+              <Route exact path="/" component={Home} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/logout" component={Logout} />
+              <Route component={Error} />
+            </Switch>
+          </div>
+        </BrowserRouter>
+      </div>
+    );
+  }
 }
 
 export default App;

@@ -1,10 +1,6 @@
-import React, {useState} from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-// import { Provider } from "react-redux";
 import "./index.css";
-// import index from './redux/index';
-// import store from "./redux/store";
-// import { Provider } from './context';
 
 import Provider from './context';
 

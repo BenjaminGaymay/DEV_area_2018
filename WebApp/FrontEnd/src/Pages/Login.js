@@ -11,7 +11,7 @@ import { Redirect } from "react-router";
 import { AccountCircle, Lock } from "@material-ui/icons";
 import Context from "../context/context";
 
-class _Login extends React.Component {
+class LoginConsumer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -290,7 +290,7 @@ class _Login extends React.Component {
 }
 
 const Login = () => (
-  <Context.Consumer>{context => <_Login context={context} />}</Context.Consumer>
+  <Context.Consumer>{context => <LoginConsumer context={context} />}</Context.Consumer>
 );
 
 export default Login;
