@@ -438,8 +438,7 @@ export async function setSubscribeUpdatedFalse(id) {
 }
 
 export async function getUpdatedSubscribe() {
-    //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
-    return query(`SELECT * FROM subscribe WHERE updated=FALSE;`);
+    return query(`SELECT * FROM subscribe WHERE updated=TRUE;`);
 }
 
 /* //GOOD
