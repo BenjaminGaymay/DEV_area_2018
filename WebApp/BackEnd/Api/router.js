@@ -1,8 +1,8 @@
 'use strict';
 
 import * as bdd from './src/mysql';
-import * as mail from './src/mail';
-import * as http from './src/ServiceHTTP';
+import * as mail from './src/services/mail';
+import * as http from './src/services/http';
 import ejs from 'ejs';
 import fs from 'fs';
 
@@ -37,8 +37,27 @@ async function createToken() {
     return value;
 }
 
+function manageHttp(services, req, res) {
+    services['http'].run('action', 'default', {request: req, response: res}).then(result => {
+        console.log(result);
+        res.status(200);
+        res.send("OK");
+    }).catch(error => {
+        console.log(error);
+        res.status(500);
+        res.send("KO");
+    });
+}
 
-export function router(app) {
+
+export function router(app, services) {
+    app.get('/http/:token', (req, res) => {
+        manageHttp(services, req, res);
+    });
+    app.post('/http/:token', (req, res) => {
+        manageHttp(services, req, res);
+    });
+
     app.post('/subscribe', (req, res) => {
         bdd.login(req.headers.login, req.headers.password).then(result => {
             bdd.subscribe(result, req.body).then(result => {
@@ -77,7 +96,6 @@ export function router(app) {
 
 
     app.post('/login', (req, res) => {
-        console.log(req.body);
         bdd.login(req.body.login, req.body.password).then(result => {
             console.log(result);
             res.status(200);
@@ -160,4 +178,17 @@ export function router(app) {
         about.server.current_time = getUnixTime();
         res.send(about);
     });
+
+    // imdb tests
+    // app.get('/imdb', (req, res) => {
+    //     services['imdb'].run('update', 'default', {request: req, response: res}).then(result => {
+    //         console.log(result);
+    //         res.status(200);
+    //         res.send(result);
+    //     }).catch(error => {
+    //         console.log(error);
+    //         res.status(500);
+    //         res.send("KO");
+    //     });
+    // });
 }
