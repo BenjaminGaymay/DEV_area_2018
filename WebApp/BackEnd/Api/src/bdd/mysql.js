@@ -376,6 +376,19 @@ export async function getSubscribeById(id) {
     })
 }
 
+export async function getSubscribeByActionServiceId(id) {
+    return query(`SELECT * FROM subscribe WHERE action_service_id = '${id}';`).catch(error => {
+        console.log(error);
+    }).then(result => {
+        if (typeof result[0] == "undefined") {
+            return Promise.reject('getSubscribeByActionServiceId: Empty result.');
+        }
+        result[0].config_action_data = (result[0].config_action_data == null ? null : JSON.parse(result[0].config_action_data));
+        result[0].config_reaction_data = (result[0].config_reaction_data == null ? null : JSON.parse(result[0].config_reaction_data));
+        return result;
+    })
+}
+
 export async function findUrlToken(token) {
     console.log(token);
     //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
