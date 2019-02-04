@@ -9,7 +9,7 @@ export default function(app) {
   );
 
   app.get("/auth/try", (req, res) => {
-		reddit.getLastPostWithName('node').then(results => {
+		reddit.getLastPostWithName('funny').then(results => {
       console.log(results);
       res.send(results);
 		});

@@ -59,7 +59,7 @@ class RedditOauth2 {
         if (response.data.dist != 0) {
           response = response.data.children[0].data;
           console.log({'title': response.title, 'author': response.author, 'url': response.url});
-          resolve({'title': response.title, 'author': response.author, 'url': response.url});
+          resolve({'title': response.title, 'author': response.author, 'url': response.url, 'created': response.created});
         } else {
           console.log('vide')
           resolve(undefined);
