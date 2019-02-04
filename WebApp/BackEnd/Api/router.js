@@ -1,14 +1,171 @@
 'use strict';
 
-import * as bdd from './src/mysql.js';
+import * as bdd from './src/bdd/mysql';
+import * as mail from './src/services/mail';
+import * as http from './src/services/http';
+import ejs from 'ejs';
 import fs from 'fs';
 
 function getUnixTime() {
     return Date.now() / 1000 | 0;
 }
 
+let mailJson = {
+    subject: "Epitech c'est nul",
+    html: "",
+    to: ["poubelleapipoubelle@gmail.com", "poubelleapipoubelle@gmail.com"],
+};
 
-export function router(app) {
+async function createToken() {
+    let rand = function () {
+        return Math.random().toString(36).substr(2); // remove 0.
+    };
+
+    let token = function () {
+        return rand() + rand(); // to make it longer
+    };
+    let value = token();
+    let myBreak = false;
+    while (!myBreak) {
+        try {
+            await bdd.isTokenExist(value);
+            value = token();
+        } catch (e) {
+            myBreak = true;
+        }
+    }
+    return value;
+}
+
+function fusion(dic1, dic2) {
+    let result = dic1;
+    for (let i in dic2) {
+        if (!result.hasOwnProperty(i)) {
+            result[i] = dic2[i];
+        } else if (result.hasOwnProperty(i) && typeof dic2[i] == "object") {
+            result[i] = {...result[i], ...dic2[i]};
+        }
+    }
+    return result;
+}
+
+export function router(app, services) {
+    app.get('/http/:token', (req, res) => {
+        services[9].update(services, req, res).then(result => {
+            console.log(result);
+        }).catch(error => {
+            console.log(error);
+        });
+    });
+    app.post('/http/:token', (req, res) => {
+        services[9].update(services, req, res).then(result => {
+            console.log(result);
+        }).catch(error => {
+            console.log(error);
+        });
+    });
+
+    app.post('/subscribe', (req, res) => {
+        bdd.login(req.headers.login, req.headers.password).then(result => {
+            bdd.subscribe(result, req.body).then(result => {
+                console.log(result);
+                res.status(200);
+                res.send("OK");
+            }).catch(error => {
+                console.log(error);
+                res.status(500);
+                res.send("KO");
+            });
+        }).catch(error => {
+            console.log(error);
+            res.status(500);
+            res.send("KO");
+        });
+    });
+
+    app.post('/unsubscribe', (req, res) => {
+        bdd.login(req.headers.login, req.headers.password).then(result => {
+            bdd.unsubscribe(result, req.body).then(result => {
+                console.log(result);
+                res.status(200);
+                res.send("OK");
+            }).catch(error => {
+                console.log(error);
+                res.status(500);
+                res.send("KO");
+            });
+        }).catch(error => {
+            console.log(error);
+            res.status(500);
+            res.send("KO");
+        });
+    });
+
+
+    app.post('/login', (req, res) => {
+        bdd.login(req.body.login, req.body.password).then(result => {
+            console.log(result);
+            res.status(200);
+            res.send("OK");
+        }).catch(error => {
+            console.log(error);
+            res.status(500);
+            res.send("KO");
+        });
+    });
+
+    app.get('/validationAccount/:login/:token', (req, res) => {
+        if (typeof req.params.login !== "string" && typeof req.params.token !== "string") {
+            res.status(500);
+            res.send("KO");
+        }
+        bdd.register(req.params.login, req.params.token).then(result => {
+            console.log(result);
+            res.status(200);
+            res.send("OK");
+        }).catch(error => {
+            console.log(error);
+            res.status(500);
+            res.send("KO");
+        });
+    });
+
+    app.post('/register', (req, res) => {
+        createToken().then(token => {
+            bdd.registerIntoTmp(req.body.email, req.body.login, req.body.password, token)
+                .then(result => {
+                    console.log('MDR');
+                    console.log(result);
+
+                    fs.readFile('./template/mail.ejs', 'utf8', function (err, content) {
+                        if (err) return err;
+                        let html = ejs.render(content, {
+                            token: result.token,
+                            login: result.login,
+                        });
+                        let mailJson = {
+                            subject: "Validation inscription",
+                            html: html,
+                            to: [result.email],
+                        };
+                        mail.run(JSON.stringify(mailJson)).then(result => {
+                            console.log(result);
+                        }).catch(error => {
+                            console.log(error);
+                        });
+                    });
+                    res.status(200);
+                    res.send("OK");
+                })
+                .catch(error => {
+                    console.log(error);
+                    res.status(500);
+                    res.send("KO");
+                });
+        });
+    });
+
+
     app.get('/', function (req, res) {
         bdd.getUserByName('admin').then(user => {
             bdd.getUserServices(user.id).then(result => {
