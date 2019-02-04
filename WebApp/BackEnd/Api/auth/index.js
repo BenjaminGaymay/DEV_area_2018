@@ -48,9 +48,9 @@ export default function(app) {
       const token = github.githubOauth2.accessToken.create(result);
       console.log('token ' + token.token.access_token)
 
-      const response = await github.getRepos(token.token.access_token, req, res)
+      // const response = await github.getRepos(token.token.access_token, req, res)
+      const response = await github.getNotifs(token.token.access_token, req, res)
       console.log(response);
-      // github.getNotifs(token.token.access_token, req, res)
       return res.status(200).json(response);
     } catch (error) {
       console.error("Access Token Error", error.message);

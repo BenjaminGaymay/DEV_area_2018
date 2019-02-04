@@ -65,12 +65,19 @@ class Github {
             request(options, (error, response, body) => {
                 if (!error && response.statusCode == 200) {
                     let a = JSON.parse(body);
-                    a = {
-                        id: a[0].id,
-                        reason: a[0].reason,
-                        subject: a[0].subject
-                    };
-                    resolve(a);
+                    try {
+                        a = {
+                            id: a[0].id,
+                            reason: a[0].reason,
+                            title: a[0].subject.title,
+                            type: a[0].subject.type,
+                            url: a[0].repository.html_url
+                        };
+                        resolve(a);
+                    }
+                    catch {
+                        resolve([])
+                    }
                 }
                 else {
                     resolve(error);
