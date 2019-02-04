@@ -9,7 +9,7 @@ class RedditOauth2 {
     this.reddit = simpleOauth2Reddit.create({
       clientId: this.id,
       clientSecret: this.secret,
-      callbackURL: `http://localhost:3000/auth/reddit/callback`,
+      callbackURL: `http://localhost:8080/auth/reddit/callback`,
       state: this.state
     });
   }
@@ -37,12 +37,17 @@ class RedditOauth2 {
     const response = new Promise((resolve, reject) => {
       request(options, (error, response, body) => {
         if (!error && response.statusCode == 200) {
-          body = JSON.parse(body).data.trophies;
-          const trophies = []
-          for (const i in body) {
-            trophies.push({name:body[i].data.name, image:body[i].data.icon_40});
+          try {
+            body = JSON.parse(body).data.trophies;
+            const trophies = []
+            for (const i in body) {
+              trophies.push({name:body[i].data.name, image:body[i].data.icon_40});
+            }
+            resolve(trophies);
           }
-          resolve(trophies);
+          catch {
+            resolve([]);
+          }
         } else {
           resolve(error);
         }
@@ -54,18 +59,15 @@ class RedditOauth2 {
   async getLastPostWithName(name) {
     return new Promise((resolve, reject) => {
       request.get('https://www.reddit.com/r/' + name + '/new/.json', (error, response) => {
-        // console.log(error);
         response = JSON.parse(response.body);
         if (response.data.dist != 0) {
           response = response.data.children[0].data;
           console.log({'title': response.title, 'author': response.author, 'url': response.url});
           resolve({'title': response.title, 'author': response.author, 'url': response.url, 'created': response.created});
         } else {
-          console.log('vide')
           resolve(undefined);
         }
       });
-      // res.redirect('https://www.reddit.com/r/node/new/.json?count=20');
     });
   }
 

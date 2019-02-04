@@ -32,17 +32,22 @@ class Github {
 
       const response = new Promise((resolve, reject) => {
           request(options, (error, response, body) => {
-              if (!error && response.statusCode == 200) {
-                  const repos = []
-                  body = JSON.parse(body);
-                  for (const i in body) {
-                      repos.push({ 'name':body[i].name, 'url':body[i].html_url});
-                  }
-                  resolve(repos);
+            if (!error && response.statusCode == 200) {
+                try {
+                    const repos = []
+                    body = JSON.parse(body);
+                    for (const i in body) {
+                        repos.push({ 'name':body[i].name, 'url':body[i].html_url});
+                    }
+                    resolve(repos);
                 }
-                else {
-                  resolve(error);
+                catch {
+                    resolve([])
                 }
+            }
+            else {
+                resolve(error);
+            }
             });
         });
         return await response;
