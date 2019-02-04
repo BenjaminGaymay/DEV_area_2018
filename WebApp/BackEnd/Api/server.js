@@ -14,7 +14,7 @@ app.set('view_engine', 'ejs');
 
 authRouter(app);
 services().then(services => {
-    console.log(services);
+    //console.log(services);
     router(app, services);
     updateServices(services);
 }).catch(error => {

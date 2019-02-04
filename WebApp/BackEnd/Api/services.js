@@ -1,4 +1,6 @@
-import * as bdd from './src/mysql';
+import * as bdd from './src/bdd/mysql';
+
+const exceptions = ['http'];
 
 export async function services() {
     let services = [];
@@ -7,12 +9,11 @@ export async function services() {
         bdd.getAllServices().then(result => {
             for (let service of result) {
                 const path = './src/services/' + service.name;
-                let run = require(path).run;
-                let update = require(path).update;
-                services[service.name] = {
-                    id: service.id,
-                    run: run,
-                    update: update
+                let file = require(path);
+                services[service.id] = {
+                    name: service.name,
+                    run: file.run,
+                    update: file.update
                 };
             }
             resolve(services);
@@ -24,11 +25,12 @@ export async function services() {
 }
 
 export async function updateServices(services) {
+    services = services.filter(service => service != null && service.update && exceptions.indexOf(service.name) === -1)
+    const interval = 300000; // 5 minutes
     setInterval(() => {
         console.log('Starting services update..');
-        for (const name in services) {
-            if (services[name].update)
-                services[name].update();
+        for (let service of services) {
+            service.update();
         }
-    }, 5000);
+    }, interval);
 }

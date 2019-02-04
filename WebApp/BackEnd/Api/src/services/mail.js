@@ -50,3 +50,7 @@ export async function run(json) {
         });
     });
 }
+
+export async function update() {
+
+}

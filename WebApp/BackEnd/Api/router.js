@@ -1,6 +1,6 @@
 'use strict';
 
-import * as bdd from './src/mysql';
+import * as bdd from './src/bdd/mysql';
 import * as mail from './src/services/mail';
 import * as http from './src/services/http';
 import ejs from 'ejs';
@@ -37,25 +37,32 @@ async function createToken() {
     return value;
 }
 
-function manageHttp(services, req, res) {
-    services['http'].run('action', 'default', {request: req, response: res}).then(result => {
-        console.log(result);
-        res.status(200);
-        res.send("OK");
-    }).catch(error => {
-        console.log(error);
-        res.status(500);
-        res.send("KO");
-    });
+function fusion(dic1, dic2) {
+    let result = dic1;
+    for (let i in dic2) {
+        if (!result.hasOwnProperty(i)) {
+            result[i] = dic2[i];
+        } else if (result.hasOwnProperty(i) && typeof dic2[i] == "object") {
+            result[i] = {...result[i], ...dic2[i]};
+        }
+    }
+    return result;
 }
-
 
 export function router(app, services) {
     app.get('/http/:token', (req, res) => {
-        manageHttp(services, req, res);
+        services[9].update(services, req, res).then(result => {
+            console.log(result);
+        }).catch(error => {
+            console.log(error);
+        });
     });
     app.post('/http/:token', (req, res) => {
-        manageHttp(services, req, res);
+        services[9].update(services, req, res).then(result => {
+            console.log(result);
+        }).catch(error => {
+            console.log(error);
+        });
     });
 
     app.post('/subscribe', (req, res) => {
