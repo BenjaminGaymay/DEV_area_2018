@@ -4,6 +4,7 @@ import {router} from "./router"
 import {services, updateServices} from "./services"
 import authRouter from './auth';
 import bodyParser from 'body-parser';
+import { getUpdatedSubscribe } from './src/bdd/mysql';
 
 const app = express();
 app.use(cors({origin: '*'}));
@@ -28,5 +29,13 @@ services().then(services => {
 //     <a href="/auth/github">Github</a>
 //     `);
 // });
+
+console.log(getUpdatedSubscribe());
+
+// setInterval(() => {
+//     // for (const widget of widgets) {
+//     //     setSubscribeUpdatedFalse(widget.id);
+//     // }
+// }), 150000;
 
 app.listen(process.env.PORT, () => console.log(`Server is listening on port ${process.env.PORT}`));

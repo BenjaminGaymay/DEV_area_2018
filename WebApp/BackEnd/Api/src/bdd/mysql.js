@@ -401,7 +401,7 @@ export async function updateSubscribeData(id, action_data, reaction_data) {
         reaction_data = JSON.stringify(reaction_data);
     }
     //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
-    return query(`UPDATE subscribe SET updated=TRUE, action_data='${action_data}', reaction_data='${reaction_data}' 
+    return query(`UPDATE subscribe SET updated=TRUE, action_data='${action_data}', reaction_data='${reaction_data}'
                       WHERE id='${id}';`)
         .catch(error => {
             console.log(error);
@@ -410,6 +410,23 @@ export async function updateSubscribeData(id, action_data, reaction_data) {
         .then(result => {
             return true;
         });
+}
+
+export async function setSubscribeUpdatedFalse(id) {
+    //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
+    return query(`UPDATE subscribe SET updated=FALSE WHERE id='${id}';`)
+        .catch(error => {
+            console.log(error);
+            return Promise.reject('Service or token not found.');
+        })
+        .then(result => {
+            return true;
+        });
+}
+
+export async function getUpdatedSubscribe() {
+    //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
+    return query(`SELECT * FROM subscribe WHERE updated=FALSE;`);
 }
 
 /* //GOOD
