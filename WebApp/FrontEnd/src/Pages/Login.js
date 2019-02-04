@@ -21,7 +21,6 @@ class LoginConsumer extends React.Component {
       password: "",
       confPassword: "",
       animation: false,
-      isAuth: false
     };
   }
 
@@ -246,8 +245,7 @@ class LoginConsumer extends React.Component {
           })
           .then(res => {
             this.setState({
-              animation: false,
-              isAuth: true
+              animation: false
             });
             this.props.context.setUser({
               isLogged: true,
@@ -265,7 +263,7 @@ class LoginConsumer extends React.Component {
   };
 
   render() {
-    if (this.state.isAuth === true) {
+    if (this.props.context.isLogged) {
       return <Redirect to="/dashboard" />;
     }
     const loginForm = this.state.form === "login";
@@ -290,7 +288,9 @@ class LoginConsumer extends React.Component {
 }
 
 const Login = () => (
-  <Context.Consumer>{context => <LoginConsumer context={context} />}</Context.Consumer>
+  <Context.Consumer>
+    {context => <LoginConsumer context={context} />}
+  </Context.Consumer>
 );
 
 export default Login;
