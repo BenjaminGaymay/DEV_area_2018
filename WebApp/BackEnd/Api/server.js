@@ -1,10 +1,9 @@
 import express from "express";
-import { rootDir } from "./constant";
-
+import cors from "cors";
+import {router} from "./router"
+import {services} from "./services"
+import bodyParser from 'body-parser';
 import authRouter from "./auth";
-
-
-const port = 8080;
 
 const app = express();
 app.use(cors({origin: '*'}));
