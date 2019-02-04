@@ -1,7 +1,8 @@
 import React from "react";
-
 import { Grid } from "@material-ui/core";
+
 import Img from "../assets/images/home.png";
+
 export default class Home extends React.Component {
   constructor(props) {
     super(props);

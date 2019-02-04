@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import PrivateRoute from './guard/PrivateRoute';
 
 //components
 import ButtonAppBar from "./components/Appbar/Appbar";
@@ -27,7 +28,7 @@ class App extends React.Component {
           <div>
             <ButtonAppBar />
             <Switch>
-              <Route exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/dashboard" component={Dashboard}/>
               <Route exact path="/" component={Home} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/logout" component={Logout} />

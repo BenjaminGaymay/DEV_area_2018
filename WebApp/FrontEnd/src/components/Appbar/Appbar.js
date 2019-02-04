@@ -26,16 +26,14 @@ function AppBarConsumer(props) {
           <Typography variant="h6" color="inherit" className="grow">
             Area
           </Typography>
-          <Button color="inherit">
-            <Link to="/">Home</Link>
-          </Button>
-          <Button color="inherit">
-          {
-            !props.context.isLogged ?
-            <Link to="/login">Login</Link> :
-            <Link to="/logout">Logout</Link>
+          <Button color="inherit" component={Link} to="/">Home</Button>
+          {!props.context.isLogged ?
+          <Button color="inherit" component={Link} to="/login">Login</Button> :
+          <>
+            <Button color="inherit" component={Link} to="/dashboard">Dashboard</Button>
+            <Button color="inherit" component={Link} to="/logout">Logout</Button>
+          </>
           }
-          </Button>
         </Toolbar>
       </AppBar>
     </div>
