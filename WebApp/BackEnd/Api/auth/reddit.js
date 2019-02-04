@@ -10,11 +10,7 @@ class RedditOauth2 {
     this.reddit = simpleOauth2Reddit.create({
       clientId: this.id,
       clientSecret: this.secret,
-<<<<<<< HEAD
       callbackURL: `http://localhost:8080/auth/reddit/callback`,
-=======
-      callbackURL: `${process.env.IP}/auth/reddit/callback`,
->>>>>>> services
       state: this.state
     });
   }
