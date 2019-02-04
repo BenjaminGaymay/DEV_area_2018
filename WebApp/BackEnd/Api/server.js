@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import {router} from "./router"
-import {services} from "./services"
+import {Services} from "./services"
 import bodyParser from 'body-parser';
 import authRouter from "./auth";
 
@@ -13,8 +13,9 @@ app.use(express.static(__dirname + "/assets"));
 app.set('view_engine', 'ejs');
 
 authRouter(app);
-services().then(services => {
-    //console.log(services);
+let services = new Services();
+services.build().then(result => {
+    console.log(result);
     router(app, services);
 }).catch(error => {
     console.log(error);

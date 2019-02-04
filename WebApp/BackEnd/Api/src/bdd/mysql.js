@@ -165,7 +165,7 @@ export async function getUserSuscribe(userId) {
  * @param sql
  * @returns {Promise<any>}
  */
-function query(sql) {
+export function query(sql) {
     return new Promise((resolve, reject) => {
         bdd.query(sql, (err, rows) => {
             if (err)
@@ -225,6 +225,7 @@ export async function getActionReaction(row) {
             } else {
                 array.action = result[0];
                 array.action.config = row.config_action_data.length !== 0 ? JSON.parse(row.config_action_data) : null;
+                array.action.data = row.action_data !== null && row.action_data.length !== 0 ? JSON.parse(row.action_data) : null;
             }
             return getServiceById(row.reaction_service_id);
         })
@@ -235,6 +236,7 @@ export async function getActionReaction(row) {
             } else if (array.action) {
                 array.reaction = result[0];
                 array.reaction.config = row.config_reaction_data.length !== 0 ? JSON.parse(row.config_reaction_data) : null;
+                array.reaction.data = row.reaction_data !== null && row.reaction_data.length !== 0 ? JSON.parse(row.reaction_data) : null;
             }
             return array;
         });
@@ -385,48 +387,3 @@ export async function updateSubscribeData(id, action_data, reaction_data) {
             return true;
         });
 }
-
-/* //GOOD
-register('admin', 'azertyqwerty').then(result => {
-    console.log(result);
-}).catch(error => {
-    console.log("error: " + error);
-});*/
-
-//GOOD
-// login('admin', 'azertyqwerty')
-//     .then(result => {
-//         console.log(result);
-//     })
-//     .catch(error => {
-//         console.log("error: " + error);
-//     });
-
-/* //GOOD
-registerService('radio').then(result => {
-    console.log(result);
-}).catch(error => {
-    console.log("error: " + error);
-});*/
-
-/* //GOOD
-getUserByName('admin')
-    .then(user => {
-        getUserServices(user.id)
-            .then(result => {
-                console.log(result);
-            })
-            .catch(error => {
-                console.log("error 2: " + error);
-            });
-    })
-    .catch(error => {
-        console.log("error 1: " + error);
-    });*/
-
-
-/*bdd.query("SELECT * FROM user", function (err, result) {
-    if (err) throw err;
-    console.log("Result:");
-    console.log(result);
-});*/

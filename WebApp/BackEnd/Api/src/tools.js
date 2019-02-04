@@ -1,4 +1,3 @@
-
 /**
  * @param str
  * @returns {boolean}
@@ -32,13 +31,22 @@ export function convertData(data) {
  */
 export function keepPreviousDataIfTheyAreRegisteredInTheBddBucket(result) {
     /* On garde certaines data de la précédante requetes, config en BDD */
-    if (result.subscribe.reaction.config.hasOwnProperty('bucket') && result.subscribe.reaction.config.bucket != null) {
-        for (let i in result.bucket) {
-            if (!result.subscribe.reaction.config.bucket.includes(i))
-                delete result.bucket[i];
+    if (result.reaction.config.hasOwnProperty('bucket') && result.reaction.config.bucket != null) {
+        for (let i in result.action.data) {
+            if (!result.reaction.config.bucket.includes(i))
+                delete result.action.data[i];
         }
     } else { /* Sinon on garde rien */
-        result.bucket = {};
+        result.action.data = {};
     }
     return result;
+}
+
+export function postTraitement(result) {
+    result.reaction.config = convertData(result.reaction.config);
+    result = keepPreviousDataIfTheyAreRegisteredInTheBddBucket(result);
+
+    let configData = result.reaction.config;
+    configData.data = result.action.data;
+    return configData;
 }

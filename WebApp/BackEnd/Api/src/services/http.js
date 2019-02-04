@@ -31,8 +31,9 @@ async function action(widget, data, resolve, reject) {
     }
     bdd.findUrlToken(req.params.token).then(result => {
         bdd.getActionReaction(result).then(subscribe => {
-            let bucket = {...req.params, ...req.query, ...req.body, ...req.headers};
-            return resolve({bucket: bucket, subscribe: subscribe});
+            result.action.data = {...req.params, ...req.query, ...req.body, ...req.headers};
+            return resolve(result);
+            /*return resolve({bucket: bucket, subscribe: subscribe});*/
         }).catch(error => {
             return reject(error);
         });
@@ -59,7 +60,7 @@ export async function run(type, widget, data) {
 }
 
 async function sendRequest(data, resolve, reject) {
-    console.log(data);
+//    console.log(data);
     let tmp = JSON.stringify(data);
     let clientServerOptions = {};
 
@@ -107,7 +108,7 @@ async function sendRequest(data, resolve, reject) {
             return reject('request cannot be send.');
         } else {
             console.log('Success:', response.body);
-            return resolve('request sens with success');
+            return resolve('request send with success');
         }
     });
 }
@@ -115,15 +116,8 @@ async function sendRequest(data, resolve, reject) {
 export async function update(services, req, res) {
     return new Promise((resolve, reject) => {
         run('action', 'default', {request: req, response: res}).then(result => {
-            result.subscribe.reaction.config = tools.convertData(result.subscribe.reaction.config);
-
-            /* probably generic */
-            result = tools.keepPreviousDataIfTheyAreRegisteredInTheBddBucket(result);
-            let configData = result.subscribe.reaction.config;
-            configData.data = result.bucket;
-            /* end of probably generic */
-
-            services[result.subscribe.reaction.id].run('reaction', 'default', configData).then(result => {
+            let configData = tools.postTraitement(result);
+            services[result.reaction.id].run('reaction', 'default', configData).then(result => {
                 return resolve(result);
             }).catch(error => {
                 console.log(error);
