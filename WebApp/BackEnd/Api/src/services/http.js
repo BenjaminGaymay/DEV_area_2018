@@ -2,6 +2,7 @@
 import request from "request";
 import {jsonCompare as compare} from "../jsonSchemaCompare";
 import * as bdd from "../bdd/mysql";
+import * as tools from "../tools";
 
 function createGetUrl(data) {
     let url = data.url + '?';
@@ -41,8 +42,6 @@ async function action(widget, data, resolve, reject) {
 }
 
 async function reaction(widget, data, resolve, reject) {
-    //console.log(data);
-    resolve('OK');
     return sendRequest(data, resolve, reject);
 }
 
@@ -61,26 +60,12 @@ export async function run(type, widget, data) {
 
 async function sendRequest(data, resolve, reject) {
     console.log(data);
-    /*data = {
-        method: 'post',
-        url: 'https://hookb.in/zrQdZOBlkks1Z1GRmXz2',
-        urlExtra: {
-            firstnom: 'bob',
-            lastname: "mdr",
-        },
-        headers: {'Content-Type': 'application/json'},
-        body: {mdr: 'lol'},
-    };*/
-
-    //console.log(data);
     let tmp = JSON.stringify(data);
+    let clientServerOptions = {};
 
     if (!compare(tmp, schema)) {
         return reject('ServiceHTTP: Some params in bundle are missing.');
     }
-
-    let clientServerOptions = {};
-
     if (data.method.toUpperCase() === 'GET') {
         let url = createGetUrl(data);
         if (url === null) {
@@ -119,10 +104,52 @@ async function sendRequest(data, resolve, reject) {
         if (error || response.statusCode !== 200) {
             console.log(data.headers);
             console.log('Error: ' + (error ? error.errno : response.statusCode));
-            return reject('et merde');
+            return reject('request cannot be send.');
         } else {
             console.log('Success:', response.body);
-            return resolve('Et yes');
+            return resolve('request sens with success');
         }
     });
 }
+
+export async function update(services, req, res) {
+    return new Promise((resolve, reject) => {
+        run('action', 'default', {request: req, response: res}).then(result => {
+            result.subscribe.reaction.config = tools.convertData(result.subscribe.reaction.config);
+
+            /* probably generic */
+            result = tools.keepPreviousDataIfTheyAreRegisteredInTheBddBucket(result);
+            let configData = result.subscribe.reaction.config;
+            configData.data = result.bucket;
+            /* end of probably generic */
+
+            services[result.subscribe.reaction.id].run('reaction', 'default', configData).then(result => {
+                return resolve(result);
+            }).catch(error => {
+                console.log(error);
+                return reject(error);
+            });
+        }).catch(error => {
+            console.log(error);
+            return reject(error);
+        });
+    });
+}
+
+
+/*return new Promise((resolve, reject) => {
+    if (!req.params.hasOwnProperty('token')) {
+        console.log('HTTP missing parameter');
+        return reject('HTTP missing parameter');
+    }
+    bdd.findUrlToken(req.params.token).then(result => {
+        let data = {...req.params, ...req.query, ...req.body, ...req.headers};
+        bdd.updateSubscribeData(result.id, data, result.reaction_data).then(result => {
+            return resolve('success');
+        }).catch(error => {
+            return reject('error');
+        });
+    }).catch(error => {
+        return reject(error);
+    });
+});*/

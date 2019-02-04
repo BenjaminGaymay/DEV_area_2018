@@ -224,7 +224,7 @@ export async function getActionReaction(row) {
                 console.log(`Service action ${row.action_service_id} not found`);
             } else {
                 array.action = result[0];
-                array.action.data = row.action_data.length !== 0 ? JSON.parse(row.action_data) : null;
+                array.action.config = row.config_action_data.length !== 0 ? JSON.parse(row.config_action_data) : null;
             }
             return getServiceById(row.reaction_service_id);
         })
@@ -234,7 +234,7 @@ export async function getActionReaction(row) {
                 array = {};
             } else if (array.action) {
                 array.reaction = result[0];
-                array.reaction.data = row.reaction_data.length !== 0 ? JSON.parse(row.reaction_data) : null;
+                array.reaction.config = row.config_reaction_data.length !== 0 ? JSON.parse(row.config_reaction_data) : null;
             }
             return array;
         });
@@ -267,7 +267,8 @@ export async function getUserServices(user_id) {
  * @returns {Promise<void>}
  */
 export async function getAllServices() {
-    return query(`SELECT * FROM service`).catch(error => {
+    return query(`SELECT *
+                  FROM service`).catch(error => {
         return Promise.reject('subscribe unknown error.');
     }).then(result => {
         if (typeof result[0] == "undefined") {
@@ -291,7 +292,7 @@ export async function subscribe(user, data) {
     getServiceById(data.actionServiceId).then(result => {
         getServiceById(data.reactionServiceId).then(result => {
 
-            return query(`INSERT INTO subscribe (user_id, action_service_id, reaction_service_id, action_data, reaction_data) value ('${user.id}', '${data.actionServiceId}', '${data.reactionServiceId}', '${data.actionServiceData}', '${data.reactionServiceData}')`)
+            return query(`INSERT INTO subscribe (user_id, action_service_id, reaction_service_id, config_action_data, config_reaction_data) value ('${user.id}', '${data.actionServiceId}', '${data.reactionServiceId}', '${data.actionServiceData}', '${data.reactionServiceData}')`)
                 .catch(error => {
                     return Promise.reject('subscribe unknown error.');
                 })
@@ -343,8 +344,8 @@ export async function getSubscribeById(id) {
         if (typeof result[0] == "undefined") {
             return Promise.reject('GetSubscribeById: Empty result.');
         }
-        result[0].action_data = (result[0].action_data == null ? null : JSON.parse(result[0].action_data));
-        result[0].reaction_data = (result[0].reaction_data == null ? null : JSON.parse(result[0].reaction_data));
+        result[0].config_action_data = (result[0].config_action_data == null ? null : JSON.parse(result[0].config_action_data));
+        result[0].config_reaction_data = (result[0].config_reaction_data == null ? null : JSON.parse(result[0].config_reaction_data));
         return result;
     })
 }
@@ -353,7 +354,7 @@ export async function findUrlToken(token) {
     console.log(token);
     //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
     return query(`SELECT * FROM subscribe WHERE action_service_id = '9'
-                    AND JSON_CONTAINS(action_data, '"${token}"', '$.token');`)
+                    AND JSON_CONTAINS(config_action_data, '"${token}"', '$.token');`)
         .catch(error => {
             console.log(error);
             return Promise.reject('Service or token not found.');
@@ -363,6 +364,25 @@ export async function findUrlToken(token) {
                 return Promise.reject('Token not match.');
             }
             return result[0];
+        });
+}
+
+export async function updateSubscribeData(id, action_data, reaction_data) {
+    if (typeof action_data !== "string") {
+        action_data = JSON.stringify(action_data);
+    }
+    if (typeof reaction_data !== "string") {
+        reaction_data = JSON.stringify(reaction_data);
+    }
+    //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
+    return query(`UPDATE subscribe SET updated=TRUE, action_data='${action_data}', reaction_data='${reaction_data}' 
+                      WHERE id='${id}';`)
+        .catch(error => {
+            console.log(error);
+            return Promise.reject('Service or token not found.');
+        })
+        .then(result => {
+            return true;
         });
 }
 
