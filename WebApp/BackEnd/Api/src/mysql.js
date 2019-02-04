@@ -188,6 +188,33 @@ export async function getServiceById(id) {
     return query(`SELECT * FROM service WHERE service.id like '${id}'`);
 }
 
+/**
+ *
+ * @param name
+ * @returns {Promise<*>}
+ */
+export async function getServiceDatasByName(name) {
+    if (!(typeof name === "string")) {
+        return Promise.reject('getServiceByName fail with param.');
+    }
+
+    return query(`SELECT datas FROM service WHERE service.name like '${name}'`);
+}
+
+/**
+ *
+ * @param name
+ * @param datas
+ * @returns {Promise<*>}
+ */
+export async function setServiceDatasByName(name, datas) {
+
+    if (!(typeof name == "string")) {
+        return Promise.reject('setServiceDatasByName fail with param.');
+    }
+
+    return query(`UPDATE service SET datas = '${datas}' WHERE name like '${name}'`);
+}
 
 /**
  *
@@ -208,7 +235,6 @@ export async function registerService(name) {
             return true;
         });
 }
-
 
 /**
  *

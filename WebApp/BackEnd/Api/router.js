@@ -178,4 +178,17 @@ export function router(app, services) {
         about.server.current_time = getUnixTime();
         res.send(about);
     });
+
+    // imdb tests
+    // app.get('/imdb', (req, res) => {
+    //     services['imdb'].run('update', 'default', {request: req, response: res}).then(result => {
+    //         console.log(result);
+    //         res.status(200);
+    //         res.send(result);
+    //     }).catch(error => {
+    //         console.log(error);
+    //         res.status(500);
+    //         res.send("KO");
+    //     });
+    // });
 }
