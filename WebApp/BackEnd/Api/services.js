@@ -1,6 +1,6 @@
 import * as bdd from './src/bdd/mysql';
 
-const exceptions = ['http'];
+const exceptions = ['http', 'imdb'];
 
 export async function services() {
     let services = [];
@@ -27,10 +27,16 @@ export async function services() {
 export async function updateServices(services) {
     services = services.filter(service => service != null && service.update && exceptions.indexOf(service.name) === -1)
     const interval = 300000; // 5 minutes
+
+    console.log('Starting services update..');
+    for (let service of services) {
+        service.update();
+    }
+
     setInterval(() => {
         console.log('Starting services update..');
         for (let service of services) {
             service.update();
         }
-    }, interval);
+    }, 25000);
 }
