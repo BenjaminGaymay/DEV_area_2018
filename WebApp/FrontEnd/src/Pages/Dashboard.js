@@ -159,7 +159,7 @@ export default class Dashboard extends React.Component {
                   window.open(this.state.urlOauth);
                 }}
               />
-              <p>{() => {}}</p>
+              <p>zz</p>
             </ListItem>
           </List>
         </Dialog>
