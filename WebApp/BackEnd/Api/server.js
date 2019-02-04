@@ -20,12 +20,13 @@ services().then(services => {
     console.log(error);
 });
 
-// app.get("/", (req, res) => {
-//   res.send(`
-//     <a href="/auth/reddit">Reddit</a>
-//     <a href="/auth/facebook">Facebook</a>
-//     <a href="/auth/github">Github</a>
-//     `);
-// });
+app.get("/", (req, res) => {
+    res.send(`
+    <a href="/auth/reddit">Reddit</a>
+    <a href="/auth/facebook">Facebook</a>
+    <a href="/auth/github">Github</a>
+    <a href="/auth/try">Try</a>
+    `);
+});
 
 app.listen(process.env.PORT, () => console.log(`Server is listening on port ${process.env.PORT}`));
