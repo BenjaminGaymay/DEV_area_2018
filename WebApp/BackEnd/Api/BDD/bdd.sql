@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost:3306
--- Généré le :  Sam 02 Février 2019 à 16:27
+-- Généré le :  Lun 04 Février 2019 à 12:20
 -- Version du serveur :  10.2.21-MariaDB-10.2.21+maria~stretch
 -- Version de PHP :  7.2.14-1+0~20190113100742.14+stretch~1.gbpd83c69
 
@@ -39,6 +39,7 @@ INSERT INTO `service` (`id`, `name`) VALUES
 (6, 'fortnite'),
 (9, 'http'),
 (8, 'radio'),
+(10, 'reddit'),
 (5, 'rss'),
 (1, 'weather');
 
@@ -51,9 +52,12 @@ INSERT INTO `service` (`id`, `name`) VALUES
 CREATE TABLE `subscribe` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `updated` tinyint(1) NOT NULL DEFAULT 0,
   `action_service_id` int(11) NOT NULL,
   `reaction_service_id` int(11) NOT NULL,
+  `config_action_data` text DEFAULT NULL,
   `action_data` text DEFAULT NULL,
+  `config_reaction_data` text DEFAULT NULL,
   `reaction_data` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -61,10 +65,11 @@ CREATE TABLE `subscribe` (
 -- Contenu de la table `subscribe`
 --
 
-INSERT INTO `subscribe` (`id`, `user_id`, `action_service_id`, `reaction_service_id`, `action_data`, `reaction_data`) VALUES
-(1, 1, 9, 9, '{\"token\": \"azerty12345\"}', '{\"method\": \"post\", \"body\": \"{\\\"name\\\": \\\"bob\\\", \\\"phone\\\": \\\"0011002233\\\"}\", \"headers\": null, \"url\": \"https://hookb.in/xYQ6MoQmN1UdOdY1j2WB\", \"bucket\": \"[\\\"school\\\"]\"}'),
-(2, 1, 1, 5, '', ''),
-(3, 33, 1, 6, NULL, NULL);
+INSERT INTO `subscribe` (`id`, `user_id`, `updated`, `action_service_id`, `reaction_service_id`, `config_action_data`, `action_data`, `config_reaction_data`, `reaction_data`) VALUES
+(1, 1, 0, 9, 9, '{\"token\": \"azerty12345\"}', NULL, '{\"method\": \"post\", \"body\": \"{\\\"name\\\": \\\"bob\\\", \\\"phone\\\": \\\"0011002233\\\"}\", \"headers\": null, \"url\": \"https://hookb.in/xYQ6MoQmN1UdOdY1j2WB\", \"bucket\": \"[\\\"school\\\"]\"}', 'null'),
+(2, 1, 0, 1, 5, '', NULL, '', NULL),
+(3, 33, 0, 1, 6, NULL, NULL, NULL, NULL),
+(5, 1, 0, 10, 9, NULL, NULL, '{\"method\": \"post\", \"body\": \"{\\\"name\\\": \\\"bob\\\", \\\"phone\\\": \\\"0011002233\\\"}\", \"headers\": null, \"url\": \"https://hookb.in/xYQ6MoQmN1UdOdY1j2WB\", \"bucket\": \"[\\\"school\\\"]\"}', NULL);
 
 -- --------------------------------------------------------
 
@@ -162,12 +167,12 @@ ALTER TABLE `user_tmp`
 -- AUTO_INCREMENT pour la table `service`
 --
 ALTER TABLE `service`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT pour la table `subscribe`
 --
 ALTER TABLE `subscribe`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT pour la table `user`
 --
