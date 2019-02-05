@@ -1,31 +1,64 @@
-import React from 'react';
+import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import PrivateRoute from "./guard/PrivateRoute";
 
-import ButtonAppBar from './components/Appbar';
-import Error from "../src/Pages/Error";
-import Home from "../src/Pages/Home";
-import Login from './Pages/Login';
+//components
+import ButtonAppBar from "./components/Appbar/Appbar";
 
-class App extends React.Component {
-	render() {
-		return (
-			<div className="App">
-				{/* NIQUE TA RACE, QUAND YA PLUS DE WIFI, METS TA MERDE EN LOCAL */}
-				<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
-				<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-				<BrowserRouter>
-					<div>
-					<ButtonAppBar />
-					<Switch>h
-						<Route exact path = "/" component = { Home } />
-						<Route path="/login" component = { Login } />
-						<Route component = { Error } />
-					</Switch>
-					</div>
-				</BrowserRouter>
-			</div>
-		);
-	}
+import Context from "./context/context";
+
+//pages
+import Dashboard from "./Pages/Dashboard";
+import Error from "./Pages/Error";
+import Home from "./Pages/Home";
+import Login from "./Pages/Login";
+import Logout from "./Pages/Logout";
+
+class AppConsumer extends React.Component {
+  componentWillMount() {
+    const username = localStorage.getItem("username");
+    const password = localStorage.getItem("password");
+
+    if (!!username && !!password) {
+      this.props.context.setUser({
+        username,
+        password,
+        isLogged: true
+      });
+    }
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
+        <BrowserRouter>
+          <div>
+            <ButtonAppBar />
+            <Switch>
+              <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <Route exact path="/" component={Home} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/logout" component={Logout} />
+              <Route component={Error} />
+            </Switch>
+          </div>
+        </BrowserRouter>
+      </div>
+    );
+  }
 }
+
+const App = () => (
+  <Context.Consumer>
+    {context => <AppConsumer context={context} />}
+  </Context.Consumer>);
 
 export default App;
