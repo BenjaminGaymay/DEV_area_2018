@@ -53,12 +53,13 @@ export function postTraitement(result) {
 
 export function getSchema(schema, type, widget = undefined) {
     if (typeof schema === "undefined") return null;
+    if (typeof type == "undefined") return schema;
     switch (type) {
         case "action":
             return typeof widget === "undefined" ? schema.action : schema.action[widget];
         case "reaction":
             return typeof widget === "undefined" ? schema.reaction : schema.reaction[widget];
         default:
-            return schema;
+            return null;
     }
 }

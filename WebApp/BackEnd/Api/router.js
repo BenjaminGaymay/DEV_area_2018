@@ -57,8 +57,8 @@ function Http(req, res, services) {
 }
 
 export function router(app, services) {
-    app.get("/getService/:name", (req, res) => {
-        if (req.params.name === "*") {
+    app.get("/getService/:name?/:type?/:widget?", (req, res) => {
+        if (typeof req.params.name === "undefined") {
             let result = [];
             for (let item in services.getServices()) {
                 console.log(services.getServices()[item]);
@@ -68,7 +68,9 @@ export function router(app, services) {
         } else {
             let service = services.getByName(req.params.name);
             if (typeof service === "undefined") res.status(500).send('KO');
-            res.status(200).send(service.getSchema());
+            let result  = tools.getSchema(service.getSchema(), req.params.type, req.params.widget);
+            if (result === null) return res.status(500).send("Invalid parameters.");
+            res.status(200).send(result);
         }
     });
 
