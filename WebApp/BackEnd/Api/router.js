@@ -68,20 +68,42 @@ export function router(app, services) {
         } else {
             let service = services.getByName(req.params.name);
             if (typeof service === "undefined") res.status(500).send('KO');
-            let result  = tools.getSchema(service.getSchema(), req.params.type, req.params.widget);
+            let result = tools.getSchema(service.getSchema(), req.params.type, req.params.widget);
             if (result === null) return res.status(500).send("Invalid parameters.");
             res.status(200).send(result);
         }
     });
 
     app.get("/test", (req, res) => {
-        services.getByName("reddit").update().then(result => {
+        bdd.getSubscribeById(6).then(results => {
+            //console.log(results);
+
+            bdd.getActionReaction(results[0]).then(result => {
+                let configData = tools.postTraitement(result);
+                console.log(configData);
+                services.getById(result.reaction.id).run('reaction', 'default', configData).then(result_1 => {
+                    res.status(200).send(result_1);
+                }).catch(error => {
+                    console.log(error);
+                    res.status(500).send(error);
+                });
+                /*let configData = tools.postTraitement(result);
+                services.getById(results.reaction_service_id).run('reaction', 'default', configData).then(result_1 => {
+                    resolve('OK');
+                }).catch(error => {
+                    reject(error);
+                });*/
+            }).catch(error => {
+                console.log(error);
+            });
+        });
+        /*services.getByName("reddit").update().then(result => {
             services.getByName("reddit").run("action", "default", services).then(results => {
                 console.log(results);
             });
             res.status(200);
             res.send("OK");
-        });
+        });*/
     });
 
     app.get("/http/:token", (req, res) => {

@@ -1,24 +1,14 @@
 "use strict";
 import nodemailer from 'nodemailer';
 import striptags from 'striptags';
-import {jsonCompare as compare} from "../jsonSchemaCompare";
-
-const schemaMail = {
-    subject: typeof "",
-    html: typeof "",
-    to: typeof [],
-};
-
-const schema = JSON.stringify(schemaMail);
 
 export async function run(type, widget, json) {
     return new Promise(function (resolve, reject) {
-        let tmp = json;
-        if (typeof json !== "string") {
-            tmp = JSON.stringify(json);
-        }
 
-        if (!compare(tmp, schema)) {
+        let to = json.to ? json.to : json.data.to;
+        let html = json.html ? json.html : json.data.html;
+        let subject = json.subject ? json.subject : json.data.subject;
+        if (to == null || html == null || subject == null) {
             return reject('Mail: Some params in bundle are missing.');
         }
 
@@ -40,10 +30,10 @@ export async function run(type, widget, json) {
 
         let mailOptions = {
             from: from, // sender address
-            to: json.to.toString(), // list of receivers
-            subject: json.subject, // Subject line
+            to: to.toString(), // list of receivers
+            subject: subject, // Subject line
             text: text, // plain text body
-            html: json.html // html body
+            html: html // html body
         };
 
         // send mail with defined transport object
@@ -53,8 +43,8 @@ export async function run(type, widget, json) {
                 console.log(err);
                 console.log('Email non envoyé');
                 reject(err);
-
             }
+            resolve('OK');
         });
     });
 }
@@ -69,7 +59,11 @@ export function getSchema() {
         reaction: {
             sendEmail: {
                 description: 'Send an email',
-                schema: schemaMail,
+                schema: {
+                    subject: typeof "",
+                    html: typeof "",
+                    to: typeof [],
+                },
             }
         },
     }

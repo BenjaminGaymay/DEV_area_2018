@@ -17,9 +17,12 @@ export function IsJsonString(str) {
  * @returns {*}
  */
 export function convertData(data) {
+    if (typeof data !== "object")
+        return data;
     for (let i in data) {
         if (IsJsonString(data[i])) {
             data[i] = JSON.parse(data[i]);
+            //data[i] = convertData(data[i]);
         }
     }
     return data;
@@ -42,10 +45,27 @@ export function keepPreviousDataIfTheyAreRegisteredInTheBddBucket(result) {
     return result;
 }
 
-export function postTraitement(result) {
-    result.reaction.config = convertData(result.reaction.config);
-    result = keepPreviousDataIfTheyAreRegisteredInTheBddBucket(result);
+export function changeNameWithConfig(result) {
+    if (!result.action.config.hasOwnProperty("transform"))
+        return result;
+    for (let item in result.action.config.transform) {
+        if (result.action.data.hasOwnProperty(item)) {
+            let tmp = result.action.data[item];
+            delete result.action.data[item];
+            result.action.data[result.action.config.transform[item]] = tmp;
+        }
+    }
+    return result;
+}
 
+export function postTraitement(result) {
+    result.action.config = convertData(result.action.config);
+    result.reaction.config = convertData(result.reaction.config); // convert all string to json
+    /** do post traitement **/
+    result = changeNameWithConfig(result);
+    console.log(result.action.data);
+    result = keepPreviousDataIfTheyAreRegisteredInTheBddBucket(result);
+    console.log(result.action.data);
     let configData = result.reaction.config;
     configData.data = result.action.data;
     return configData;

@@ -223,8 +223,9 @@ export async function getActionReaction(row) {
             if (typeof result[0] === "undefined") {
                 console.log(`Service action ${row.action_service_id} not found`);
             } else {
+                let tmp = typeof row.config_action_data === "string" ? JSON.parse(row.config_action_data) : row.config_action_data;
                 array.action = result[0];
-                array.action.config = row.config_action_data.length !== 0 ? JSON.parse(row.config_action_data) : null;
+                array.action.config = row.config_action_data !== null ? tmp : null;
                 array.action.data = row.action_data !== null && row.action_data.length !== 0 ? JSON.parse(row.action_data) : null;
             }
             return getServiceById(row.reaction_service_id);
@@ -234,8 +235,9 @@ export async function getActionReaction(row) {
                 console.log(`Service reaction ${row.reaction_service_id} not found`);
                 array = {};
             } else if (array.action) {
+                let tmp = typeof row.config_reaction_data === "string" ? JSON.parse(row.config_reaction_data) : row.config_reaction_data;
                 array.reaction = result[0];
-                array.reaction.config = row.config_reaction_data.length !== 0 ? JSON.parse(row.config_reaction_data) : null;
+                array.reaction.config = row.config_reaction_data !== null ? tmp : null;
                 array.reaction.data = row.reaction_data !== null && row.reaction_data.length !== 0 ? JSON.parse(row.reaction_data) : null;
             }
             return array;
