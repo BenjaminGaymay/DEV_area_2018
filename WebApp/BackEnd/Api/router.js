@@ -159,7 +159,7 @@ export function router(app, services) {
                             html: html,
                             to: [result.email],
                         };
-                        mail.run(JSON.stringify(mailJson)).then(result => {
+                        mail.run('reaction', 'default', mailJson).then(result => {
                             console.log(result);
                         }).catch(error => {
                             console.log(error);

@@ -18,6 +18,7 @@ const schemaMail = {
 const schema = JSON.stringify(schemaMail);
 
 async function action(widget, services, resolve, reject) {
+
     reddit_bdd.getAllUpdated().then(results => {
         for (let item of results) {
             bdd.getActionReaction(item).then(result => {

@@ -11,16 +11,18 @@ const schemaMail = {
 
 const schema = JSON.stringify(schemaMail);
 
-export async function run(json) {
+export async function run(type, widget, json) {
     return new Promise(function (resolve, reject) {
+        let tmp = json;
+        if (typeof json !== "string") {
+            tmp = JSON.stringify(json);
+        }
 
-        if (!compare(json, schema)) {
+        if (!compare(tmp, schema)) {
             return reject('Mail: Some params in bundle are missing.');
         }
 
-        let param = JSON.parse(json);
-        param.text = striptags(param.html);
-
+        let text = striptags(json.html);
         let user = "poubelleapipoubelle@gmail.com";
         let pass = "SpTr5WhcVSjJswa";
         let from = `"📧 AREA 📧" <${user}>`;
@@ -38,10 +40,10 @@ export async function run(json) {
 
         let mailOptions = {
             from: from, // sender address
-            to: param.to.toString(), // list of receivers
-            subject: param.subject, // Subject line
-            text: param.text, // plain text body
-            html: param.html // html body
+            to: json.to.toString(), // list of receivers
+            subject: json.subject, // Subject line
+            text: text, // plain text body
+            html: json.html // html body
         };
 
         // send mail with defined transport object
