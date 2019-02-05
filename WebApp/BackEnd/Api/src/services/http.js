@@ -15,8 +15,8 @@ function createGetUrl(data) {
 }
 
 const schemaMail = {
-    url: "",
-    method: "",
+    url: String,
+    method: String,
 };
 
 const schema = JSON.stringify(schemaMail);
@@ -31,8 +31,8 @@ async function action(widget, data, resolve, reject) {
     }
     bdd.findUrlToken(req.params.token).then(result => {
         bdd.getActionReaction(result).then(subscribe => {
-            result.action.data = {...req.params, ...req.query, ...req.body, ...req.headers};
-            return resolve(result);
+            subscribe.action.data = {...req.params, ...req.query, ...req.body, ...req.headers};
+            return resolve(subscribe);
             /*return resolve({bucket: bucket, subscribe: subscribe});*/
         }).catch(error => {
             return reject(error);
@@ -117,7 +117,7 @@ export async function update(services, req, res) {
     return new Promise((resolve, reject) => {
         run('action', 'default', {request: req, response: res}).then(result => {
             let configData = tools.postTraitement(result);
-            services[result.reaction.id].run('reaction', 'default', configData).then(result => {
+            services.getById(result.reaction.id).run('reaction', 'default', configData).then(result => {
                 return resolve(result);
             }).catch(error => {
                 console.log(error);
@@ -130,20 +130,28 @@ export async function update(services, req, res) {
     });
 }
 
-
-/*return new Promise((resolve, reject) => {
-    if (!req.params.hasOwnProperty('token')) {
-        console.log('HTTP missing parameter');
-        return reject('HTTP missing parameter');
-    }
-    bdd.findUrlToken(req.params.token).then(result => {
-        let data = {...req.params, ...req.query, ...req.body, ...req.headers};
-        bdd.updateSubscribeData(result.id, data, result.reaction_data).then(result => {
-            return resolve('success');
-        }).catch(error => {
-            return reject('error');
-        });
-    }).catch(error => {
-        return reject(error);
-    });
-});*/
+export function getSchema(type, widget) {
+    return {
+        action: {
+            http: {
+                description: "Trigger http request for action.",
+                schema: {
+                    method: typeof "",
+                    headers: typeof {},
+                    body: typeof {},
+                }
+            },
+        },
+        reaction: {
+            http: {
+                description: "React to an action with a custom http request.",
+                schema: {
+                    url: typeof "",
+                    method: typeof "",
+                    headers: typeof {},
+                    body: typeof {},
+                }
+            }
+        }
+    };
+}

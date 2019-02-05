@@ -10,13 +10,6 @@ const reddit = new RedditOauth2(
     process.env.REDDIT_CLIENT_SECRET
 );
 
-const schemaMail = {
-    url: "",
-    method: "",
-};
-
-const schema = JSON.stringify(schemaMail);
-
 async function action(widget, services, resolve, reject) {
 
     reddit_bdd.getAllUpdated().then(results => {
@@ -66,4 +59,21 @@ export async function update(widget) {
             reject('Error when getting last post on Reddit service.');
         })
     });
+}
+
+export function getSchema() {
+    return {
+        action: {
+            getLastPost: {
+                description: "Get the last post of a reddit thread.",
+                schema: {
+                    title: typeof "",
+                    author: typeof "",
+                    url: typeof "",
+                    created: typeof 0
+                }
+            },
+        },
+        reaction: {}
+    };
 }

@@ -15,7 +15,8 @@ export class Services {
                     this.services[service.name] = {
                         id: service.id,
                         run: file.run,
-                        update: file.update
+                        update: file.update,
+                        getSchema: file.getSchema
                     };
                 }
                 return resolve('Ok');
@@ -25,6 +26,10 @@ export class Services {
                 return reject(error);
             });
         });
+    }
+
+    getServices() {
+        return this.services;
     }
 
     getByName(name) {

@@ -1,6 +1,7 @@
 "use strict";
 
 import * as bdd from "./src/bdd/mysql";
+import * as tools from "./src/tools";
 import * as mail from "./src/services/mail";
 import ejs from "ejs";
 import fs from "fs";
@@ -56,14 +57,26 @@ function Http(req, res, services) {
 }
 
 export function router(app, services) {
+    app.get("/getService/:name", (req, res) => {
+        if (req.params.name === "*") {
+            let result = [];
+            for (let item in services.getServices()) {
+                console.log(services.getServices()[item]);
+                result.push({name: item, id: services.getServices()[item].id, schema: services.getServices()[item].getSchema()});
+            }
+            res.send(result);
+        } else {
+            let service = services.getByName(req.params.name);
+            if (typeof service === "undefined") res.status(500).send('KO');
+            res.status(200).send(service.getSchema());
+        }
+    });
 
     app.get("/test", (req, res) => {
         services.getByName("reddit").update().then(result => {
-
             services.getByName("reddit").run("action", "default", services).then(results => {
                 console.log(results);
             });
-
             res.status(200);
             res.send("OK");
         });

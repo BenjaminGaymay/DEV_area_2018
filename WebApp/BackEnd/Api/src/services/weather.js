@@ -35,3 +35,10 @@ export async function run(type, widget, data) {
 export async function update(widget) {
 
 }
+
+export function getSchema() {
+    return {
+        action: {},
+        reaction: {}
+    }
+}

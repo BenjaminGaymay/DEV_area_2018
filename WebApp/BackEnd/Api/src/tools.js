@@ -50,3 +50,15 @@ export function postTraitement(result) {
     configData.data = result.action.data;
     return configData;
 }
+
+export function getSchema(schema, type, widget = undefined) {
+    if (typeof schema === "undefined") return null;
+    switch (type) {
+        case "action":
+            return typeof widget === "undefined" ? schema.action : schema.action[widget];
+        case "reaction":
+            return typeof widget === "undefined" ? schema.reaction : schema.reaction[widget];
+        default:
+            return schema;
+    }
+}

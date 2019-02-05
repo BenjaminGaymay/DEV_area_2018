@@ -4,9 +4,9 @@ import striptags from 'striptags';
 import {jsonCompare as compare} from "../jsonSchemaCompare";
 
 const schemaMail = {
-    subject: "",
-    html: "",
-    to: [],
+    subject: typeof "",
+    html: typeof "",
+    to: typeof [],
 };
 
 const schema = JSON.stringify(schemaMail);
@@ -24,7 +24,7 @@ export async function run(type, widget, json) {
 
         let text = striptags(json.html);
         let user = "poubelleapipoubelle@gmail.com";
-        let pass = "SpTr5WhcVSjJswa";
+        let pass = "88KVueuWJ7juyDU";
         let from = `"📧 AREA 📧" <${user}>`;
 
         let transporter = nodemailer.createTransport({
@@ -49,10 +49,28 @@ export async function run(type, widget, json) {
         // send mail with defined transport object
         /*console.log(mailOptions);*/
         transporter.sendMail(mailOptions, (err, result) => { // catch invalid email
+            if (err) {
+                console.log(err);
+                console.log('Email non envoyé');
+                reject(err);
+
+            }
         });
     });
 }
 
 export async function update(widget) {
 
+}
+
+export function getSchema() {
+    return {
+        action: {},
+        reaction: {
+            sendEmail: {
+                description: 'Send an email',
+                schema: schemaMail,
+            }
+        },
+    }
 }
