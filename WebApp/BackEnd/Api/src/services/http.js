@@ -1,6 +1,7 @@
 "use strict";
 import request from "request";
 import {jsonCompare as compare} from "../jsonSchemaCompare";
+import * as http_bdd from "../bdd/http_bdd";
 import * as bdd from "../bdd/mysql";
 import * as tools from "../tools";
 
@@ -29,11 +30,10 @@ async function action(widget, data, resolve, reject) {
         console.log('HTTP missing parameter');
         return reject('HTTP missing parameter');
     }
-    bdd.findUrlToken(req.params.token).then(result => {
+    http_bdd.findUrlToken(req.params.token).then(result => {
         bdd.getActionReaction(result).then(subscribe => {
             subscribe.action.data = {...req.params, ...req.query, ...req.body, ...req.headers};
             return resolve(subscribe);
-            /*return resolve({bucket: bucket, subscribe: subscribe});*/
         }).catch(error => {
             return reject(error);
         });
@@ -130,7 +130,7 @@ export async function update(services, req, res) {
     });
 }
 
-export function getSchema(type, widget) {
+export function getSchema() {
     return {
         action: {
             http: {

@@ -198,7 +198,7 @@ export async function getAllServices() {
  * @returns {Promise<void>}
  */
 export async function subscribe(user, data) {
-    if (!data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
+    if (typeof data === "undefined" || !data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
         || !data.hasOwnProperty("actionServiceData") || !data.hasOwnProperty("reactionServiceData")) {
         return Promise.reject('Missing parameters');
     }
@@ -261,21 +261,6 @@ export async function getSubscribeById(id) {
         result[0].config_reaction_data = (result[0].config_reaction_data == null ? null : JSON.parse(result[0].config_reaction_data));
         return result;
     })
-}
-
-export async function findUrlToken(token) {
-    return query(`SELECT * FROM subscribe WHERE action_service_id = '9'
-                    AND JSON_CONTAINS(config_action_data, '"${token}"', '$.token');`)
-        .catch(error => {
-            console.log(error);
-            return Promise.reject('Service or token not found.');
-        })
-        .then(result => {
-            if (typeof result[0] == "undefined") {
-                return Promise.reject('Token not match.');
-            }
-            return result[0];
-        });
 }
 
 export async function updateSubscribeData(id, action_data, reaction_data) {

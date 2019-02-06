@@ -72,8 +72,8 @@ export function router(app, services) {
     });
 
     app.post("/subscribe", (req, res) => {
-        login_bdd(req.headers.login, req.headers.password).then(result => {
-            bdd.subscribe(result, req.body).then(result => {
+        bdd.subscribe(req.headers.login, req.headers.password).then(result => {
+            /*bdd.subscribe(result, req.body).then(result => {
                 console.log(result);
                 res.status(200);
                 res.send("OK");
@@ -81,7 +81,7 @@ export function router(app, services) {
                 console.log(error);
                 res.status(500);
                 res.send("KO");
-            });
+            });*/
         }).catch(error => {
             console.log(error);
             res.status(500);
@@ -90,7 +90,7 @@ export function router(app, services) {
     });
 
     app.post("/unsubscribe", (req, res) => {
-        login_bdd(req.headers.login, req.headers.password).then(result => {
+        bdd.unsubscribe(req.headers.login, req.headers.password).then(result => {
             bdd.unsubscribe(result, req.body).then(result => {
                 console.log(result);
                 res.status(200);

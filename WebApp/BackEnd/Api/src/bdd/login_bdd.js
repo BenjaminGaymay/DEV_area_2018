@@ -51,12 +51,12 @@ export async function register(login, token) {
                 return Promise.reject(`Register ${login} not found`); //override exception
             }
             let user = result[0];
-            return query(`INSERT INTO user (email, username, password) values ('${user.email}', '${user.username}', '${user.password}')`)
+            return bdd.query(`INSERT INTO user (email, username, password) values ('${user.email}', '${user.username}', '${user.password}')`)
                 .catch(error => {
                     return Promise.reject(`User ${user.username} already exist`); //override exception
                 })
                 .then(result => {
-                    return query(`DELETE FROM user_tmp WHERE user_tmp.id = '${user.id}'`).catch(error =>
+                    return bdd.query(`DELETE FROM user_tmp WHERE user_tmp.id = '${user.id}'`).catch(error =>
                         console.log("Register: DELETE: OMFG comment c'est possible !")).then(result => {
                         return "Ok";
                     });
