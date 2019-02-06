@@ -1,6 +1,6 @@
 "use strict";
 import * as reddit_bdd from "../bdd/reddit_bdd";
-import * as bdd from "../bdd/mysql";
+import * as bdd from "../bdd/bdd";
 import RedditOauth2 from "../../auth/reddit";
 import * as tools from "../tools";
 import {postTraitement} from "../tools";

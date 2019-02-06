@@ -4,7 +4,7 @@ import * as login_bdd from "../bdd/login_bdd";
 import fs from "fs";
 import ejs from "ejs";
 import * as mail from "../services/mail";
-import * as bdd from "../bdd/mysql";
+import * as bdd from "../bdd/bdd";
 
 async function createToken() {
     let rand = function () {

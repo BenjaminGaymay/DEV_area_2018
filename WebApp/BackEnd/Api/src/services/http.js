@@ -2,7 +2,7 @@
 import request from "request";
 import {jsonCompare as compare} from "../jsonSchemaCompare";
 import * as http_bdd from "../bdd/http_bdd";
-import * as bdd from "../bdd/mysql";
+import * as bdd from "../bdd/bdd";
 import * as tools from "../tools";
 
 function createGetUrl(data) {

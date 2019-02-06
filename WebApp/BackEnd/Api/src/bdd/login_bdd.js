@@ -1,4 +1,5 @@
-import * as bdd from "mysql";
+import * as bdd from "./bdd";
+import sha1 from "sha1";
 
 /**
  *

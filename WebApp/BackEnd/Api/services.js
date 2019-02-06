@@ -1,4 +1,4 @@
-import * as bdd from './src/bdd/mysql';
+import * as bdd from './src/bdd/bdd';
 
 export class Services {
 

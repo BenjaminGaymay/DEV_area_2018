@@ -1,6 +1,6 @@
 "use strict";
 
-import * as bdd from "./src/bdd/mysql";
+import * as bdd from "./src/bdd/bdd";
 import * as login_bdd from "./src/bdd/login_bdd";
 import * as tools from "./src/tools";
 import fs from "fs";
@@ -72,8 +72,8 @@ export function router(app, services) {
     });
 
     app.post("/subscribe", (req, res) => {
-        bdd.subscribe(req.headers.login, req.headers.password).then(result => {
-            /*bdd.subscribe(result, req.body).then(result => {
+        login_bdd.login(req.headers.login, req.headers.password).then(result => {
+            bdd.subscribe(result, req.body).then(result => {
                 console.log(result);
                 res.status(200);
                 res.send("OK");
@@ -81,7 +81,7 @@ export function router(app, services) {
                 console.log(error);
                 res.status(500);
                 res.send("KO");
-            });*/
+            });
         }).catch(error => {
             console.log(error);
             res.status(500);
@@ -90,7 +90,7 @@ export function router(app, services) {
     });
 
     app.post("/unsubscribe", (req, res) => {
-        bdd.unsubscribe(req.headers.login, req.headers.password).then(result => {
+        login_bdd.login(req.headers.login, req.headers.password).then(result => {
             bdd.unsubscribe(result, req.body).then(result => {
                 console.log(result);
                 res.status(200);

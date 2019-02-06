@@ -1,4 +1,4 @@
-import {query} from "./mysql";
+import {query} from "./bdd";
 
 export async function updateAllSubscribedUsers(name, created, data) {
     data = data.replace(/'/g, "\\'");
