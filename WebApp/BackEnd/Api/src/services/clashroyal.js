@@ -1,6 +1,6 @@
 'use strict';
 import request from 'request';
-import * as bdd from '../bdd/mysql';
+import * as bdd from '../bdd/bdd';
 
 // Trigger: "" "victory" "defeat" "equality"
 
@@ -22,31 +22,36 @@ export async function update() {
 	const widgets = await bdd.getSubscribeByActionServiceId('16');
 	let headers = { Authorization: 'Bearer ' + token, Accept: 'application/json' };
 
+	console.log('ClashRoyalService: starting update..');
+
 	for (const widget of widgets) {
 		request({
 			url: url.replace('<tag>', widget.config_action_data.tag),
 			headers
 		}, (error, response, body) => {
-			if (!error) {
-				const lastGame = JSON.parse(body)[0];
-				let state = '';
-
-				if (lastGame.team[0].crowns > lastGame.opponent[0].crowns)
-					state = 'victory';
-				else if (lastGame.team[0].crowns === lastGame.opponent[0].crowns)
-					state = 'equality';
-				else
-					state = 'defeat';
-
-				if ((widget.config_action_data.trigger === '' || widget.config_action_data.trigger === state) && widget.action_data !== lastGame.battleTime) {
-					bdd.updateSubscribeData(widget.id, lastGame.battleTime, {
-						type: lastGame.type,
-						team: lastGame.team.length > 1 ? [lastGame.team[0].name, lastGame.team[1].name] : [lastGame.team[0].name],
-						opponent: lastGame.opponent.length > 1 ? [lastGame.opponent[0].name, lastGame.opponent[1].name] : [lastGame.opponent[0].name],
-						state: state
-					});
-				}
+			if (error) {
+				console.log('ClashRoyalService:', error);
+				return;
 			}
+			const lastGame = JSON.parse(body)[0];
+			let state = '';
+
+			if (lastGame.team[0].crowns > lastGame.opponent[0].crowns)
+				state = 'victory';
+			else if (lastGame.team[0].crowns === lastGame.opponent[0].crowns)
+				state = 'equality';
+			else
+				state = 'defeat';
+
+			if ((widget.config_action_data.trigger === '' || widget.config_action_data.trigger === state) && widget.action_data !== lastGame.battleTime) {
+				bdd.updateSubscribeData(widget.id, lastGame.battleTime, {
+					type: lastGame.type,
+					team: lastGame.team.length > 1 ? [lastGame.team[0].name, lastGame.team[1].name] : [lastGame.team[0].name],
+					opponent: lastGame.opponent.length > 1 ? [lastGame.opponent[0].name, lastGame.opponent[1].name] : [lastGame.opponent[0].name],
+					state: state
+				});
+			}
+			console.log('ClashRoyalService: update ended.');
 		})
 
 	}

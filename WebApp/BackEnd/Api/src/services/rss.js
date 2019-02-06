@@ -1,7 +1,7 @@
 "use strict";
 import request from "request";
 import {jsonCompare as compare} from "../jsonSchemaCompare";
-import * as bdd from "../bdd/mysql";
+import * as bdd from "../bdd/bdd";
 
 const schemaMail = {
     url: "",
@@ -34,4 +34,11 @@ export async function run(type, widget, data) {
 
 export async function update() {
 
+}
+
+export function getSchema() {
+    return {
+        action: {},
+        reaction: {}
+    }
 }

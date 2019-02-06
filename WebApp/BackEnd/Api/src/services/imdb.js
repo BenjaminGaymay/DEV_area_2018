@@ -1,6 +1,6 @@
 'use strict';
 import request from 'request';
-import * as bdd from '../bdd/mysql';
+import * as bdd from '../bdd/bdd';
 
 // url: http://api.themoviedb.org/3/movie/upcoming?page=1&api_key=8e0abe397ffd3af9ac5d115c0f815c2c&language= + lang
 // img: http://image.tmdb.org/t/p/w200 + img url

@@ -1,7 +1,8 @@
 "use strict";
 import request from "request";
 import {jsonCompare as compare} from "../jsonSchemaCompare";
-import * as bdd from "../bdd/mysql";
+import * as http_bdd from "../bdd/http_bdd";
+import * as bdd from "../bdd/bdd";
 import * as tools from "../tools";
 
 function createGetUrl(data) {
@@ -15,8 +16,8 @@ function createGetUrl(data) {
 }
 
 const schemaMail = {
-    url: "",
-    method: "",
+    url: String,
+    method: String,
 };
 
 const schema = JSON.stringify(schemaMail);
@@ -29,10 +30,10 @@ async function action(widget, data, resolve, reject) {
         console.log('HTTP missing parameter');
         return reject('HTTP missing parameter');
     }
-    bdd.findUrlToken(req.params.token).then(result => {
+    http_bdd.findUrlToken(req.params.token).then(result => {
         bdd.getActionReaction(result).then(subscribe => {
-            let bucket = {...req.params, ...req.query, ...req.body, ...req.headers};
-            return resolve({bucket: bucket, subscribe: subscribe});
+            subscribe.action.data = {...req.params, ...req.query, ...req.body, ...req.headers};
+            return resolve(subscribe);
         }).catch(error => {
             return reject(error);
         });
@@ -59,7 +60,7 @@ export async function run(type, widget, data) {
 }
 
 async function sendRequest(data, resolve, reject) {
-    console.log(data);
+//    console.log(data);
     let tmp = JSON.stringify(data);
     let clientServerOptions = {};
 
@@ -107,7 +108,7 @@ async function sendRequest(data, resolve, reject) {
             return reject('request cannot be send.');
         } else {
             console.log('Success:', response.body);
-            return resolve('request sens with success');
+            return resolve('request send with success');
         }
     });
 }
@@ -115,15 +116,8 @@ async function sendRequest(data, resolve, reject) {
 export async function update(services, req, res) {
     return new Promise((resolve, reject) => {
         run('action', 'default', {request: req, response: res}).then(result => {
-            result.subscribe.reaction.config = tools.convertData(result.subscribe.reaction.config);
-
-            /* probably generic */
-            result = tools.keepPreviousDataIfTheyAreRegisteredInTheBddBucket(result);
-            let configData = result.subscribe.reaction.config;
-            configData.data = result.bucket;
-            /* end of probably generic */
-
-            services[result.subscribe.reaction.id].run('reaction', 'default', configData).then(result => {
+            let configData = tools.postTraitement(result);
+            services.getById(result.reaction.id).run('reaction', 'default', configData).then(result => {
                 return resolve(result);
             }).catch(error => {
                 console.log(error);
@@ -136,20 +130,28 @@ export async function update(services, req, res) {
     });
 }
 
-
-/*return new Promise((resolve, reject) => {
-    if (!req.params.hasOwnProperty('token')) {
-        console.log('HTTP missing parameter');
-        return reject('HTTP missing parameter');
-    }
-    bdd.findUrlToken(req.params.token).then(result => {
-        let data = {...req.params, ...req.query, ...req.body, ...req.headers};
-        bdd.updateSubscribeData(result.id, data, result.reaction_data).then(result => {
-            return resolve('success');
-        }).catch(error => {
-            return reject('error');
-        });
-    }).catch(error => {
-        return reject(error);
-    });
-});*/
+export function getSchema() {
+    return {
+        action: {
+            http: {
+                description: "Trigger http request for action.",
+                schema: {
+                    method: typeof "",
+                    headers: typeof {},
+                    body: typeof {},
+                }
+            },
+        },
+        reaction: {
+            http: {
+                description: "React to an action with a custom http request.",
+                schema: {
+                    url: typeof "",
+                    method: typeof "",
+                    headers: typeof {},
+                    body: typeof {},
+                }
+            }
+        }
+    };
+}

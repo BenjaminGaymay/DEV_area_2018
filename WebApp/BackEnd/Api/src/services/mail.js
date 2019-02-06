@@ -1,28 +1,20 @@
 "use strict";
 import nodemailer from 'nodemailer';
 import striptags from 'striptags';
-import {jsonCompare as compare} from "../jsonSchemaCompare";
 
-const schemaMail = {
-    subject: "",
-    html: "",
-    to: [],
-};
-
-const schema = JSON.stringify(schemaMail);
-
-export async function run(json) {
+export async function run(type, widget, json) {
     return new Promise(function (resolve, reject) {
 
-        if (!compare(json, schema)) {
+        let to = json.to ? json.to : json.data.to;
+        let html = json.html ? json.html : json.data.html;
+        let subject = json.subject ? json.subject : json.data.subject;
+        if (to == null || html == null || subject == null) {
             return reject('Mail: Some params in bundle are missing.');
         }
 
-        let param = JSON.parse(json);
-        param.text = striptags(param.html);
-
+        let text = striptags(json.html);
         let user = "poubelleapipoubelle@gmail.com";
-        let pass = "vZmX5JKQDBur9bi";
+        let pass = "88KVueuWJ7juyDU";
         let from = `"📧 AREA 📧" <${user}>`;
 
         let transporter = nodemailer.createTransport({
@@ -38,19 +30,41 @@ export async function run(json) {
 
         let mailOptions = {
             from: from, // sender address
-            to: param.to.toString(), // list of receivers
-            subject: param.subject, // Subject line
-            text: param.text, // plain text body
-            html: param.html // html body
+            to: to.toString(), // list of receivers
+            subject: subject, // Subject line
+            text: text, // plain text body
+            html: html // html body
         };
 
         // send mail with defined transport object
         /*console.log(mailOptions);*/
         transporter.sendMail(mailOptions, (err, result) => { // catch invalid email
+            if (err) {
+                console.log(err);
+                console.log('Email non envoyé');
+                reject(err);
+            }
+            resolve('OK');
         });
     });
 }
 
 export async function update() {
 
+}
+
+export function getSchema() {
+    return {
+        action: {},
+        reaction: {
+            sendEmail: {
+                description: 'Send an email',
+                schema: {
+                    subject: typeof "",
+                    html: typeof "",
+                    to: typeof [],
+                },
+            }
+        },
+    }
 }

@@ -1,42 +1,70 @@
-import * as bdd from './src/bdd/mysql';
+import * as bdd from './src/bdd/bdd';
 
-const exceptions = ['http', 'imdb'];
+export class Services {
 
-export async function services() {
-    let services = [];
-
-    return new Promise(function (resolve, reject) {
-        bdd.getAllServices().then(result => {
-            for (let service of result) {
-                const path = './src/services/' + service.name;
-                let file = require(path);
-                services[service.id] = {
-                    name: service.name,
-                    run: file.run,
-                    update: file.update
-                };
-            }
-            resolve(services);
-        }).catch(error => {
-            console.log(error);
-            reject(error);
-        });
-    });
-}
-
-export async function updateServices(services) {
-    services = services.filter(service => service != null && service.update && exceptions.indexOf(service.name) === -1)
-    const interval = 300000; // 5 minutes
-
-    console.log('Starting services update..');
-    for (let service of services) {
-        service.update();
+    constructor() {
+        this.services = [];
+        this.exceptions = ['http'];
     }
 
-    setInterval(() => {
-        console.log('Starting services update..');
-        for (let service of services) {
-            service.update();
+    async build() {
+        return new Promise((resolve, reject) => {
+            bdd.getAllServices().then(result => {
+                for (let service of result) {
+                    const path = './src/services/' + service.name;
+                    let file = require(path);
+                    this.services[service.name] = {
+                        id: service.id,
+                        run: file.run,
+                        update: file.update,
+                        getSchema: file.getSchema
+                    };
+                }
+                return resolve('Ok');
+
+            }).catch(error => {
+                console.log(error);
+                return reject(error);
+            });
+        });
+    }
+
+    getServices() {
+        return this.services;
+    }
+
+    getByName(name) {
+        return this.services[name];
+    }
+
+    getById(id) {
+        if (typeof id === "string") {
+            id = Number(id);
         }
-    }, 25000);
+        for (let item in this.services) {
+            if (this.services[item].id === id) {
+                return this.services[item];
+            }
+        }
+        return null;
+    }
+
+    updateServices() {
+        const interval = 300000; // 5 minutes
+
+        console.log('Starting services update..');
+
+        for (const name in this.services) {
+            if (this.exceptions.indexOf(name) === -1)
+                this.services[name].update();
+        }
+
+        setInterval(() => {
+            console.log('Starting services update..');
+            for (const name in this.services) {
+                if (this.exceptions.indexOf(name) === -1)
+                    this.services[name].update();
+            }
+        }, interval);
+    }
 }

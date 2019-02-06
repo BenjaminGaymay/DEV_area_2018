@@ -27,97 +27,6 @@ bdd.connect(function (err) {
 
 /**
  *
- * @param email
- * @param username
- * @param password
- * @param token
- * @returns {Promise<*>}
- */
-export async function registerIntoTmp(email, username, password, token) {
-    if (!(typeof email === "string" && typeof username === "string"
-        && typeof password === "string" && typeof token === "string")) {
-        return Promise.reject(`RegisterIntoTmp fail with param.`);
-    }
-
-    return getUserByName(username).then(result => {
-        return Promise.reject({msg: `User ${username} already exist`}); //override exception
-    }).catch(error => {
-        if (typeof error === "object") {
-            return Promise.reject(error.msg); //override exception
-        }
-        return query(`INSERT INTO user_tmp (email, username, password, token) values ('${email}', '${username}', sha1('${password}'), '${token}')`)
-            .catch(error => {
-                return Promise.reject(`User ${username} already exist`); //override exception
-            })
-            .then(result => {
-                return {token: token, login: username, email: email};
-            });
-    });
-}
-
-/**
- *
- * @param login
- * @param token
- * @returns {Promise<*>}
- */
-export async function register(login, token) {
-
-    if (!(typeof login === "string" && typeof token === "string")) {
-        return Promise.reject(`Register fail with param.`);
-    }
-
-    return query(`SELECT * FROM user_tmp WHERE user_tmp.username = '${login}' AND user_tmp.token = '${token}'`)
-        .catch(error => {
-            console.log(error);
-            return Promise.reject('Register unknown error.');
-        }).then(result => {
-            if (typeof result[0] === "undefined") {
-                return Promise.reject(`Register ${login} not found`); //override exception
-            }
-            let user = result[0];
-            return query(`INSERT INTO user (email, username, password) values ('${user.email}', '${user.username}', '${user.password}')`)
-                .catch(error => {
-                    return Promise.reject(`User ${user.username} already exist`); //override exception
-                })
-                .then(result => {
-                    return query(`DELETE FROM user_tmp WHERE user_tmp.id = '${user.id}'`).catch(error =>
-                        console.log("Register: DELETE: OMFG comment c'est possible !")).then(result => {
-                        return "Ok";
-                    });
-                });
-        });
-}
-
-
-/**
- *
- * @param username
- * @param password
- * @param callback
- * @returns {Promise<*>}
- */
-export async function login(username, password, callback) {
-    if (!(typeof username == "string" && typeof password === "string")) {
-        return Promise.reject(`Login fail with param.`);
-    }
-
-    return query(`SELECT * FROM user WHERE username like '${username}'`)
-        .catch(error => {
-            return Promise.reject(`Login unknown error.`);
-        })
-        .then(result => {
-            if (typeof result[0] != "undefined" && result[0].password === sha1(password)) {
-                delete result[0].password;
-                return result[0];
-            } else
-                return Promise.reject(`Username or password not match.`); //override exception
-        });
-
-}
-
-/**
- *
  * @param username
  * @returns {Promise<*>}
  */
@@ -165,7 +74,7 @@ export async function getUserSuscribe(userId) {
  * @param sql
  * @returns {Promise<any>}
  */
-function query(sql) {
+export function query(sql) {
     return new Promise((resolve, reject) => {
         bdd.query(sql, (err, rows) => {
             if (err)
@@ -249,8 +158,10 @@ export async function getActionReaction(row) {
             if (typeof result[0] === "undefined") {
                 console.log(`Service action ${row.action_service_id} not found`);
             } else {
+                let tmp = typeof row.config_action_data === "string" ? JSON.parse(row.config_action_data) : row.config_action_data;
                 array.action = result[0];
-                array.action.config = row.config_action_data.length !== 0 ? JSON.parse(row.config_action_data) : null;
+                array.action.config = row.config_action_data !== null ? tmp : null;
+                array.action.data = row.action_data !== null && row.action_data.length !== 0 ? JSON.parse(row.action_data) : null;
             }
             return getServiceById(row.reaction_service_id);
         })
@@ -259,8 +170,10 @@ export async function getActionReaction(row) {
                 console.log(`Service reaction ${row.reaction_service_id} not found`);
                 array = {};
             } else if (array.action) {
+                let tmp = typeof row.config_reaction_data === "string" ? JSON.parse(row.config_reaction_data) : row.config_reaction_data;
                 array.reaction = result[0];
-                array.reaction.config = row.config_reaction_data.length !== 0 ? JSON.parse(row.config_reaction_data) : null;
+                array.reaction.config = row.config_reaction_data !== null ? tmp : null;
+                array.reaction.data = row.reaction_data !== null && row.reaction_data.length !== 0 ? JSON.parse(row.reaction_data) : null;
             }
             return array;
         });
@@ -311,7 +224,7 @@ export async function getAllServices() {
  * @returns {Promise<void>}
  */
 export async function subscribe(user, data) {
-    if (!data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
+    if (typeof data === "undefined" || !data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
         || !data.hasOwnProperty("actionServiceData") || !data.hasOwnProperty("reactionServiceData")) {
         return Promise.reject('Missing parameters');
     }
