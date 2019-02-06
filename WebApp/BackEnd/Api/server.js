@@ -23,7 +23,6 @@ services.build().then(result => {
     setInterval(async () => {
         const widgets = await getUpdatedSubscribe();
         for (const widget of widgets) {
-            console.log('need to update');
             services.getById(widget.action_service_id).run('action', undefined, undefined);
             setSubscribeUpdatedFalse(widget.id);
         }
