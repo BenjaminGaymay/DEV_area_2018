@@ -63,9 +63,7 @@ export function postTraitement(result) {
     result.reaction.config = convertData(result.reaction.config); // convert all string to json
     /** do post traitement **/
     result = changeNameWithConfig(result);
-    console.log(result.action.data);
     result = keepPreviousDataIfTheyAreRegisteredInTheBddBucket(result);
-    console.log(result.action.data);
     let configData = result.reaction.config;
     configData.data = result.action.data;
     return configData;
