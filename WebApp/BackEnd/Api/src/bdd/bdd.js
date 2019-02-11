@@ -27,97 +27,6 @@ bdd.connect(function (err) {
 
 /**
  *
- * @param email
- * @param username
- * @param password
- * @param token
- * @returns {Promise<*>}
- */
-export async function registerIntoTmp(email, username, password, token) {
-    if (!(typeof email === "string" && typeof username === "string"
-        && typeof password === "string" && typeof token === "string")) {
-        return Promise.reject(`RegisterIntoTmp fail with param.`);
-    }
-
-    return getUserByName(username).then(result => {
-        return Promise.reject({msg: `User ${username} already exist`}); //override exception
-    }).catch(error => {
-        if (typeof error === "object") {
-            return Promise.reject(error.msg); //override exception
-        }
-        return query(`INSERT INTO user_tmp (email, username, password, token) values ('${email}', '${username}', sha1('${password}'), '${token}')`)
-            .catch(error => {
-                return Promise.reject(`User ${username} already exist`); //override exception
-            })
-            .then(result => {
-                return {token: token, login: username, email: email};
-            });
-    });
-}
-
-/**
- *
- * @param login
- * @param token
- * @returns {Promise<*>}
- */
-export async function register(login, token) {
-
-    if (!(typeof login === "string" && typeof token === "string")) {
-        return Promise.reject(`Register fail with param.`);
-    }
-
-    return query(`SELECT * FROM user_tmp WHERE user_tmp.username = '${login}' AND user_tmp.token = '${token}'`)
-        .catch(error => {
-            console.log(error);
-            return Promise.reject('Register unknown error.');
-        }).then(result => {
-            if (typeof result[0] === "undefined") {
-                return Promise.reject(`Register ${login} not found`); //override exception
-            }
-            let user = result[0];
-            return query(`INSERT INTO user (email, username, password) values ('${user.email}', '${user.username}', '${user.password}')`)
-                .catch(error => {
-                    return Promise.reject(`User ${user.username} already exist`); //override exception
-                })
-                .then(result => {
-                    return query(`DELETE FROM user_tmp WHERE user_tmp.id = '${user.id}'`).catch(error =>
-                        console.log("Register: DELETE: OMFG comment c'est possible !")).then(result => {
-                        return "Ok";
-                    });
-                });
-        });
-}
-
-
-/**
- *
- * @param username
- * @param password
- * @param callback
- * @returns {Promise<*>}
- */
-export async function login(username, password, callback) {
-    if (!(typeof username == "string" && typeof password === "string")) {
-        return Promise.reject(`Login fail with param.`);
-    }
-
-    return query(`SELECT * FROM user WHERE username like '${username}'`)
-        .catch(error => {
-            return Promise.reject(`Login unknown error.`);
-        })
-        .then(result => {
-            if (typeof result[0] != "undefined" && result[0].password === sha1(password)) {
-                delete result[0].password;
-                return result[0];
-            } else
-                return Promise.reject(`Username or password not match.`); //override exception
-        });
-
-}
-
-/**
- *
  * @param username
  * @returns {Promise<*>}
  */
@@ -165,7 +74,7 @@ export async function getUserSuscribe(userId) {
  * @param sql
  * @returns {Promise<any>}
  */
-function query(sql) {
+export function query(sql) {
     return new Promise((resolve, reject) => {
         bdd.query(sql, (err, rows) => {
             if (err)
@@ -188,6 +97,33 @@ export async function getServiceById(id) {
     return query(`SELECT * FROM service WHERE service.id like '${id}'`);
 }
 
+/**
+ *
+ * @param name
+ * @returns {Promise<*>}
+ */
+export async function getServiceDatasByName(name) {
+    if (!(typeof name === "string")) {
+        return Promise.reject('getServiceByName fail with param.');
+    }
+
+    return query(`SELECT datas FROM service WHERE service.name like '${name}'`);
+}
+
+/**
+ *
+ * @param name
+ * @param datas
+ * @returns {Promise<*>}
+ */
+export async function setServiceDatasByName(name, datas) {
+
+    if (!(typeof name == "string")) {
+        return Promise.reject('setServiceDatasByName fail with param.');
+    }
+
+    return query(`UPDATE service SET datas = '${datas}' WHERE name like '${name}'`);
+}
 
 /**
  *
@@ -209,34 +145,35 @@ export async function registerService(name) {
         });
 }
 
-
 /**
  *
  * @param row
- * @param action_id
- * @param reaction_id
  * @returns {Promise<*>}
  */
-async function getActionReaction(row, action_id, reaction_id) {
+export async function getActionReaction(row) {
     let array = {};
 
-    return getServiceById(action_id)//)action_id)
+    return getServiceById(row.action_service_id)//)action_id)
         .then(result => {
             if (typeof result[0] === "undefined") {
-                console.log(`Service action ${action_id} not found`);
+                console.log(`Service action ${row.action_service_id} not found`);
             } else {
+                let tmp = typeof row.config_action_data === "string" ? JSON.parse(row.config_action_data) : row.config_action_data;
                 array.action = result[0];
-                array.action.data = row.action_data.length !== 0 ? JSON.parse(row.action_data) : null;
+                array.action.config = row.config_action_data !== null ? tmp : null;
+                array.action.data = row.action_data !== null && row.action_data.length !== 0 ? JSON.parse(row.action_data) : null;
             }
-            return getServiceById(reaction_id);
+            return getServiceById(row.reaction_service_id);
         })
         .then(result => {
             if (typeof result[0] === "undefined") {
-                console.log(`Service reaction ${reaction_id} not found`);
+                console.log(`Service reaction ${row.reaction_service_id} not found`);
                 array = {};
             } else if (array.action) {
+                let tmp = typeof row.config_reaction_data === "string" ? JSON.parse(row.config_reaction_data) : row.config_reaction_data;
                 array.reaction = result[0];
-                array.reaction.data = row.reaction_data.length !== 0 ? JSON.parse(row.reaction_data) : null;
+                array.reaction.config = row.config_reaction_data !== null ? tmp : null;
+                array.reaction.data = row.reaction_data !== null && row.reaction_data.length !== 0 ? JSON.parse(row.reaction_data) : null;
             }
             return array;
         });
@@ -253,7 +190,7 @@ export async function getUserServices(user_id) {
             let promises = [];
 
             for (let i in result) {
-                let item = getActionReaction(result[i], result[i].action_service_id, result[i].reaction_service_id);
+                let item = getActionReaction(result[i]);
                 promises.push(item);
             }
             return Promise.all(promises);
@@ -264,6 +201,21 @@ export async function getUserServices(user_id) {
         });
 }
 
+/**
+ *
+ * @returns {Promise<void>}
+ */
+export async function getAllServices() {
+    return query(`SELECT *
+                  FROM service`).catch(error => {
+        return Promise.reject('subscribe unknown error.');
+    }).then(result => {
+        if (typeof result[0] == "undefined") {
+            return Promise.reject('Any service available.');
+        }
+        return result;
+    });
+}
 
 /**
  *
@@ -272,14 +224,14 @@ export async function getUserServices(user_id) {
  * @returns {Promise<void>}
  */
 export async function subscribe(user, data) {
-    if (!data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
+    if (typeof data === "undefined" || !data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
         || !data.hasOwnProperty("actionServiceData") || !data.hasOwnProperty("reactionServiceData")) {
         return Promise.reject('Missing parameters');
     }
     getServiceById(data.actionServiceId).then(result => {
         getServiceById(data.reactionServiceId).then(result => {
 
-            return query(`INSERT INTO subscribe (user_id, action_service_id, reaction_service_id, action_data, reaction_data) value ('${user.id}', '${data.actionServiceId}', '${data.reactionServiceId}', '${data.actionServiceData}', '${data.reactionServiceData}')`)
+            return query(`INSERT INTO subscribe (user_id, action_service_id, reaction_service_id, config_action_data, config_reaction_data) value ('${user.id}', '${data.actionServiceId}', '${data.reactionServiceId}', '${data.actionServiceData}', '${data.reactionServiceData}')`)
                 .catch(error => {
                     return Promise.reject('subscribe unknown error.');
                 })
@@ -305,7 +257,7 @@ export async function unsubscribe(user, data) {
         return Promise.reject('Missing parameters');
     }
 
-    return query(`DELETE FROM 'subscribe' WHERE user_id = ${user.id} AND id = ${data.subscribeId};`)
+    return query(`DELETE FROM subscribe WHERE user_id = ${user.id} AND id = ${data.subscribeId};`)
         .catch(error => {
             return Promise.reject('subscribe unknown error.');
         })
@@ -315,14 +267,91 @@ export async function unsubscribe(user, data) {
 }
 
 export async function isTokenExist(token) {
-    return query(`SELECT * FROM 'user_tmp' WHERE token = ${token};`)
+    return query(`SELECT * FROM user_tmp WHERE token = ${token};`)
         .catch(error => {
             return Promise.reject('Token not exist.');
         })
         .then(result => {
             return true;
         });
+}
 
+export async function getSubscribeById(id) {
+    return query(`SELECT * FROM subscribe WHERE id = '${id}';`).catch(error => {
+        console.log(error);
+    }).then(result => {
+        if (typeof result[0] == "undefined") {
+            return Promise.reject('GetSubscribeById: Empty result.');
+        }
+        result[0].config_action_data = (result[0].config_action_data == null ? null : JSON.parse(result[0].config_action_data));
+        result[0].config_reaction_data = (result[0].config_reaction_data == null ? null : JSON.parse(result[0].config_reaction_data));
+        return result;
+    })
+}
+
+export async function getSubscribeByActionServiceId(id) {
+    return query(`SELECT * FROM subscribe WHERE action_service_id = '${id}';`).catch(error => {
+        console.log(error);
+    }).then(result => {
+        if (typeof result[0] == "undefined") {
+            return Promise.reject('getSubscribeByActionServiceId: Empty result.');
+        }
+        result[0].config_action_data = (result[0].config_action_data == null ? null : JSON.parse(result[0].config_action_data));
+        result[0].config_reaction_data = (result[0].config_reaction_data == null ? null : JSON.parse(result[0].config_reaction_data));
+        return result;
+    })
+}
+
+export async function findUrlToken(token) {
+    console.log(token);
+    //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
+    return query(`SELECT * FROM subscribe WHERE action_service_id = '9'
+                    AND JSON_CONTAINS(config_action_data, '"${token}"', '$.token');`)
+        .catch(error => {
+            console.log(error);
+            return Promise.reject('Service or token not found.');
+        })
+        .then(result => {
+            if (typeof result[0] == "undefined") {
+                return Promise.reject('Token not match.');
+            }
+            return result[0];
+        });
+}
+
+export async function updateSubscribeData(id, action_data, reaction_data) {
+    if (typeof action_data !== "string") {
+        action_data = JSON.stringify(action_data);
+    }
+    if (typeof reaction_data !== "string") {
+        reaction_data = JSON.stringify(reaction_data);
+    }
+    //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
+    return query(`UPDATE subscribe SET updated=TRUE, action_data='${action_data}', reaction_data='${reaction_data}'
+                      WHERE id='${id}';`)
+        .catch(error => {
+            console.log(error);
+            return Promise.reject('Service or token not found.');
+        })
+        .then(result => {
+            return true;
+        });
+}
+
+export async function setSubscribeUpdatedFalse(id) {
+    //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
+    return query(`UPDATE subscribe SET updated=FALSE WHERE id='${id}';`)
+        .catch(error => {
+            console.log(error);
+            return Promise.reject('Service or token not found.');
+        })
+        .then(result => {
+            return true;
+        });
+}
+
+export async function getUpdatedSubscribe() {
+    return query(`SELECT * FROM subscribe WHERE updated=TRUE;`);
 }
 
 /* //GOOD

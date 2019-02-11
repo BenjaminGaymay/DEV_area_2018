@@ -15,7 +15,7 @@ export function jsonCompare(json, schema) {
             console.log(`La variable \"${k}\" est manquante.`);
             result = false;
             return false;
-        } else if (typeof oJson[k] !== typeof oSchema[k]) {
+        } else if (typeof oJson[k] !== oSchema[k]) {
             console.log(`Les types de \"${k}\" sont incompatibles.`);
         }
     });
