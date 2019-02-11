@@ -33,7 +33,7 @@ class LoginConsumer extends React.Component {
 
   registerForm = () => {
     return (
-      <div style={{ padding: 15 }}>
+      <div key="register" style={{ padding: 15 }}>
         <h1 style={{ textAlign: "center", fontWeight: "lighter" }}>
           S'inscrire
         </h1>
@@ -134,7 +134,7 @@ class LoginConsumer extends React.Component {
 
   loginForm = () => {
     return (
-      <div style={{ padding: 15 }}>
+      <div key="login" style={{ padding: 15 }}>
         <h1 style={{ textAlign: "center", fontWeight: "lighter" }}>
           Connexion
         </h1>
