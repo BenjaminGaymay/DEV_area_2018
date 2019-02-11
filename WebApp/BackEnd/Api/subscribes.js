@@ -1,6 +1,6 @@
 import * as bdd from './src/bdd/bdd';
 
-export class Services {
+export class Subscribes {
 
     constructor() {
         this.services = [];
@@ -8,15 +8,13 @@ export class Services {
 
     async build() {
         return new Promise((resolve, reject) => {
-            bdd.getAllServices().then(result => {
-                for (let service of result) {
-                    const path = './src/services/' + service.filename;
+            bdd.getAllSubscribes().then(result => {
+                for (let subscribe of result) {
+                    const path = './src/subscribe/' + subscribe.filename;
                     let file = require(path);
-                    this.services[service.filename] = {
-                        id: service.id,
-                        action: file.action,
-                        reaction: file.reaction,
-                        update: file.update,
+                    this.services[subscribe.filename] = {
+                        id: subscribe.id,
+                        run: file.run,
                         //getSchema: file.getSchema
                     };
                 }
@@ -37,9 +35,7 @@ export class Services {
     }
 
     getById(id) {
-        if (typeof id === "string") {
-            id = Number(id);
-        }
+        if (typeof id === "string") id = Number(id);
         for (let item in this.services) {
             if (this.services[item].id === id) {
                 return this.services[item];

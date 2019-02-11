@@ -176,12 +176,24 @@ export async function getUserServices(user_id) {
 }
 
 /**
- *
  * @returns {Promise<void>}
  */
 export async function getAllServices() {
-    return query(`SELECT *
-                  FROM service`).catch(error => {
+    return query(`SELECT * FROM service`).catch(error => {
+        return Promise.reject('subscribe unknown error.');
+    }).then(result => {
+        if (typeof result[0] == "undefined") {
+            return Promise.reject('Any service available.');
+        }
+        return result;
+    });
+}
+
+/**
+ * @returns {Promise<void>}
+ */
+export async function getAllSubscribes() {
+    return query(`SELECT * FROM subscribe`).catch(error => {
         return Promise.reject('subscribe unknown error.');
     }).then(result => {
         if (typeof result[0] == "undefined") {
@@ -198,7 +210,7 @@ export async function getAllServices() {
  * @returns {Promise<void>}
  */
 export async function subscribe(user, data) {
-    if (typeof data === "undefined" || !data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
+    if (typeof data === "undefined" || !data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
         || !data.hasOwnProperty("actionServiceData") || !data.hasOwnProperty("reactionServiceData")) {
         return Promise.reject('Missing parameters');
     }
@@ -279,5 +291,16 @@ export async function updateSubscribeData(id, action_data, reaction_data) {
         })
         .then(result => {
             return true;
+        });
+}
+
+export async function getAllSubscribeUpdated() {
+    return query(`SELECT * FROM link WHERE updated = TRUE`)
+        .catch(error => {
+            console.log(error);
+            return Promise.reject('Service or token not found.');
+        })
+        .then(result => {
+            return result;
         });
 }

@@ -3,7 +3,6 @@ import * as reddit_bdd from "../bdd/reddit_bdd";
 import * as bdd from "../bdd/bdd";
 import RedditOauth2 from "../../auth/reddit";
 import * as tools from "../tools";
-import {postTraitement} from "../tools";
 
 const reddit = new RedditOauth2(
     process.env.REDDIT_CLIENT_ID,
@@ -59,6 +58,10 @@ export async function update(widget) {
             reject('Error when getting last post on Reddit service.');
         })
     });
+}
+
+export async function subscribe(widget, request) {
+    // on ajoute des data par defaut tel que created="0"
 }
 
 export function getSchema() {

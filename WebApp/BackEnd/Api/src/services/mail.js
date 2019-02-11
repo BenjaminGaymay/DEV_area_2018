@@ -49,6 +49,9 @@ export async function run(type, widget, json) {
     });
 }
 
+export async function subscribe(widget, request) {
+}
+
 export async function update(widget) {
 
 }

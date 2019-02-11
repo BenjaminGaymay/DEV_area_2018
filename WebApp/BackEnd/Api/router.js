@@ -23,11 +23,11 @@ function getUnixTime() {
 //     return result;
 // }
 
-export function router(app, services) {
-    login_router(app, services);
-    http_router(app, services);
+export function router(app, services, subscribes) {
+    /*login_router(app, services);
+    http_router(app, services);*/
 
-    app.get("/getService/:name?/:type?/:widget?", (req, res) => {
+    /*app.get("/getService/:name?/:type?/:widget?", (req, res) => {
         if (typeof req.params.name === "undefined") {
             let result = [];
             for (let item in services.getServices()) {
@@ -42,36 +42,53 @@ export function router(app, services) {
             if (result === null) return res.status(500).send("Invalid parameters.");
             res.status(200).send(result);
         }
-    });
+    });*/
 
     app.get("/test", (req, res) => {
-        // services.getByName("mail").update()
-        // bdd.getSubscribeById(6).then(results => {
-        //     //console.log(results);
-        //
-        //     bdd.getActionReaction(results[0]).then(result => {
-        //         let configData = tools.postTraitement(result);
-        //         console.log(configData);
-        //         services.getById(result.reaction.id).run('reaction', 'default', configData).then(result_1 => {
-        //             res.status(200).send(result_1);
-        //         }).catch(error => {
-        //             console.log(error);
-        //             res.status(500).send(error);
-        //         });
-        //     }).catch(error => {
-        //         console.log(error);
-        //     });
-        // });
-        /*services.getByName("reddit").update().then(result => {
-            services.getByName("reddit").run("action", "default", services).then(results => {
-                console.log(results);
-            });
-            res.status(200);
-            res.send("OK");
-        });*/
+        bdd.getAllSubscribeUpdated().then(result => {
+            for (let item of result) {
+                item.config_action = JSON.parse(item.config_action);
+                item.config_reaction = JSON.parse(item.config_reaction);
+                item.datas = JSON.parse(item.datas);
+                subscribes.getById(item.subscribe_id).run(item).then(result => {
+                    console.log(result);
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+            res.status(200).send(result);
+        });
     });
+    /*services.getByName("fortnite").update().then(result => {
+        console.log(result);
+    });*/
+    // services.getByName("mail").update()
+    // bdd.getSubscribeById(6).then(results => {
+    //     //console.log(results);
+    //
+    //     bdd.getActionReaction(results[0]).then(result => {
+    //         let configData = tools.postTraitement(result);
+    //         console.log(configData);
+    //         services.getById(result.reaction.id).run('reaction', 'default', configData).then(result_1 => {
+    //             res.status(200).send(result_1);
+    //         }).catch(error => {
+    //             console.log(error);
+    //             res.status(500).send(error);
+    //         });
+    //     }).catch(error => {
+    //         console.log(error);
+    //     });
+    // });
+    /*services.getByName("reddit").update().then(result => {
+        services.getByName("reddit").run("action", "default", services).then(results => {
+            console.log(results);
+        });
+        res.status(200);
+        res.send("OK");
+    });
+});*/
 
-    app.post("/subscribe", (req, res) => {
+    /*app.post("/subscribe", (req, res) => {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
             bdd.subscribe(result, req.body).then(result => {
                 console.log(result);
@@ -125,5 +142,5 @@ export function router(app, services) {
         about.client.host = req.ip.split(':').pop();
         about.server.current_time = getUnixTime();
         res.send(about);
-    });
+    });*/
 }
