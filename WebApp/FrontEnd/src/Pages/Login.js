@@ -5,10 +5,12 @@ import {
   Grid,
   TextField,
   Button,
-  CircularProgress
+  CircularProgress,
+  Snackbar,
+  IconButton
 } from "@material-ui/core";
 import { Redirect } from "react-router";
-import { AccountCircle, Lock } from "@material-ui/icons";
+import { AccountCircle, Lock, Close } from "@material-ui/icons";
 import Context from "../context/context";
 
 class LoginConsumer extends React.Component {
@@ -20,7 +22,9 @@ class LoginConsumer extends React.Component {
       mail: "",
       password: "",
       confPassword: "",
-      animation: false
+      animation: false,
+      err: "",
+      open: false
     };
   }
 
@@ -60,7 +64,6 @@ class LoginConsumer extends React.Component {
               fullWidth
               label="Email"
               type="email"
-              name="email"
               value={this.state.email}
               onChange={this.handleChange}
             />
@@ -223,7 +226,9 @@ class LoginConsumer extends React.Component {
           })
           .catch(res => {
             this.setState({
-              animation: false
+              animation: false,
+              open: true,
+              err: 'Oops something bad happened!'
             });
             console.log(res.status);
           });
@@ -255,11 +260,19 @@ class LoginConsumer extends React.Component {
           })
           .catch(res => {
             this.setState({
-              animation: false
+              animation: false,
+              open: true,
+              err: 'Oops something bad happened!'
             });
           });
       }
     );
+  };
+
+  handleClose = () => {
+    this.setState({
+      open: false
+    });
   };
 
   render() {
@@ -282,6 +295,21 @@ class LoginConsumer extends React.Component {
               : this.registerForm()}
           </Paper>
         </Grid>
+        <Snackbar
+          open={this.state.open}
+          message={<p>{this.state.err}</p>}
+          onClose={this.handleClose}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={this.handleClose}
+            >
+              <Close />
+            </IconButton>
+          ]}
+        />
       </Grid>
     );
   }
