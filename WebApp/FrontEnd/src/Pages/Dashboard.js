@@ -114,8 +114,7 @@ export default function Dashboard(props) {
                       {item.name}
                     </Typography>
                     <Typography component="p">
-                      Noob noob noob noob noob noob noob noob noob noob{" "}
-                      {item.name}
+                      {item.desc}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
