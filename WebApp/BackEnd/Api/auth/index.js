@@ -19,10 +19,12 @@ export default function (app) {
     app.get("/auth/reddit", reddit.authorizeUrl());
 
     app.get("/auth/reddit/callback", reddit.accessToken(), async (req, res) => {
-        console.log('token: ' + req.token.token.access_token);
+        const data = readFileSync('./auth/template.html', { encoding: 'utf-8' }).replace('ACCESS_TOKEN', req.token.token.access_token);
+        return res.status(200).send(data);
+        // console.log('token: ' + req.token.token.access_token);
 
-        const response = await reddit.getTrophies(req.token.token.access_token, req, res);
-        return res.status(200).json(response);
+        // const response = await reddit.getTrophies(req.token.token.access_token, req, res);
+        // return res.status(200).json(response);
     });
 
     app.get("/auth/github", (req, res) => {

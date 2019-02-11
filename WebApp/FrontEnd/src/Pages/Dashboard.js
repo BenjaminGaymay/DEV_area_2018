@@ -20,69 +20,30 @@ import {
 } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 
+import servicesJSON from '../assets/services.json';
+
+import CR from '../components/ServiceConfiguration/CR';
+import LoL from '../components/ServiceConfiguration/LoL';
+import Imdb from '../components/ServiceConfiguration/Imdb';
+import Email from '../components/ServiceConfiguration/Email';
+import Github from '../components/ServiceConfiguration/Github';
+import Reddit from '../components/ServiceConfiguration/Reddit';
+import Facebook from '../components/ServiceConfiguration/Facebook';
+import Fortnite from "../components/ServiceConfiguration/Fortnite";
+
 const Transition = props => <Slide direction="up" {...props} />;
 
 export default function Dashboard(props) {
-  // const services = [
-  //   {
-  //     name: "reddit",
-  //     options: {
-  //       image:
-  //         "https://images-eu.ssl-images-amazon.com/images/I/418PuxYS63L.png",
-  //       accessToken: ""
-  //     }
-  //   },
-  //   {
-  //     name: "facebook",
-  //     options: {
-  //       image:
-  //         "https://geeko.lesoir.be/wp-content/uploads/sites/58/2018/11/Facebook-2.jpg",
-  //       accessToken: ""
-  //     }
-  //   },
-  //   {
-  //     name: "github",
-  //     options: {
-  //       image:
-  //         "https://dyw7ncnq1en5l.cloudfront.net/optim/news/75/75755/-c-github.jpg",
-  //       accessToken: ""
-  //     }
-  //   }
-  // ];
-
   const [token, setToken] = useState("");
-  const [services, setServices] = useState([
-    {
-      name: "reddit",
-      options: {
-        image:
-          "https://images-eu.ssl-images-amazon.com/images/I/418PuxYS63L.png",
-        accessToken: ""
-      }
-    },
-    {
-      name: "facebook",
-      options: {
-        image:
-          "https://geeko.lesoir.be/wp-content/uploads/sites/58/2018/11/Facebook-2.jpg",
-        accessToken: ""
-      }
-    },
-    {
-      name: "github",
-      options: {
-        image:
-          "https://dyw7ncnq1en5l.cloudfront.net/optim/news/75/75755/-c-github.jpg",
-        accessToken: ""
-      }
-    }
-  ]);
+  const [services, setServices] = useState([]);
   const [configuration, setConfiguration] = useState(false);
   const [selectedService, setSelectedService] = useState("");
   const [url, setUrl] = useState("");
 
   useEffect(() => {
     window.addEventListener("message", handleOauthResponse);
+    setServices(servicesJSON);
+
     return () => {
       window.removeEventListener("message", handleOauthResponse);
     };
@@ -95,7 +56,6 @@ export default function Dashboard(props) {
     const res = services.find(obj => obj.name === selectedService);
     // if (res) res.options.accessToken = e.data.access_token;
     if (res) setToken(res.options.accessToken);
-
   }
 
   function handleCloseDialog() {
@@ -115,12 +75,34 @@ export default function Dashboard(props) {
     }
   }
 
+  function renderSwitch() {
+    switch(selectedService) {
+      case 'reddit': return <Reddit/>;
+      case 'github': return <Github/>;
+      case 'facebook': return <Facebook/>;
+      case 'league of legends': return <LoL/>;
+      case 'imdb': return <Imdb/>;
+      case 'email': return <Email/>;
+      case 'fortnite': return <Fortnite/>;
+      case 'clash royale': return <CR/>;
+      default: return <></>;
+    }
+  }
+
   return (
-    <Grid container spacing={16} style={{ marginTop: 32 }}>
-      <Grid item xs={12}>
-        <Grid container justify="center" spacing={32}>
+    <Grid container style={{ marginTop: 32 }} spacing={0} justify="center">
+      <Grid item xs={10}>
+        <Grid
+          container
+          justify="center"
+          spacing={32}
+          style={{
+            margin: 0,
+            width: "100%"
+          }}
+        >
           {services.map((item, index) => (
-            <Grid item key={item.name}>
+            <Grid item key={item.name} xs={12} sm={6} md={4} lg={3}>
               <Card elevation={4}>
                 <CardActionArea>
                   <CardMedia
@@ -179,17 +161,8 @@ export default function Dashboard(props) {
             <ListItemText primary="Phone ringtone" secondary="Titania" />
           </ListItem>
           <Divider />
-          <ListItem button>
-            <ListItemText
-              primary={`${selectedService.charAt(0).toUpperCase() +
-                selectedService.slice(1)} access token`}
-              onClick={() => {
-                window.open(url);
-              }}
-            />
-            <p>{token}</p>
-          </ListItem>
         </List>
+        {renderSwitch()}
       </Dialog>
     </Grid>
   );
