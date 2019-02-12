@@ -65,11 +65,11 @@ export function router(app, services, subscribes) {
 
     app.get("/allTest", (req, res) => {
         bdd.getAllLinkUpdated().then(result => { // on chope toutes liens mis à jours
-            console.log(result);
             for (let item of result) {
                 item.config_action = JSON.parse(item.config_action);
                 item.config_reaction = JSON.parse(item.config_reaction);
                 item.datas = JSON.parse(item.datas);
+                //console.log(item);
                 subscribes.getById(item.subscribe_id).run(item).then(result => { // on call la fonction run de l'abonnement en question
                     console.log(result);
                     // ici je dois mettre le bool update à false !
