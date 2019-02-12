@@ -1,28 +1,16 @@
 "use strict";
 import nodemailer from 'nodemailer';
 import striptags from 'striptags';
-import {jsonCompare as compare} from "./jsonSchemaCompare";
 
-const schemaMail = {
-    subject: "",
-    html: "",
-    to: [],
-};
-
-const schema = JSON.stringify(schemaMail);
-
-export async function run(json) {
+export async function run(datas) {
     return new Promise(function (resolve, reject) {
-
-        if (!compare(json, schema)) {
+        if (!datas.hasOwnProperty("to") || !datas.hasOwnProperty("html") || !datas.hasOwnProperty("subject")) {
             return reject('Mail: Some params in bundle are missing.');
         }
 
-        let param = JSON.parse(json);
-        param.text = striptags(param.html);
-
+        let text = striptags(datas.html);
         let user = "poubelleapipoubelle@gmail.com";
-        let pass = "vZmX5JKQDBur9bi";
+        let pass = "88KVueuWJ7juyDU";
         let from = `"📧 AREA 📧" <${user}>`;
 
         let transporter = nodemailer.createTransport({
@@ -38,15 +26,25 @@ export async function run(json) {
 
         let mailOptions = {
             from: from, // sender address
-            to: param.to.toString(), // list of receivers
-            subject: param.subject, // Subject line
-            text: param.text, // plain text body
-            html: param.html // html body
+            to: datas.to.toString(), // list of receivers
+            subject: datas.subject, // Subject line
+            text: text, // plain text body
+            html: datas.html // html body
         };
 
         // send mail with defined transport object
         /*console.log(mailOptions);*/
         transporter.sendMail(mailOptions, (err, result) => { // catch invalid email
+            if (err) {
+                console.log(err);
+                console.log('Email non envoyé');
+                return reject(err);
+            }
+            return resolve('OK');
         });
     });
+}
+
+export async function update(widget) {
+
 }

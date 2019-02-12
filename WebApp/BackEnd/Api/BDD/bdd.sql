@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost:3306
--- Généré le :  Mar 29 Janvier 2019 à 12:56
+-- Généré le :  Mar 12 Février 2019 à 10:47
 -- Version du serveur :  10.2.21-MariaDB-10.2.21+maria~stretch
 -- Version de PHP :  7.2.14-1+0~20190113100742.14+stretch~1.gbpd83c69
 
@@ -23,23 +23,49 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `link`
+--
+
+CREATE TABLE `link` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `updated` tinyint(1) NOT NULL DEFAULT 0,
+  `subscribe_id` int(11) NOT NULL,
+  `config_action` text DEFAULT NULL,
+  `config_reaction` text DEFAULT NULL,
+  `datas` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Contenu de la table `link`
+--
+
+INSERT INTO `link` (`id`, `user_id`, `updated`, `subscribe_id`, `config_action`, `config_reaction`, `datas`) VALUES
+(1, 1, 0, 1, '{\"skinName\": \"Moonrise\"}', '{\"to\": \"poubelleapipoubelle@gmail.com\"}', '{\"skinName\": \"Moonrise\", \"vBucks\": \"1200\" , \"url\": \"https://cdn.thetrackernetwork.com/cdn/fortnite/797C6306_large.png\"}'),
+(2, 1, 0, 2, '{\"skinName\": \"Sanctum\"}', '{\"method\": \"POST\", \"url\": \"https://hookb.in/QJL2wRV962t9r92dlVEY\", \"headers\" : null}', '{\"skinName\": \"Sanctum\", \"vBucks\": \"1500\" , \"url\": \"https://cdn.thetrackernetwork.com/cdn/fortnite/13926359_large.png\"}'),
+(3, 1, 1, 3, '{\"name\": \"funny\", \"created\": \"1549993465\"}', '{\"to\": \"poubelleapipoubelle@gmail.com\"}', '{\"title\":\"*cries in native american*\",\"author\":\"Sean_Lock\",\"url\":\"https://i.redd.it/06uiu8n4z3g21.png\",\"created\":1549993465}'),
+(4, 1, 1, 4, '{\"name\": \"funny\", \"created\": \"1549993465\"}', '{\"method\": \"POST\", \"url\": \"https://hookb.in/QJL2wRV962t9r92dlVEY\", \"headers\" : null}', '{\"title\":\"*cries in native american*\",\"author\":\"Sean_Lock\",\"url\":\"https://i.redd.it/06uiu8n4z3g21.png\",\"created\":1549993465}');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `service`
 --
 
 CREATE TABLE `service` (
   `id` int(11) NOT NULL,
-  `name` varchar(40) NOT NULL
+  `filename` varchar(40) NOT NULL,
+  `datas` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Contenu de la table `service`
 --
 
-INSERT INTO `service` (`id`, `name`) VALUES
-(6, 'fortnite'),
-(8, 'radio'),
-(5, 'rss'),
-(1, 'weather');
+INSERT INTO `service` (`id`, `filename`, `datas`) VALUES
+(1, 'fortnite', '{\"lastUpdate\": \"2019-02-12 09:47:35\"}'),
+(2, 'mail', NULL),
+(3, 'reddit', NULL);
 
 -- --------------------------------------------------------
 
@@ -49,21 +75,19 @@ INSERT INTO `service` (`id`, `name`) VALUES
 
 CREATE TABLE `subscribe` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `action_service_id` int(11) NOT NULL,
-  `reaction_service_id` int(11) NOT NULL,
-  `action_data` text DEFAULT NULL,
-  `reaction_data` text DEFAULT NULL
+  `filename` varchar(40) NOT NULL,
+  `datas` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Contenu de la table `subscribe`
 --
 
-INSERT INTO `subscribe` (`id`, `user_id`, `action_service_id`, `reaction_service_id`, `action_data`, `reaction_data`) VALUES
-(1, 1, 1, 6, '{\"nom\": \"bob\", \"prenom\": \"duchamps\"}', '{\"nom\": \"alain\", \"prenom\": \"bernard\"}'),
-(2, 1, 1, 5, '', ''),
-(3, 33, 1, 6, NULL, NULL);
+INSERT INTO `subscribe` (`id`, `filename`, `datas`) VALUES
+(1, 'fortnite-mail', NULL),
+(2, 'fortnite-http', NULL),
+(3, 'reddit-mail', NULL),
+(4, 'reddit-http', NULL);
 
 -- --------------------------------------------------------
 
@@ -87,7 +111,12 @@ INSERT INTO `user` (`id`, `username`, `email`, `password`) VALUES
 (33, 'bob', 'poubelleapipoubelle@gmail.com', '1288426f72c0e95d1c03023ec8853ca200724c86'),
 (35, 'jack', 'poubelleapipoubelle@gmail.com', '1288426f72c0e95d1c03023ec8853ca200724c86'),
 (36, 'Enzo', 'poubelleapipoubelle@gmail.com', '9712514327aa8a076ee7c2db398085610dfbdec0'),
-(37, 'Robin', 'poubelleapipoubelle@gmail.com', '9712514327aa8a076ee7c2db398085610dfbdec0');
+(37, 'Robin', 'poubelleapipoubelle@gmail.com', '9712514327aa8a076ee7c2db398085610dfbdec0'),
+(38, 'Salut', 'poubelleapipoubelle@gmail.com', 'd1980e7b5ffd959bb5697591a53450c57d91e7b5'),
+(39, 'JeanPaul2', 'poubelleapipoubelle@gmail.com', '64a50932049ddff830412e0fd9edb30198bf17f3'),
+(40, 'Marco22LaFrappe22', 'poubelleapipoubelle@gmail.com', '9cf95dacd226dcf43da376cdb6cbba7035218921'),
+(41, 'MarcoPaulo', 'poubelleapipoubelle@gmail.com', '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8'),
+(42, 'MarcoPaulo4', 'poubelleapipoubelle@gmail.com', '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8');
 
 -- --------------------------------------------------------
 
@@ -105,15 +134,33 @@ CREATE TABLE `user_tmp` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Contenu de la table `user_tmp`
+--
+
+INSERT INTO `user_tmp` (`id`, `username`, `email`, `password`, `date`, `token`) VALUES
+(23, 'Marco', 'poubelleapipoubelle@gmail.com', '9cf95dacd226dcf43da376cdb6cbba7035218921', '2019-02-05 09:34:59', '4857kf8pfvm48uzyn1w95g'),
+(25, 'Marco2', 'poubelleapipoubelle@gmail.com', '9cf95dacd226dcf43da376cdb6cbba7035218921', '2019-02-05 09:35:54', 'vyy9e7bcp3r2bgea7v09d'),
+(26, 'Marco22', 'poubelleapipoubelle@gmail.com', '9cf95dacd226dcf43da376cdb6cbba7035218921', '2019-02-05 09:36:17', 't5rbxsks39l069q8x36ji'),
+(27, 'Marco22LaFrappe', 'poubelleapipoubelle@gmail.com', '9cf95dacd226dcf43da376cdb6cbba7035218921', '2019-02-05 09:37:18', 'f4wqdk9n2j1kf3cprngbi'),
+(29, 'Marco22LaFrappe2', 'poubelleapipoubelle@gmail.com', '9cf95dacd226dcf43da376cdb6cbba7035218921', '2019-02-05 09:40:00', 'x3jjr2hpgmn3yr8kmyorf7');
+
+--
 -- Index pour les tables exportées
 --
+
+--
+-- Index pour la table `link`
+--
+ALTER TABLE `link`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- Index pour la table `service`
 --
 ALTER TABLE `service`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`),
+  ADD UNIQUE KEY `name` (`filename`),
   ADD UNIQUE KEY `id` (`id`);
 
 --
@@ -121,6 +168,7 @@ ALTER TABLE `service`
 --
 ALTER TABLE `subscribe`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`filename`),
   ADD UNIQUE KEY `id` (`id`);
 
 --
@@ -145,10 +193,15 @@ ALTER TABLE `user_tmp`
 --
 
 --
+-- AUTO_INCREMENT pour la table `link`
+--
+ALTER TABLE `link`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
 -- AUTO_INCREMENT pour la table `service`
 --
 ALTER TABLE `service`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT pour la table `subscribe`
 --
@@ -158,12 +211,12 @@ ALTER TABLE `subscribe`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 --
 -- AUTO_INCREMENT pour la table `user_tmp`
 --
 ALTER TABLE `user_tmp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
