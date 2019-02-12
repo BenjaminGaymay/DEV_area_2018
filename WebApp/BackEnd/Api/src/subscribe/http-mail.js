@@ -4,7 +4,6 @@ import * as mail from "../services/mail";
 
 export async function run(subscribe, req, res) {
     return new Promise((resolve, reject) => {
-        console.log(subscribe);
         fs.readFile("./template/httpEmailRecap.ejs", "utf8", function (err, content) {
             if (err) return err;
             if (subscribe.datas === null) subscribe.datas = {};
