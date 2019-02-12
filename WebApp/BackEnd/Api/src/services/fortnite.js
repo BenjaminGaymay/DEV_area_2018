@@ -2,23 +2,6 @@
 import request from "request";
 import * as fortnite_bdd from "../bdd/fortnite_bdd";
 
-export async function action(subscribe_id) {
-    return new Promise((resolve, reject) => {
-
-        fortnite_bdd.getUpdatedUserShop(subscribe_id).then(results => {
-            return resolve(results);
-        }).catch(error => {
-            console.log(error);
-            return reject('Error when getting updated user shop fortnite.');
-        })
-    });
-}
-
-export async function reaction(widget, data, resolve, reject) {
-    resolve('OK');
-
-}
-
 export async function updateStore() {
     return new Promise((resolve, reject) => {
         let clientServerOptions = {
@@ -40,29 +23,8 @@ export async function updateStore() {
             }
         });
     });
-
-
-    /*    reddit.getLastPostWithName('funny').then(results => {
-            //console.log(results);
-            reddit_bdd.updateAllSubscribedUsers('funny', results.created, JSON.stringify(results)).then(result => {
-                resolve('OK');
-            }).catch(error => {
-                console.log(error);
-                reject('Error when updating Reddit service.');
-            });
-        }).catch(error => {
-            console.log(error);
-            reject('Error when getting last post on Reddit service.');
-        })*/
 }
 
 export async function update(widget) {
     updateStore().then();
-}
-
-export function getSchema() {
-    return {
-        action: {},
-        reaction: {}
-    }
 }

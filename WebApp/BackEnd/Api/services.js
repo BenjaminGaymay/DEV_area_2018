@@ -14,8 +14,6 @@ export class Services {
                     let file = require(path);
                     this.services[service.filename] = {
                         id: service.id,
-                        action: file.action,
-                        reaction: file.reaction,
                         update: file.update,
                         //getSchema: file.getSchema
                     };

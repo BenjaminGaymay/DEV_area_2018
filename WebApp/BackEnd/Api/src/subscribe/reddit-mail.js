@@ -4,13 +4,14 @@ import * as mail from "../services/mail";
 
 export async function run(subscribe) {
     return new Promise((resolve, reject) => {
-        fs.readFile("./template/fortniteShop.ejs", "utf8", function (err, content) {
+        fs.readFile("./template/redditPost.ejs", "utf8", function (err, content) {
             if (err) return err;
+            subscribe.datas.topic = subscribe.config_action.name;
             let html = ejs.render(content, {
                 datas: subscribe.datas,
             });
             let mailJson = {
-                subject: "Votre skin est disponible !",
+                subject: "Un nouveau post est disponible !",
                 html: html,
                 to: [subscribe.config_reaction.to],
             };

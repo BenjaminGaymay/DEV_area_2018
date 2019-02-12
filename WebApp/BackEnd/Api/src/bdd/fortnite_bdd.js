@@ -29,7 +29,7 @@ export async function updateShop(json) {
                     await query(`UPDATE link
                         set datas = '{"skinName": "${item.name}", "vBucks": "${item.vBucks}" , "url": "${item.imageUrl}"}',
                             updated = TRUE
-                        WHERE id = '${array[index].id}'`);
+                        WHERE id = '${array[index].id}' and updated=FALSE`);
                 }
             }
             return 'OK';

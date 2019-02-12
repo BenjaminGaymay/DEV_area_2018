@@ -2,6 +2,7 @@
 
 import * as bdd from "./src/bdd/bdd";
 import * as fortnite from "./src/services/fortnite"
+import * as reddit from "./src/services/reddit"
 import * as login_bdd from "./src/bdd/login_bdd";
 import * as tools from "./src/tools";
 import fs from "fs";
@@ -46,15 +47,23 @@ export function router(app, services, subscribes) {
         }
     });*/
 
-    app.get("/update", (req, res) => {
-        fortnite.updateStore().then(result => {
+    app.get("/redditUpdateTest", (req, res) => {
+        reddit.update().then(result => {
             res.send(result);
         }).catch(error => {
             res.status(500).send('ERROR');
         })
     });
 
-    app.get("/test", (req, res) => {
+    app.get("/fortniteUpdateTst", (req, res) => {
+        fortnite.update().then(result => {
+            res.send(result);
+        }).catch(error => {
+            res.status(500).send('ERROR');
+        })
+    });
+
+    app.get("/allTest", (req, res) => {
         bdd.getAllLinkUpdated().then(result => { // on chope toutes liens mis à jours
             console.log(result);
             for (let item of result) {
@@ -62,12 +71,13 @@ export function router(app, services, subscribes) {
                 item.config_reaction = JSON.parse(item.config_reaction);
                 item.datas = JSON.parse(item.datas);
                 subscribes.getById(item.subscribe_id).run(item).then(result => { // on call la fonction run de l'abonnement en question
-                    res.status(200).send(result);
+                    console.log(result);
+                    // ici je dois mettre le bool update à false !
                 }).catch(error => {
                     console.log(error);
-                    res.status(500).send('KO');
                 });
             }
+            res.status(200).send('OK');
         });
     });
     /*services.getByName("fortnite").update().then(result => {
