@@ -1,24 +1,15 @@
 "use strict";
 import request from "request";
-import {jsonCompare as compare} from "../jsonSchemaCompare";
-import * as bdd from "../bdd/bdd";
 import * as fortnite_bdd from "../bdd/fortnite_bdd";
-import * as reddit_bdd from "../bdd/reddit_bdd";
-
-const schemaMail = {
-    url: "",
-    method: "",
-};
-
-const schema = JSON.stringify(schemaMail);
 
 export async function action(subscribe_id) {
     return new Promise((resolve, reject) => {
+
         fortnite_bdd.getUpdatedUserShop(subscribe_id).then(results => {
-            console.log(results);
+            return resolve(results);
         }).catch(error => {
             console.log(error);
-            reject('Error when getting last post on Reddit service.');
+            return reject('Error when getting updated user shop fortnite.');
         })
     });
 }

@@ -1,13 +1,39 @@
-import * as fortnite from "../services/fortnite";
+import request from "request";
 
 export async function run(subscribe) {
-    console.log(subscribe);
-    /*fortnite.updateStore().then(result => {
-        console.log("OUAI");
-    }).catch(error => {
-        console.log(error);
-    });*/
-    fortnite.action(2, subscribe.config_action.skinName).then(result => {
-        console.log(result);
+    return new Promise((resolve, reject) => {
+        let clientServerOptions = {
+            uri: subscribe.config_reaction.url,
+            method: subscribe.config_reaction.method,
+            headers: subscribe.config_reaction.headers,
+            body: {},
+        };
+
+        if (clientServerOptions.headers === null) {
+            clientServerOptions.headers = {};
+        }
+
+        if (clientServerOptions.method === "GET") {
+            clientServerOptions.headers.skinUrl = subscribe.datas.url;
+            clientServerOptions.headers.skinName = subscribe.datas.skinName;
+            clientServerOptions.headers.price = subscribe.datas.vBucks;
+        } else {
+            clientServerOptions.headers['content-type'] = 'application/json';
+            clientServerOptions.body.skinUrl = subscribe.datas.url;
+            clientServerOptions.body.skinName = subscribe.datas.skinName;
+            clientServerOptions.body.price = subscribe.datas.vBucks;
+        }
+
+        clientServerOptions.body = JSON.stringify(clientServerOptions.body);
+
+        request(clientServerOptions, function (error, response) {
+            if (error || response.statusCode !== 200) {
+                console.log(data.headers);
+                return reject('request cannot be send.');
+            } else {
+                console.log('Success:', response.body);
+                return resolve('OK');
+            }
+        });
     });
 }

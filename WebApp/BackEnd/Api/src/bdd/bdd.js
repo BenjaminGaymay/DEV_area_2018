@@ -294,7 +294,7 @@ export async function updateSubscribeData(id, action_data, reaction_data) {
         });
 }
 
-export async function getAllSubscribeUpdated() {
+export async function getAllLinkUpdated() {
     return query(`SELECT * FROM link WHERE updated = TRUE`)
         .catch(error => {
             console.log(error);

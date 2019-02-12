@@ -1,11 +1,13 @@
 "use strict";
 
 import * as bdd from "./src/bdd/bdd";
+import * as fortnite from "./src/services/fortnite"
 import * as login_bdd from "./src/bdd/login_bdd";
 import * as tools from "./src/tools";
 import fs from "fs";
 import login_router from "./src/router/login"
 import http_router from "./src/router/http"
+import ejs from "ejs";
 
 function getUnixTime() {
     return Date.now() / 1000 | 0;
@@ -44,19 +46,28 @@ export function router(app, services, subscribes) {
         }
     });*/
 
+    app.get("/update", (req, res) => {
+        fortnite.updateStore().then(result => {
+            res.send(result);
+        }).catch(error => {
+            res.status(500).send('ERROR');
+        })
+    });
+
     app.get("/test", (req, res) => {
-        bdd.getAllSubscribeUpdated().then(result => {
+        bdd.getAllLinkUpdated().then(result => { // on chope toutes liens mis à jours
+            console.log(result);
             for (let item of result) {
                 item.config_action = JSON.parse(item.config_action);
                 item.config_reaction = JSON.parse(item.config_reaction);
                 item.datas = JSON.parse(item.datas);
-                subscribes.getById(item.subscribe_id).run(item).then(result => {
-                    console.log(result);
+                subscribes.getById(item.subscribe_id).run(item).then(result => { // on call la fonction run de l'abonnement en question
+                    res.status(200).send(result);
                 }).catch(error => {
                     console.log(error);
+                    res.status(500).send('KO');
                 });
             }
-            res.status(200).send(result);
         });
     });
     /*services.getByName("fortnite").update().then(result => {

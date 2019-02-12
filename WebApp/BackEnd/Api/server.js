@@ -5,13 +5,15 @@ import {Subscribes} from "./subscribes"
 import {Services} from "./services"
 import bodyParser from 'body-parser';
 import authRouter from "./auth";
+import ejs from "ejs";
 
 const app = express();
 app.use(cors({origin: '*'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/assets"));
-app.set('view_engine', 'ejs');
+app.engine('ejs', ejs.renderFile);
+app.set('view engine', 'ejs');
 
 authRouter(app);
 
@@ -24,7 +26,7 @@ async function init() {
 }
 
 init().then(result => {
-    console.log(result);
+    //console.log(result);
     router(app, result.services, result.subscribes);
 });
 
