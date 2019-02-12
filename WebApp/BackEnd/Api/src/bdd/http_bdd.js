@@ -1,4 +1,4 @@
-import * as bdd from "mysql";
+import * as bdd from "./bdd";
 
 
 export async function findUrlToken(token) {

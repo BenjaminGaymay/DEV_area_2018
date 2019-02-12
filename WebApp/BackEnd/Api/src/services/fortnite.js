@@ -1,44 +1,30 @@
 "use strict";
 import request from "request";
-import {jsonCompare as compare} from "../jsonSchemaCompare";
-import * as bdd from "../bdd/bdd";
+import * as fortnite_bdd from "../bdd/fortnite_bdd";
 
-const schemaMail = {
-    url: "",
-    method: "",
-};
-
-const schema = JSON.stringify(schemaMail);
-
-async function action(widget, data, resolve, reject) {
-    resolve('OK');
-}
-
-async function reaction(widget, data, resolve, reject) {
-    resolve('OK');
-
-}
-
-export async function run(type, widget, data) {
+export async function updateStore() {
     return new Promise((resolve, reject) => {
-        switch (type) {
-            case 'action':
-                return action(widget, data, resolve, reject);
-            case 'reaction':
-                return reaction(widget, data, resolve, reject);
-            default:
-                return reject('Type not found.');
-        }
+        let clientServerOptions = {
+            uri: "https://api.fortnitetracker.com/v1/store",
+            method: "GET",
+            headers: {"TRN-Api-Key": "2bf71bbd-2bac-49b8-a1da-b8af2d4a0a50"},
+            body: "",
+        };
+
+        request(clientServerOptions, function (error, response) {
+            if (error || response.statusCode !== 200) return reject('Fortnite request cannot be send.');
+            else {
+                fortnite_bdd.updateShop(response.body).then(result => {
+                    resolve('OK');
+                }).catch(error => {
+                    console.log(error);
+                    resolve('KO');
+                });
+            }
+        });
     });
 }
 
-export async function update() {
-
-}
-
-export function getSchema() {
-    return {
-        action: {},
-        reaction: {}
-    }
+export async function update(widget) {
+    updateStore().then();
 }

@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
 import {router} from "./router"
+import {Subscribes} from "./subscribes"
 import {Services} from "./services"
 import authRouter from './auth';
 import bodyParser from 'body-parser';
-import { getUpdatedSubscribe, setSubscribeUpdatedFalse } from './src/bdd/bdd';
+import ejs from "ejs";
+import { getAllLinkUpdated, setLinksUpdatedFalse } from './src/bdd/bdd';
 
 
 const app = express();
@@ -12,23 +14,37 @@ app.use(cors({origin: '*'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/assets"));
-app.set('view_engine', 'ejs');
+app.engine('ejs', ejs.renderFile);
+app.set('view engine', 'ejs');
 
 authRouter(app);
-let services = new Services();
-services.build().then(result => {
-    router(app, services);
-    services.updateServices(services);
 
+async function init() {
+    let subscribes = new Subscribes();
+    await subscribes.build();
+    let services = new Services();
+    await services.build();
     setInterval(async () => {
-        const widgets = await getUpdatedSubscribe();
+        const widgets = await getAllLinkUpdated();
+
+        console.log('Check for new updated services..');
         for (const widget of widgets) {
-            services.getById(widget.action_service_id).run('action', undefined, undefined);
-            setSubscribeUpdatedFalse(widget.id);
+            const link = services.getLinksByID(widget.subscribe_id);
+
+            if (link) {
+                link.run(widget);
+                setLinksUpdatedFalse(widget.id);
+            }
         }
     }, 1500);
-}).catch(error => {
-    console.log(error);
+
+    return {subscribes: subscribes, services: services};
+}
+
+init().then(result => {
+    //console.log(result);
+    router(app, result.services, result.subscribes);
+    result.services.updateServices(result.services);
 });
 
 app.get("/", (req, res) => {

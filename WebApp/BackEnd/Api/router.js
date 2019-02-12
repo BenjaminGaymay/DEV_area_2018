@@ -1,11 +1,14 @@
 "use strict";
 
 import * as bdd from "./src/bdd/bdd";
+import * as fortnite from "./src/services/fortnite"
+import * as reddit from "./src/services/reddit"
 import * as login_bdd from "./src/bdd/login_bdd";
 import * as tools from "./src/tools";
 import fs from "fs";
 import login_router from "./src/router/login"
 import http_router from "./src/router/http"
+import ejs from "ejs";
 
 function getUnixTime() {
     return Date.now() / 1000 | 0;
@@ -23,11 +26,11 @@ function getUnixTime() {
 //     return result;
 // }
 
-export function router(app, services) {
-    login_router(app, services);
-    http_router(app, services);
+export function router(app, services, subscribes) {
+    /*login_router(app, services);
+    http_router(app, services);*/
 
-    app.get("/getService/:name?/:type?/:widget?", (req, res) => {
+    /*app.get("/getService/:name?/:type?/:widget?", (req, res) => {
         if (typeof req.params.name === "undefined") {
             let result = [];
             for (let item in services.getServices()) {
@@ -42,36 +45,71 @@ export function router(app, services) {
             if (result === null) return res.status(500).send("Invalid parameters.");
             res.status(200).send(result);
         }
+    });*/
+
+    app.get("/redditUpdateTest", (req, res) => {
+        reddit.update().then(result => {
+            res.send(result);
+        }).catch(error => {
+            res.status(500).send('ERROR');
+        })
     });
 
-    app.get("/test", (req, res) => {
-        // services.getByName("mail").update()
-        // bdd.getSubscribeById(6).then(results => {
-        //     //console.log(results);
-        //
-        //     bdd.getActionReaction(results[0]).then(result => {
-        //         let configData = tools.postTraitement(result);
-        //         console.log(configData);
-        //         services.getById(result.reaction.id).run('reaction', 'default', configData).then(result_1 => {
-        //             res.status(200).send(result_1);
-        //         }).catch(error => {
-        //             console.log(error);
-        //             res.status(500).send(error);
-        //         });
-        //     }).catch(error => {
-        //         console.log(error);
-        //     });
-        // });
-        /*services.getByName("reddit").update().then(result => {
-            services.getByName("reddit").run("action", "default", services).then(results => {
-                console.log(results);
-            });
-            res.status(200);
-            res.send("OK");
-        });*/
+    app.get("/fortniteUpdateTst", (req, res) => {
+        fortnite.update().then(result => {
+            res.send(result);
+        }).catch(error => {
+            res.status(500).send('ERROR');
+        })
     });
 
-    app.post("/subscribe", (req, res) => {
+    app.get("/allTest", (req, res) => {
+        bdd.getAllLinkUpdated().then(result => { // on chope toutes liens mis à jours
+            console.log(result);
+            for (let item of result) {
+                item.config_action = JSON.parse(item.config_action);
+                item.config_reaction = JSON.parse(item.config_reaction);
+                item.datas = JSON.parse(item.datas);
+                subscribes.getById(item.subscribe_id).run(item).then(result => { // on call la fonction run de l'abonnement en question
+                    console.log(result);
+                    // ici je dois mettre le bool update à false !
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+            res.status(200).send('OK');
+        });
+    });
+    /*services.getByName("fortnite").update().then(result => {
+        console.log(result);
+    });*/
+    // services.getByName("mail").update()
+    // bdd.getSubscribeById(6).then(results => {
+    //     //console.log(results);
+    //
+    //     bdd.getActionReaction(results[0]).then(result => {
+    //         let configData = tools.postTraitement(result);
+    //         console.log(configData);
+    //         services.getById(result.reaction.id).run('reaction', 'default', configData).then(result_1 => {
+    //             res.status(200).send(result_1);
+    //         }).catch(error => {
+    //             console.log(error);
+    //             res.status(500).send(error);
+    //         });
+    //     }).catch(error => {
+    //         console.log(error);
+    //     });
+    // });
+    /*services.getByName("reddit").update().then(result => {
+        services.getByName("reddit").run("action", "default", services).then(results => {
+            console.log(results);
+        });
+        res.status(200);
+        res.send("OK");
+    });
+});*/
+
+    /*app.post("/subscribe", (req, res) => {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
             bdd.subscribe(result, req.body).then(result => {
                 console.log(result);
@@ -125,18 +163,5 @@ export function router(app, services) {
         about.client.host = req.ip.split(':').pop();
         about.server.current_time = getUnixTime();
         res.send(about);
-    });
-
-    // imdb tests
-    // app.get('/imdb', (req, res) => {
-    //     services['imdb'].run('update', 'default', {request: req, response: res}).then(result => {
-    //         console.log(result);
-    //         res.status(200);
-    //         res.send(result);
-    //     }).catch(error => {
-    //         console.log(error);
-    //         res.status(500);
-    //         res.send("KO");
-    //     });
-    // });
+    });*/
 }
