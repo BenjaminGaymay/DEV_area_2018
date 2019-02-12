@@ -47,3 +47,31 @@ export async function getUpdatedUserShop(subscribe_id) {
             return result;
         });
 }
+
+export async function getStatsSubscribe() {
+    return query(`SELECT id,
+                         user_id,
+                         subscribe_id,
+                         datas,
+                         JSON_VALUE(config_action, '$.platform') as platform,
+                         JSON_VALUE(config_action, '$.pseudo')   as pseudo
+                  FROM link
+                  WHERE subscribe_id = '6'
+                    AND updated = FALSE`)
+        .catch(error => {
+            console.log(error);
+            return Promise.reject('KO');
+        }).then(result => {
+            return result;
+        });
+}
+
+export async function updateThisPlayerStat(id, stat) {
+    stat = JSON.stringify(stat);
+    return query(`UPDATE link set datas = '${stat}', updated = TRUE where id = '${id}'`).catch(error => {
+        console.log(error);
+        return Promise.reject('KO');
+    }).catch(result => {
+        return 'Ok';
+    })
+}

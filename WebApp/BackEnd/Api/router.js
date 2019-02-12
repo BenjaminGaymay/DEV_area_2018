@@ -63,6 +63,14 @@ export function router(app, services, subscribes) {
        });
     });
 
+    app.get("/fortniteClientId", (req, res) => {
+        fortnite.getStatsOfPlayer("pc", 'RelaxasFr').then(result => {
+            res.send(result);
+        }).catch(error => {
+            res.status(500).send('ERROR');
+        })
+    });
+
     app.get("/redditUpdateTest", (req, res) => {
         reddit.update().then(result => {
             res.send(result);
