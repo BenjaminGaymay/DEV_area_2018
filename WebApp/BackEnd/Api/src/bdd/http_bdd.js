@@ -2,8 +2,8 @@ import * as bdd from "./bdd";
 
 
 export async function findUrlToken(token) {
-    return bdd.query(`SELECT * FROM subscribe WHERE action_service_id = '9'
-                    AND JSON_CONTAINS(config_action_data, '"${token}"', '$.token');`)
+    return bdd.query(`SELECT * FROM link WHERE subscribe_id = '5'
+                    AND JSON_CONTAINS(config_action, '"${token}"', '$.token') LIMIT 1;`)
         .catch(error => {
             console.log(error);
             return Promise.reject('Service or token not found.');

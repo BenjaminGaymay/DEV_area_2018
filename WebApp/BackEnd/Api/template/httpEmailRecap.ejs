@@ -1,0 +1,49 @@
+<div style="background-color: #060b29">
+    <table class="container" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: auto">
+        <tr>
+            <td>
+                <div style="min-width: 500px; margin: 20px 0 0 0;background: #fff;-webkit-box-shadow: 0 3px 4px rgba(0,0,0,.2);box-shadow: 0 3px 4px rgba(0,0,0,.2);border-radius: 4px;overflow: hidden;">
+                    <div style="padding: 30px">
+                        <div style="border: 1px solid #e6e6ec; margin: 0 0 25px 0; border-radius: 4px; overflow: hidden;">
+                            <h3 style="color: #060b29;text-transform: uppercase;margin: 0;padding: 15px 20px;font-weight: 900;font-size: 14px;background: #f4f4f9;border-bottom: 1px solid #e6e6ec;">
+                                HTTP Headers</h3>
+                            <ul style="margin: 0; padding: 0;list-style: none;">
+                                <% for (let i in datas.headers) { %>
+                                    <li style="padding: 12px 20px; border-bottom: 1px solid #e6e6ec; color: #060b29; white-space: nowrap;overflow-x: scroll;">
+                                        <strong class="ng-binding"><%= i %>:</strong>
+                                        <%= datas.headers[i] %>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                        <div style="border: 1px solid #e6e6ec; margin: 0 0 25px 0; border-radius: 4px; overflow: hidden;">
+                            <h3 style="color: #060b29;text-transform: uppercase;margin: 0;padding: 15px 20px;font-weight: 900;font-size: 14px;background: #f4f4f9;border-bottom: 1px solid #e6e6ec;">
+                                Body String</h3>
+                            <ul style="margin: 0; padding: 0;list-style: none;">
+                                <% for (let i in datas.body) { %>
+                                    <li style="padding: 12px 20px; border-bottom: 1px solid #e6e6ec; color: #060b29; white-space: nowrap;overflow-x: scroll;">
+                                        <strong class="ng-binding"><%= i %>:</strong>
+                                        <%= datas.body[i] %>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                        <div style="border: 1px solid #e6e6ec; margin: 0 0 25px 0; border-radius: 4px; overflow: hidden;">
+                            <h3 style="color: #060b29;text-transform: uppercase;margin: 0;padding: 15px 20px;font-weight: 900;font-size: 14px;background: #f4f4f9;border-bottom: 1px solid #e6e6ec;">
+                                Query string</h3>
+                            <ul style="margin: 0; padding: 0;list-style: none;">
+                                <% for (let i in datas.query) { %>
+                                    <li style="padding: 12px 20px; border-bottom: 1px solid #e6e6ec; color: #060b29; white-space: nowrap;overflow-x: scroll;">
+                                        <strong class="ng-binding"><%= i %>:</strong>
+                                        <%= datas.query[i] %>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </td>
+        </tr>
+    </table>
+</div>

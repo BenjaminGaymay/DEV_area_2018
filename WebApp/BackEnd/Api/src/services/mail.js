@@ -4,7 +4,6 @@ import striptags from 'striptags';
 
 export async function run(datas) {
     return new Promise(function (resolve, reject) {
-
         if (!datas.hasOwnProperty("to") || !datas.hasOwnProperty("html") || !datas.hasOwnProperty("subject")) {
             return reject('Mail: Some params in bundle are missing.');
         }
@@ -46,25 +45,6 @@ export async function run(datas) {
     });
 }
 
-export async function subscribe(widget, request) {
-}
-
 export async function update(widget) {
 
-}
-
-export function getSchema() {
-    return {
-        action: {},
-        reaction: {
-            sendEmail: {
-                description: 'Send an email',
-                schema: {
-                    subject: typeof "",
-                    html: typeof "",
-                    to: typeof [],
-                },
-            }
-        },
-    }
 }

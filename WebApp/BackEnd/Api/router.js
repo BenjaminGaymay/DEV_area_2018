@@ -27,8 +27,8 @@ function getUnixTime() {
 // }
 
 export function router(app, services, subscribes) {
-    /*login_router(app, services);
-    http_router(app, services);*/
+    /*login_router(app, services);*/
+    http_router(app, subscribes);
 
     /*app.get("/getService/:name?/:type?/:widget?", (req, res) => {
         if (typeof req.params.name === "undefined") {
@@ -46,6 +46,22 @@ export function router(app, services, subscribes) {
             res.status(200).send(result);
         }
     });*/
+
+    app.get("/template", (req, res) => {
+       res.render(__dirname + "/template/httpEmailRecap.ejs", {
+           datas: {
+               method: 'dffdf',
+               body: {
+                   name: "bob",
+                   lastname: "mamadou sacko bounana"
+               },
+               headers: {
+                   host: "ssssssssssssssssssssssssss",
+                   dnt: "ssd"
+               }
+           }
+       });
+    });
 
     app.get("/redditUpdateTest", (req, res) => {
         reddit.update().then(result => {
