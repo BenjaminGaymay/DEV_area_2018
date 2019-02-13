@@ -1,4 +1,5 @@
 import request from "request";
+import * as bdd from "../bdd/bdd";
 
 export async function run(subscribe) {
     return new Promise((resolve, reject) => {
@@ -32,4 +33,30 @@ export async function run(subscribe) {
             }
         });
     });
+}
+
+function checkConfigAction(params) {
+    return !(!params.hasOwnProperty("name"));
+}
+
+function checkConfigReaction(params) {
+    return !(!params.hasOwnProperty("method") || !params.hasOwnProperty("url") || !params.hasOwnProperty("headers"));
+}
+
+export async function subscribe(subscribeId, userId, bodyParam) {
+    return new Promise((resolve, reject) => {
+        if (!checkConfigAction(bodyParam.configAction) || !checkConfigReaction(bodyParam.configReaction)) {
+            console.log(bodyParam);
+            console.log("Missing subscribe parameters !");
+            return reject('KO');
+        }
+
+        let action = {"name": bodyParam.configAction.name, "created": "0"};
+        let reaction = {"url": bodyParam.configReaction.url, "method": bodyParam.configReaction.method, "headers": bodyParam.configReaction.headers};
+        bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
+            return resolve('OK');
+        }).catch(error => {
+            return reject('KO');
+        });
+    })
 }

@@ -15,6 +15,7 @@ export class Subscribes {
                     this.services[subscribe.filename] = {
                         id: subscribe.id,
                         run: file.run,
+                        subscribe: file.subscribe
                         //getSchema: file.getSchema
                     };
                 }

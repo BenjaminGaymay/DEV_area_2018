@@ -48,19 +48,19 @@ export function router(app, services, subscribes) {
     });*/
 
     app.get("/template", (req, res) => {
-       res.render(__dirname + "/template/httpEmailRecap.ejs", {
-           datas: {
-               method: 'dffdf',
-               body: {
-                   name: "bob",
-                   lastname: "mamadou sacko bounana"
-               },
-               headers: {
-                   host: "ssssssssssssssssssssssssss",
-                   dnt: "ssd"
-               }
-           }
-       });
+        res.render(__dirname + "/template/httpEmailRecap.ejs", {
+            datas: {
+                method: 'dffdf',
+                body: {
+                    name: "bob",
+                    lastname: "mamadou sacko bounana"
+                },
+                headers: {
+                    host: "ssssssssssssssssssssssssss",
+                    dnt: "ssd"
+                }
+            }
+        });
     });
 
     app.get("/fortniteClientId", (req, res) => {
@@ -133,34 +133,40 @@ export function router(app, services, subscribes) {
     });
 });*/
 
-    /*app.post("/subscribe", (req, res) => {
+    app.post("/subscribe", (req, res) => {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
-            bdd.subscribe(result, req.body).then(result => {
-                console.log(result);
-                res.status(200);
-                res.send("OK");
+            if (typeof req.body === "undefined" || !req.body.hasOwnProperty("subscribeId")
+                || !req.body.hasOwnProperty("configAction") || !req.body.hasOwnProperty("configReaction")) {
+                console.log("Subscribe body missing parameters");
+                res.status(500).send("KO");
+            }
+
+            req.body.configAction = JSON.parse(req.body.configAction);
+            req.body.configReaction = JSON.parse(req.body.configReaction);
+            subscribes.getById(req.body.subscribeId).subscribe(req.body.subscribeId, result.id, req.body).then(result => {
+                res.status(200).send("OK");
             }).catch(error => {
                 console.log(error);
-                res.status(500);
-                res.send("KO");
+                res.status(500).send("KO");
             });
         }).catch(error => {
             console.log(error);
-            res.status(500);
-            res.send("KO");
+            res.status(500).send("KO");
         });
     });
 
     app.post("/unsubscribe", (req, res) => {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
-            bdd.unsubscribe(result, req.body).then(result => {
-                console.log(result);
-                res.status(200);
-                res.send("OK");
+            if (typeof req.body === "undefined" || !req.body.hasOwnProperty("subscribeId")) {
+                console.log("Unsubscribe body missing parameters");
+                res.status(500).send("KO");
+            }
+
+            bdd.unsubscribe(req.body.subscribeId, result.id).then(result => {
+                res.status(200).send("OK");
             }).catch(error => {
                 console.log(error);
-                res.status(500);
-                res.send("KO");
+                res.status(500).send("KO");
             });
         }).catch(error => {
             console.log(error);
@@ -169,7 +175,7 @@ export function router(app, services, subscribes) {
         });
     });
 
-    app.get("/", function (req, res) {
+    /*app.get("/", function (req, res) {
         bdd.getUserByName("admin").then(user => {
             bdd.getUserServices(user.id).then(result => {
                 res.send(result);
