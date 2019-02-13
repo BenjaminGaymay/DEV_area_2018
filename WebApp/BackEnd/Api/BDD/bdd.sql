@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost:3306
--- Généré le :  Mar 12 Février 2019 à 10:47
+-- Généré le :  Mer 13 Février 2019 à 09:42
 -- Version du serveur :  10.2.21-MariaDB-10.2.21+maria~stretch
 -- Version de PHP :  7.2.14-1+0~20190113100742.14+stretch~1.gbpd83c69
 
@@ -43,8 +43,11 @@ CREATE TABLE `link` (
 INSERT INTO `link` (`id`, `user_id`, `updated`, `subscribe_id`, `config_action`, `config_reaction`, `datas`) VALUES
 (1, 1, 0, 1, '{\"skinName\": \"Moonrise\"}', '{\"to\": \"poubelleapipoubelle@gmail.com\"}', '{\"skinName\": \"Moonrise\", \"vBucks\": \"1200\" , \"url\": \"https://cdn.thetrackernetwork.com/cdn/fortnite/797C6306_large.png\"}'),
 (2, 1, 0, 2, '{\"skinName\": \"Sanctum\"}', '{\"method\": \"POST\", \"url\": \"https://hookb.in/QJL2wRV962t9r92dlVEY\", \"headers\" : null}', '{\"skinName\": \"Sanctum\", \"vBucks\": \"1500\" , \"url\": \"https://cdn.thetrackernetwork.com/cdn/fortnite/13926359_large.png\"}'),
-(3, 1, 1, 3, '{\"name\": \"funny\", \"created\": \"1549993465\"}', '{\"to\": \"poubelleapipoubelle@gmail.com\"}', '{\"title\":\"*cries in native american*\",\"author\":\"Sean_Lock\",\"url\":\"https://i.redd.it/06uiu8n4z3g21.png\",\"created\":1549993465}'),
-(4, 1, 1, 4, '{\"name\": \"funny\", \"created\": \"1549993465\"}', '{\"method\": \"POST\", \"url\": \"https://hookb.in/QJL2wRV962t9r92dlVEY\", \"headers\" : null}', '{\"title\":\"*cries in native american*\",\"author\":\"Sean_Lock\",\"url\":\"https://i.redd.it/06uiu8n4z3g21.png\",\"created\":1549993465}');
+(3, 1, 0, 3, '{\"name\": \"funny\", \"created\": \"1549993465\"}', '{\"to\": \"poubelleapipoubelle@gmail.com\"}', '{\"title\":\"*cries in native american*\",\"author\":\"Sean_Lock\",\"url\":\"https://i.redd.it/06uiu8n4z3g21.png\",\"created\":1549993465}'),
+(4, 1, 0, 4, '{\"name\": \"funny\", \"created\": \"1549993465\"}', '{\"method\": \"POST\", \"url\": \"https://hookb.in/QJL2wRV962t9r92dlVEY\", \"headers\" : null}', '{\"title\":\"*cries in native american*\",\"author\":\"Sean_Lock\",\"url\":\"https://i.redd.it/06uiu8n4z3g21.png\",\"created\":1549993465}'),
+(5, 1, 0, 5, '{\"token\": \"azerty12345\"}', '{\"to\": \"poubelleapipoubelle@gmail.com\"}', NULL),
+(6, 1, 1, 6, '{\"platform\": \"pc\", \"pseudo\": \"RelaxasFr\"}', '{\"to\": \"poubelleapipoubelle@gmail.com\"}', '{\"accountId\":\"83aa13a9-5980-4e2a-b4bb-1c4247e6dcc0\",\"ratio\":\"1.59\",\"matches\":\"617\",\"kills\":\"958\",\"top1\":\"14\",\"winPourcentage\":\"2%\"}'),
+(7, 1, 1, 7, '{\"platform\": \"pc\", \"pseudo\": \"RelaxasFr\"}', '{\"method\": \"GET\", \"url\": \"https://hookb.in/QJL2wRV962t9r92dlVEY\", \"headers\" : null}', '{\"accountId\":\"83aa13a9-5980-4e2a-b4bb-1c4247e6dcc0\",\"ratio\":\"1.59\",\"matches\":\"617\",\"kills\":\"958\",\"top1\":\"14\",\"winPourcentage\":\"2%\"}');
 
 -- --------------------------------------------------------
 
@@ -63,9 +66,10 @@ CREATE TABLE `service` (
 --
 
 INSERT INTO `service` (`id`, `filename`, `datas`) VALUES
-(1, 'fortnite', '{\"lastUpdate\": \"2019-02-12 09:47:35\"}'),
+(1, 'fortnite', '{\"lastUpdate\": \"2019-02-13 09:27:12\"}'),
 (2, 'mail', NULL),
-(3, 'reddit', NULL);
+(3, 'reddit', NULL),
+(15, 'http', NULL);
 
 -- --------------------------------------------------------
 
@@ -84,10 +88,13 @@ CREATE TABLE `subscribe` (
 --
 
 INSERT INTO `subscribe` (`id`, `filename`, `datas`) VALUES
-(1, 'fortnite-mail', NULL),
-(2, 'fortnite-http', NULL),
+(1, 'fortnite-shop-mail', NULL),
+(2, 'fortnite-shop-http', NULL),
 (3, 'reddit-mail', NULL),
-(4, 'reddit-http', NULL);
+(4, 'reddit-http', NULL),
+(5, 'http-mail', NULL),
+(6, 'fortnite-stats-mail', NULL),
+(7, 'fortnite-stats-http', NULL);
 
 -- --------------------------------------------------------
 
@@ -196,17 +203,17 @@ ALTER TABLE `user_tmp`
 -- AUTO_INCREMENT pour la table `link`
 --
 ALTER TABLE `link`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT pour la table `service`
 --
 ALTER TABLE `service`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT pour la table `subscribe`
 --
 ALTER TABLE `subscribe`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT pour la table `user`
 --

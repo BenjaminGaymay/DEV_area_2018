@@ -9,26 +9,22 @@ export async function run(subscribe) {
             body: {},
         };
 
-        if (clientServerOptions.headers === null) {
-            clientServerOptions.headers = {};
+        let container = "headers";
+        if (clientServerOptions.headers === null) clientServerOptions.headers = {};
+        if (clientServerOptions.method !== "GET") {
+            container = "body";
+            clientServerOptions.headers['content-type'] = 'application/json';
         }
 
-        if (clientServerOptions.method === "GET") {
-            clientServerOptions.headers.skinUrl = subscribe.datas.url;
-            clientServerOptions.headers.skinName = subscribe.datas.skinName;
-            clientServerOptions.headers.price = subscribe.datas.vBucks;
-        } else {
-            clientServerOptions.headers['content-type'] = 'application/json';
-            clientServerOptions.body.skinUrl = subscribe.datas.url;
-            clientServerOptions.body.skinName = subscribe.datas.skinName;
-            clientServerOptions.body.price = subscribe.datas.vBucks;
-        }
+        clientServerOptions[container].skinUrl = subscribe.datas.url;
+        clientServerOptions[container].skinName = subscribe.datas.skinName;
+        clientServerOptions[container].price = subscribe.datas.vBucks;
 
         clientServerOptions.body = JSON.stringify(clientServerOptions.body);
 
         request(clientServerOptions, function (error, response) {
             if (error || response.statusCode !== 200) {
-                console.log(data.headers);
+                console.log(error);
                 return reject('request cannot be send.');
             } else {
                 console.log('Success:', response.body);

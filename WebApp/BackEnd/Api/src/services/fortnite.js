@@ -79,6 +79,7 @@ export async function updateStats() {
 }
 
 export async function update() {
-    //updateStore().then();
+    updateStore().then();
     updateStats().then();
+    return 'OK';
 }
