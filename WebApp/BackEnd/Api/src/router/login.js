@@ -29,7 +29,7 @@ async function createToken() {
 
 export default function router(app, services) {
     app.post("/login", (req, res) => {
-        login_bdd(req.body.login, req.body.password).then(result => {
+        login_bdd.login(req.body.login, req.body.password).then(result => {
             console.log(result);
             res.status(200);
             res.send("OK");
