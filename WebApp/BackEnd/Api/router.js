@@ -27,7 +27,7 @@ function getUnixTime() {
 // }
 
 export function router(app, services, subscribes) {
-    /*login_router(app, services);*/
+    login_router(app, services);
     http_router(app, subscribes);
 
     /*app.get("/getService/:name?/:type?/:widget?", (req, res) => {
