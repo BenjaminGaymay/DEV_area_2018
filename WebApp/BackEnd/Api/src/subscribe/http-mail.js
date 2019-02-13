@@ -6,7 +6,7 @@ import * as bdd from "../bdd/bdd";
 export async function run(subscribe, req, res) {
     return new Promise((resolve, reject) => {
         fs.readFile("./template/httpEmailRecap.ejs", "utf8", function (err, content) {
-            if (err) return err;
+            if (err) return reject('KO');
             if (subscribe.datas === null) subscribe.datas = {};
             subscribe.datas.token = subscribe.config_action.token;
             subscribe.datas.body = req.body;

@@ -32,8 +32,6 @@ export async function run(datas) {
             html: datas.html // html body
         };
 
-        // send mail with defined transport object
-        /*console.log(mailOptions);*/
         transporter.sendMail(mailOptions, (err, result) => { // catch invalid email
             if (err) {
                 console.log(err);
