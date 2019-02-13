@@ -179,7 +179,8 @@ export async function getUserServices(user_id) {
  * @returns {Promise<void>}
  */
 export async function getAllServices() {
-    return query(`SELECT * FROM service`).catch(error => {
+    return query(`SELECT *
+                  FROM service`).catch(error => {
         return Promise.reject('subscribe unknown error.');
     }).then(result => {
         if (typeof result[0] == "undefined") {
@@ -193,7 +194,8 @@ export async function getAllServices() {
  * @returns {Promise<void>}
  */
 export async function getAllSubscribes() {
-    return query(`SELECT * FROM subscribe`).catch(error => {
+    return query(`SELECT *
+                  FROM subscribe`).catch(error => {
         return Promise.reject('subscribe unknown error.');
     }).then(result => {
         if (typeof result[0] == "undefined") {
@@ -234,21 +236,18 @@ export async function subscribe(user, data) {
 
 /**
  *
- * @param user
- * @param data Subscribe
- * @returns {Promise<void>}
+ * @param subscribeId
+ * @param userId
+ * @returns {Promise<boolean | never>}
  */
-export async function unsubscribe(user, data) {
-    if (!data.hasOwnProperty("subscribeId") || typeof data.subscribeId != "number") {
-        return Promise.reject('Missing parameters');
-    }
-
-    return query(`DELETE FROM subscribe WHERE user_id = ${user.id} AND id = ${data.subscribeId};`)
+export async function unsubscribe(subscribeId, userId) {
+    return query(`DELETE FROM link WHERE id = ${subscribeId} AND user_id = ${userId};`)
         .catch(error => {
-            return Promise.reject('subscribe unknown error.');
+            console.log("unsubscribe fail: id not found or user not match with this subscribe_id");
+            return Promise.reject('KO');
         })
         .then(result => {
-            return true;
+            return 'OK';
         });
 }
 
@@ -295,12 +294,28 @@ export async function updateSubscribeData(id, action_data, reaction_data) {
 }
 
 export async function getAllLinkUpdated() {
-    return query(`SELECT * FROM link WHERE updated = TRUE`)
+    return query(`SELECT *
+                  FROM link
+                  WHERE updated = TRUE`)
         .catch(error => {
             console.log(error);
             return Promise.reject('Service or token not found.');
         })
         .then(result => {
             return result;
+        });
+}
+
+export async function subscribeIntoLink(subscribeId, userId, action, reaction) {
+    action = JSON.stringify(action);
+    reaction = JSON.stringify(reaction);
+
+    return query(`INSERT INTO link (user_id, subscribe_id, config_action, config_reaction) 
+                            VALUES ('${userId}', '${subscribeId}', '${action}', '${reaction}')`)
+        .catch(error => {
+            console.log(error);
+            return Promise.reject('KO');
+        }).then(result => {
+            return 'OK';
         });
 }
