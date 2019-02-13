@@ -56,7 +56,7 @@ export async function getStatsSubscribe() {
                          JSON_VALUE(config_action, '$.platform') as platform,
                          JSON_VALUE(config_action, '$.pseudo')   as pseudo
                   FROM link
-                  WHERE subscribe_id = '6'
+                  WHERE (subscribe_id = '6' or subscribe_id = '7')
                     AND updated = FALSE`)
         .catch(error => {
             console.log(error);

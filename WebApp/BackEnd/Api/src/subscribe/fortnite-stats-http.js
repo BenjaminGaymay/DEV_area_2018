@@ -16,15 +16,20 @@ export async function run(subscribe) {
             clientServerOptions.headers['content-type'] = 'application/json';
         }
 
-        clientServerOptions[container].postTopic = subscribe.config_action.name;
-        clientServerOptions[container].postAuthor = subscribe.datas.author;
-        clientServerOptions[container].postUrl = subscribe.datas.url;
-        clientServerOptions[container].postTitle = subscribe.datas.title;
+        clientServerOptions[container].platform = subscribe.config_action.platform;
+        clientServerOptions[container].pseudo = subscribe.config_action.pseudo;
+        clientServerOptions[container].accountId = subscribe.datas.accountId;
+        clientServerOptions[container].ratio = subscribe.datas.ratio;
+        clientServerOptions[container].matches = subscribe.datas.matches;
+        clientServerOptions[container].kills = subscribe.datas.kills;
+        clientServerOptions[container].top1 = subscribe.datas.top1;
+        clientServerOptions[container].winPourcentage = subscribe.datas.winPourcentage;
 
         clientServerOptions.body = JSON.stringify(clientServerOptions.body);
 
         request(clientServerOptions, function (error, response) {
             if (error || response.statusCode !== 200) {
+                console.log(error);
                 return reject('request cannot be send.');
             } else {
                 console.log('Success:', response.body);
