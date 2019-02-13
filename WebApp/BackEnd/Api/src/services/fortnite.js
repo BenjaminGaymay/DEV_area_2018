@@ -81,5 +81,5 @@ export async function updateStats() {
 export async function update() {
     updateStore().then();
     updateStats().then();
-    return '0K';
+    return 'OK';
 }
