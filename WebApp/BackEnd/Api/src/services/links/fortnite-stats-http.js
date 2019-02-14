@@ -1,5 +1,8 @@
 import request from "request";
-import * as bdd from "../bdd/bdd";
+import * as bdd from "../../bdd/bdd";
+
+export const name = 'fortniteStatsHttp';
+export const id = 81;
 
 export async function run(subscribe) {
     return new Promise((resolve, reject) => {

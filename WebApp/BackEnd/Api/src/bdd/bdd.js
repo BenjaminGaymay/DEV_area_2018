@@ -48,26 +48,6 @@ export async function getUserByName(username) {
             });
 }
 
-/**
- *
- * @param userId
- * @returns {Promise<*>}
- */
-export async function getUserSuscribe(userId) {
-    if (!(typeof userId === "number")) {
-        return Promise.reject(`getUserSuscribe fail with param.`);
-    }
-    return query(`SELECT * FROM subscribe WHERE user_id like '${userId}'`)
-        .catch(error => {
-            return Promise.reject(`getUserSuscribe unknown error.`);
-        })
-        .then(result => {
-            if (typeof result[0] === "undefined")
-                return Promise.reject('getUsersubscribe userId not found.');
-            return result;
-        });
-}
-
 
 /**
  *
@@ -82,19 +62,6 @@ export function query(sql) {
             resolve(rows);
         });
     });
-}
-
-/**
- *
- * @param id
- * @returns {Promise<*>}
- */
-export async function getServiceById(id) {
-    if (!(typeof id === "number")) {
-        return Promise.reject('getServiceById fail with param.');
-    }
-
-    return query(`SELECT * FROM service WHERE service.id like '${id}'`);
 }
 
 /**
@@ -131,82 +98,6 @@ export async function setServiceDatasByName(name, datas) {
 }
 
 /**
- *
- * @param name
- * @returns {Promise<*>}
- */
-export async function registerService(name) {
-
-    if (!(typeof name == "string")) {
-        return Promise.reject('registerService fail with param.');
-    }
-
-    return query(`INSERT INTO service (name) value ('${name}')`)
-        .catch(error => {
-            return Promise.reject(`registerService ${name} already exist.`);
-        })
-        .then(result => {
-            return true;
-        });
-}
-
-/**
- *
- * @param row
- * @returns {Promise<*>}
- */
-export async function getActionReaction(row) {
-    let array = {};
-
-    return getServiceById(row.action_service_id)//)action_id)
-        .then(result => {
-            if (typeof result[0] === "undefined") {
-                console.log(`Service action ${row.action_service_id} not found`);
-            } else {
-                let tmp = typeof row.config_action === "string" ? JSON.parse(row.config_action) : row.config_action;
-                array.action = result[0];
-                array.action.config = row.config_action !== null ? tmp : null;
-                array.action.data = row.action_data !== null && row.action_data.length !== 0 ? JSON.parse(row.action_data) : null;
-            }
-            return getServiceById(row.reaction_service_id);
-        })
-        .then(result => {
-            if (typeof result[0] === "undefined") {
-                console.log(`Service reaction ${row.reaction_service_id} not found`);
-                array = {};
-            } else if (array.action) {
-                let tmp = typeof row.config_reaction === "string" ? JSON.parse(row.config_reaction) : row.config_reaction;
-                array.reaction = result[0];
-                array.reaction.config = row.config_reaction !== null ? tmp : null;
-                array.reaction.data = row.reaction_data !== null && row.reaction_data.length !== 0 ? JSON.parse(row.reaction_data) : null;
-            }
-            return array;
-        });
-}
-
-/**
- *
- * @param user_id
- * @returns {Promise<void>}
- */
-export async function getUserServices(user_id) {
-    return getUserSuscribe(user_id)
-        .then(result => {
-            let promises = [];
-
-            for (let i in result) {
-                let item = getActionReaction(result[i]);
-                promises.push(item);
-            }
-            return Promise.all(promises);
-        })
-        .catch(error => {
-            console.log(error);
-            return Promise.reject("Aucun abonnement valide");
-        });
-}
-
-/**
  * @returns {Promise<void>}
  */
 export async function getAllServices() {
@@ -234,52 +125,6 @@ export async function getAllSubscribes() {
         }
         return result;
     });
-}
-
-/**
- *
- * @param user
- * @param data Subscribe
- * @returns {Promise<void>}
- */
-export async function subscribe(user, data) {
-    if (typeof data === "undefined" || !data.hasOwnProperty("actionServiceId") || !data.hasOwnProperty("reactionServiceId")
-        || !data.hasOwnProperty("actionServiceData") || !data.hasOwnProperty("reactionServiceData")) {
-        return Promise.reject('Missing parameters');
-    }
-    getServiceById(data.actionServiceId).then(result => {
-        getServiceById(data.reactionServiceId).then(result => {
-
-            return query(`INSERT INTO subscribe (user_id, action_service_id, reaction_service_id, config_action, config_reaction) value ('${user.id}', '${data.actionServiceId}', '${data.reactionServiceId}', '${data.actionServiceData}', '${data.reactionServiceData}')`)
-                .catch(error => {
-                    return Promise.reject('subscribe unknown error.');
-                })
-                .then(result => {
-                    return true;
-                });
-        }).catch(error => {
-            return Promise.reject("Service not found.");
-        });
-    }).catch(error => {
-        return Promise.reject("Service not found.");
-    });
-}
-
-/**
- *
- * @param subscribeId
- * @param userId
- * @returns {Promise<boolean | never>}
- */
-export async function unsubscribe(subscribeId, userId) {
-    return query(`DELETE FROM link WHERE id = ${subscribeId} AND user_id = ${userId};`)
-        .catch(error => {
-            console.log("unsubscribe fail: id not found or user not match with this subscribe_id");
-            return Promise.reject('KO');
-        })
-        .then(result => {
-            return 'OK';
-        });
 }
 
 export async function isTokenExist(token) {
@@ -395,6 +240,23 @@ export async function subscribeIntoLink(subscribeId, userId, action, reaction) {
             console.log(error);
             return Promise.reject('KO');
         }).then(result => {
+            return 'OK';
+        });
+}
+
+/**
+ *
+ * @param subscribeId
+ * @param userId
+ * @returns {Promise<boolean | never>}
+ */
+export async function unsubscribeFromLink(subscribeId, userId) {
+    return query(`DELETE FROM link WHERE id = ${subscribeId} AND user_id = ${userId};`)
+        .catch(error => {
+            console.log("unsubscribe fail: id not found or user not match with this subscribe_id");
+            return Promise.reject('KO');
+        })
+        .then(result => {
             return 'OK';
         });
 }

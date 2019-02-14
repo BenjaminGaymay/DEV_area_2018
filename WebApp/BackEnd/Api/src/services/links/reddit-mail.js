@@ -1,7 +1,10 @@
 import fs from "fs";
 import ejs from "ejs";
-import * as mail from "../services/mail";
-import * as bdd from "../bdd/bdd";
+import * as mail from "../mail";
+import * as bdd from "../../bdd/bdd";
+
+export const name = 'redditMail';
+export const id = 22;
 
 export async function run(subscribe) {
     return new Promise((resolve, reject) => {

@@ -162,7 +162,7 @@ export function router(app, services, subscribes) {
                 res.status(500).send("KO");
             }
 
-            bdd.unsubscribe(req.body.subscribeId, result.id).then(result => {
+            bdd.unsubscribeFromLink(req.body.subscribeId, result.id).then(result => {
                 res.status(200).send("OK");
             }).catch(error => {
                 console.log(error);

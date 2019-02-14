@@ -5,12 +5,6 @@ import * as bdd from '../bdd/bdd';
 // url: http://api.themoviedb.org/3/movie/upcoming?page=1&api_key=8e0abe397ffd3af9ac5d115c0f815c2c&language= + lang
 // img: http://image.tmdb.org/t/p/w200 + img url
 
-async function action(widget, data, resolve, reject) {
-}
-
-async function reaction(widget, data, resolve, reject) {
-}
-
 export async function update() {
 	// requete API pour avoir le dernier film sorti
 	const previous = await bdd.getServiceDatasByName('imdb');
@@ -20,24 +14,11 @@ export async function update() {
 			reject(error);
 		}
 		const lastMovie = JSON.parse(body)['results'][0]['title'];
-		bdd.setServiceDatasByName('imdb', lastMovie);
+		bdd.setServiceDatasByName('imdb', lastMovie).then();
 		if (previous !== lastMovie)
 			console.log('IMDb widgets needs to be updated');
 		else
 			console.log('IMDb already update');
 		// resolve(lastMovie);
 	})
-}
-
-export async function run(type, widget, data) {
-    return new Promise((resolve, reject) => {
-        switch (type) {
-            case 'action':
-                return action(widget, data, resolve, reject);
-            case 'reaction':
-				return reaction(widget, data, resolve, reject);
-            default:
-                return reject('Type not found.');
-        }
-    });
 }

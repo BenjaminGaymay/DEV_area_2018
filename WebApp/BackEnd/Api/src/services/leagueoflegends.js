@@ -5,23 +5,12 @@ import * as bdd from '../bdd/bdd';
 // config_action: {"name": "TorresSwagg"}
 // datas: {"name":"TorresSwagg","level":55,"lastChampion":"Lux","rank":"GOLD I","lp":24,"win":27,"lose":14}
 
-const r = require('request');
-const file = require('../../auth/lol.json');
-
-async function action(widget, data, resolve, reject) {
-	console.log('action');
-	run('reaction', undefined, undefined);
-	resolve('action');
-}
-
-async function reaction(widget, data, resolve, reject) {
-	console.log('reaction');
-	resolve('reaction');
-}
+import * as r from  'request';
+import * as file from '../../auth/lol.json';
 
 function checkDataForUpdate(response, data, id) {
-	if (response != data)
-		bdd.updateLinkData(id, response);
+	if (response !== data)
+		bdd.updateLinkData(id, response).then();
 	console.log('LolService: ending update..')
 }
 
@@ -72,17 +61,4 @@ export async function update() {
 	})
 
 	}
-}
-
-export async function run(type, widget, data) {
-    return new Promise((resolve, reject) => {
-        switch (type) {
-            case 'action':
-                return action(widget, data, resolve, reject);
-            case 'reaction':
-				return reaction(widget, data, resolve, reject);
-            default:
-                return reject('Type not found.');
-        }
-    });
 }
