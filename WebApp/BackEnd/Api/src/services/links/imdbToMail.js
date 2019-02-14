@@ -10,7 +10,7 @@ export const name = 'imdbToMail';
 
 export async function run(widget) {
 	sendMail({
-		to: widget.config_reaction,
+		to: widget.config_reaction.to,
 		subject: 'Un nouveau sur IMDB !',
 		html: 'Un nouveau film est sorti aujourd\'hui : "' + await getServiceDatasByName('imdb') + '" waouh !'
 	});

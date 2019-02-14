@@ -9,7 +9,7 @@ export const name = 'imdbToGithubIssue';
 export const id = 4;
 
 export async function run(widget) {
-	const config = JSON.parse(widget.config_reaction);
+	const config = widget.config_reaction;
 	const title = await getServiceDatasByName('imdb');
 
 	github.createIssue(config.access_token, config.username, config.repoName, title, 'Va voir ce super film : "' + await getServiceDatasByName('imdb') + '" !');
