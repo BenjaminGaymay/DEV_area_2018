@@ -11,7 +11,7 @@ export async function update() {
 
 	request('http://api.themoviedb.org/3/movie/upcoming?page=1&api_key=8e0abe397ffd3af9ac5d115c0f815c2c&language=fr', (error, response, body) => {
 		if (error) {
-			reject(error);
+			return Promise.reject(error);
 		}
 		const lastMovie = JSON.parse(body)['results'][0]['title'];
 		bdd.setServiceDatasByName('imdb', lastMovie).then();

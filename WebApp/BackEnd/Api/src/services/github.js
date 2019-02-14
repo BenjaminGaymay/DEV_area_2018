@@ -11,7 +11,7 @@ export async function update() {
 function arraysEqual(arr1, arr2) {
     if(arr1.length !== arr2.length)
         return false;
-    for(var i = arr1.length; i--;) {
+    for(let i = arr1.length; i--;) {
         if(arr1[i] !== arr2[i])
             return false;
     }
@@ -41,14 +41,14 @@ export  async function updateGetRepos() {
 
 		request(options, (error, response, body) => {
 			if (!error && response.statusCode === 200) {
-				let repos = []
+				let repos = [];
 				body = JSON.parse(body);
 				for (const i in body) {
 					repos.push({ 'name':body[i].name, 'url':body[i].html_url});
 				}
 
 				if (JSON.stringify(repos) !== JSON.stringify(widget.datas.repos)) {
-					updateLinkData(widget.id, { repos });
+					updateLinkData(widget.id, { repos }).then();
 				}
 			}
 		});
@@ -80,7 +80,7 @@ export async function updateGetNotifs() {
 		};
 
 		request(options, (error, response, body) => {
-			if (!error && response.statusCode == 200) {
+			if (!error && response.statusCode === 200) {
 				let a = JSON.parse(body);
 				try {
 					a = {
@@ -91,7 +91,7 @@ export async function updateGetNotifs() {
 						url: a[0].repository.html_url
 					};
 					if (JSON.stringify(a) !== JSON.stringify(widget.datas)) {
-						updateLinkData(widget.id, a);
+						updateLinkData(widget.id, a).then();
 					}
 				}
 				catch {}
@@ -124,13 +124,13 @@ export async function updateGetLastIssue() {
 		};
 
 		request(options, (error, response, body) => {
-			if (!error && response.statusCode == 200) {
+			if (!error && response.statusCode === 200) {
 				try {
-					body = JSON.parse(body)[0]
-					let finalResponse = {id: body.id, url:body.html_url, title: body.title}
+					body = JSON.parse(body)[0];
+					let finalResponse = {id: body.id, url:body.html_url, title: body.title};
 
 					if (JSON.stringify(finalResponse) !== JSON.stringify(widget.datas)) {
-						updateLinkData(widget.id, finalResponse);
+						updateLinkData(widget.id, finalResponse).then();
 					}
 				}
 				catch {}

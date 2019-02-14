@@ -27,7 +27,7 @@ export async function updateGetLastPost() {
 
 export async function update() {
     updateGetLastPost().then();
-    updateGetTrophies();
+    updateGetTrophies().then();
 }
 
 function arraysEqual(arr1, arr2) {
@@ -68,7 +68,7 @@ export async function updateGetTrophies() {
                         trophies.push({name: body[i].data.name, image: body[i].data.icon_40});
                     }
                     if (!arraysEqual(trophies, widget.datas.trophies))
-                        updateLinkData(widget.id, { trophies });
+                        updateLinkData(widget.id, { trophies }).then();
                 } catch { }
             }
         });
