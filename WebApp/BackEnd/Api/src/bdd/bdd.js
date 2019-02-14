@@ -97,6 +97,38 @@ export async function getServiceById(id) {
     return query(`SELECT * FROM service WHERE service.id like '${id}'`);
 }
 
+/**
+ *
+ * @param name
+ * @returns {Promise<*>}
+ */
+export async function getServiceDatasByName(name) {
+    if (!(typeof name === "string")) {
+        return Promise.reject('getServiceByName fail with param.');
+    }
+
+    return query(`SELECT datas FROM service WHERE service.filename like '${name}'`).then(result => {
+        return JSON.parse(JSON.stringify(result))[0].datas;
+    }).catch(error => {
+        console.log(error);
+        return Promise.reject("Error");
+    });
+}
+
+/**
+ *
+ * @param name
+ * @param datas
+ * @returns {Promise<*>}
+ */
+export async function setServiceDatasByName(name, datas) {
+
+    if (!(typeof name == "string")) {
+        return Promise.reject('setServiceDatasByName fail with param.');
+    }
+
+    return query(`UPDATE service SET datas = '${datas}' WHERE filename like '${name}'`);
+}
 
 /**
  *
@@ -118,7 +150,6 @@ export async function registerService(name) {
         });
 }
 
-
 /**
  *
  * @param row
@@ -132,9 +163,9 @@ export async function getActionReaction(row) {
             if (typeof result[0] === "undefined") {
                 console.log(`Service action ${row.action_service_id} not found`);
             } else {
-                let tmp = typeof row.config_action_data === "string" ? JSON.parse(row.config_action_data) : row.config_action_data;
+                let tmp = typeof row.config_action === "string" ? JSON.parse(row.config_action) : row.config_action;
                 array.action = result[0];
-                array.action.config = row.config_action_data !== null ? tmp : null;
+                array.action.config = row.config_action !== null ? tmp : null;
                 array.action.data = row.action_data !== null && row.action_data.length !== 0 ? JSON.parse(row.action_data) : null;
             }
             return getServiceById(row.reaction_service_id);
@@ -144,9 +175,9 @@ export async function getActionReaction(row) {
                 console.log(`Service reaction ${row.reaction_service_id} not found`);
                 array = {};
             } else if (array.action) {
-                let tmp = typeof row.config_reaction_data === "string" ? JSON.parse(row.config_reaction_data) : row.config_reaction_data;
+                let tmp = typeof row.config_reaction === "string" ? JSON.parse(row.config_reaction) : row.config_reaction;
                 array.reaction = result[0];
-                array.reaction.config = row.config_reaction_data !== null ? tmp : null;
+                array.reaction.config = row.config_reaction !== null ? tmp : null;
                 array.reaction.data = row.reaction_data !== null && row.reaction_data.length !== 0 ? JSON.parse(row.reaction_data) : null;
             }
             return array;
@@ -219,7 +250,7 @@ export async function subscribe(user, data) {
     getServiceById(data.actionServiceId).then(result => {
         getServiceById(data.reactionServiceId).then(result => {
 
-            return query(`INSERT INTO subscribe (user_id, action_service_id, reaction_service_id, config_action_data, config_reaction_data) value ('${user.id}', '${data.actionServiceId}', '${data.reactionServiceId}', '${data.actionServiceData}', '${data.reactionServiceData}')`)
+            return query(`INSERT INTO subscribe (user_id, action_service_id, reaction_service_id, config_action, config_reaction) value ('${user.id}', '${data.actionServiceId}', '${data.reactionServiceId}', '${data.actionServiceData}', '${data.reactionServiceData}')`)
                 .catch(error => {
                     return Promise.reject('subscribe unknown error.');
                 })
@@ -268,22 +299,70 @@ export async function getSubscribeById(id) {
         if (typeof result[0] == "undefined") {
             return Promise.reject('GetSubscribeById: Empty result.');
         }
-        result[0].config_action_data = (result[0].config_action_data == null ? null : JSON.parse(result[0].config_action_data));
-        result[0].config_reaction_data = (result[0].config_reaction_data == null ? null : JSON.parse(result[0].config_reaction_data));
+        result[0].config_action = (result[0].config_action == null ? null : JSON.parse(result[0].config_action));
+        result[0].config_reaction = (result[0].config_reaction == null ? null : JSON.parse(result[0].config_reaction));
         return result;
     })
 }
 
-export async function updateSubscribeData(id, action_data, reaction_data) {
-    if (typeof action_data !== "string") {
-        action_data = JSON.stringify(action_data);
+export async function getLinkByActionLinkIdList(idList) {
+    let list = [];
+
+    for (const id of idList) {
+        list.push(await query(`SELECT * FROM link WHERE subscribe_id = '${id}';`).catch(error => {
+                console.log(error);
+            }).then(result => {
+                if (typeof result[0] != "undefined") {
+                    let datas = JSON.parse(JSON.stringify(result))[0];
+                    datas.config_action = datas.config_action == null ? null : JSON.parse(datas.config_action);
+                    datas.config_reaction = datas.config_reaction == null ? null : JSON.parse(datas.config_reaction);
+                    datas.datas = datas.datas == null ? null : JSON.parse(datas.datas);
+                    return datas;
+                }
+            }));
     }
-    if (typeof reaction_data !== "string") {
-        reaction_data = JSON.stringify(reaction_data);
-    }
+
+    if (list.length === 0 || list[0] == undefined)
+        return undefined;
+    return list;
+}
+
+export async function findUrlToken(token) {
+    console.log(token);
     //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
-    return query(`UPDATE subscribe SET updated=TRUE, action_data='${action_data}', reaction_data='${reaction_data}' 
+    return query(`SELECT * FROM subscribe WHERE action_service_id = '9'
+                    AND JSON_CONTAINS(config_action, '"${token}"', '$.token');`)
+        .catch(error => {
+            console.log(error);
+            return Promise.reject('Service or token not found.');
+        })
+        .then(result => {
+            if (typeof result[0] == "undefined") {
+                return Promise.reject('Token not match.');
+            }
+            return result[0];
+        });
+}
+
+export async function updateLinkData(id, datas) {
+    if (typeof datas !== "string") {
+        datas = JSON.stringify(datas);
+    }
+
+    return query(`UPDATE link SET updated=TRUE, datas='${datas}'
                       WHERE id='${id}';`)
+        .catch(error => {
+            console.log(error);
+            return Promise.reject('Service or token not found.');
+        })
+        .then(result => {
+            return true;
+        });
+}
+
+export async function setLinksUpdatedFalse(id) {
+    //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
+    return query(`UPDATE link SET updated=FALSE WHERE id='${id}';`)
         .catch(error => {
             console.log(error);
             return Promise.reject('Service or token not found.');
