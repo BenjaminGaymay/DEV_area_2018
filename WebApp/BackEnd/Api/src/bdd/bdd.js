@@ -137,19 +137,6 @@ export async function isTokenExist(token) {
         });
 }
 
-export async function getSubscribeById(id) {
-    return query(`SELECT * FROM subscribe WHERE id = '${id}';`).catch(error => {
-        console.log(error);
-    }).then(result => {
-        if (typeof result[0] == "undefined") {
-            return Promise.reject('GetSubscribeById: Empty result.');
-        }
-        result[0].config_action = (result[0].config_action == null ? null : JSON.parse(result[0].config_action));
-        result[0].config_reaction = (result[0].config_reaction == null ? null : JSON.parse(result[0].config_reaction));
-        return result;
-    })
-}
-
 export async function getLinkByActionLinkIdList(idList) {
     let list = [];
 
@@ -167,26 +154,9 @@ export async function getLinkByActionLinkIdList(idList) {
             }));
     }
 
-    if (list.length === 0 || list[0] == undefined)
+    if (list.length === 0 || list[0] === undefined)
         return undefined;
     return list;
-}
-
-export async function findUrlToken(token) {
-    console.log(token);
-    //SELECT * FROM `subscribe` WHERE JSON_CONTAINS(action_data, '"bob"', '$.nom')
-    return query(`SELECT * FROM subscribe WHERE action_service_id = '9'
-                    AND JSON_CONTAINS(config_action, '"${token}"', '$.token');`)
-        .catch(error => {
-            console.log(error);
-            return Promise.reject('Service or token not found.');
-        })
-        .then(result => {
-            if (typeof result[0] == "undefined") {
-                return Promise.reject('Token not match.');
-            }
-            return result[0];
-        });
 }
 
 export async function updateLinkData(id, datas) {
