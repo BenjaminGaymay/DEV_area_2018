@@ -6,13 +6,12 @@ import { getServiceDatasByName } from '../../bdd/bdd';
 // config_reaction: {"access_token": "39aaa244d29216043d564f3b1563be995f7dac04", "username": "Robin-P", "repoName": "zappy"}
 
 export const name = 'redditToGithubIssue';
-export const id = 13;
+export const id = 23;
 
 export async function run(widget) {
 	const config = widget.datas;
 
-	console.log(widget)
-	// github.createRepo(widget.config_reaction.access_token, config.name + ' ' + config.rank + ' Win-Lose' + config.win + '-' + config.lose);
+	github.createRepo(widget.config_reaction.access_token, 'Nouveau post reddit \'' + widget.config_action.name + ' \': '  + config.title);
 }
 
 export function getSchema() {

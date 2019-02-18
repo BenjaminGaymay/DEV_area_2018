@@ -26,7 +26,7 @@ export async function updateGetLastPost(ids) {
 }
 
 export async function update() {
-    updateGetLastPost([21, 22]).then();
+    updateGetLastPost([21, 22, 23, 24]).then();
     updateGetTrophies().then();
 }
 
