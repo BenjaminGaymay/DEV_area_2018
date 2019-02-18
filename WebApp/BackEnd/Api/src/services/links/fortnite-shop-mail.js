@@ -54,3 +54,28 @@ export async function subscribe(subscribeId, userId, bodyParam) {
         });
     })
 }
+
+export function getSchema() {
+    return {
+        name: "Fornite shop vers email",
+        description: "Recevez un email si votre skin est en boutique",
+        action: {
+            title: "Fortnite Shop",
+            config: {
+                skinName: {
+                    type: "string",
+                    label: "Nom du skin"
+                },
+            }
+        },
+        reaction: {
+            title: "Email",
+            config: {
+                to: {
+                    type: "string",
+                    label: "Destinataire"
+                },
+            }
+        },
+    }
+}

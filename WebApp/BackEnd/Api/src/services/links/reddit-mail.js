@@ -55,3 +55,28 @@ export async function subscribe(subscribeId, userId, bodyParam) {
         });
     })
 }
+
+export function getSchema() {
+    return {
+        name: "Reddit vers email",
+        description: "Recevez un email à chaque nouveau post",
+        action: {
+            title: "Reddit Email",
+            config: {
+                name: {
+                    type: "string",
+                    label: "Nom du topic"
+                },
+            }
+        },
+        reaction: {
+            title: "Email",
+            config: {
+                to: {
+                    type: "string",
+                    label: "Destinataire"
+                }
+            }
+        },
+    }
+}

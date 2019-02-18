@@ -63,3 +63,37 @@ export async function subscribe(subscribeId, userId, bodyParam) {
         });
     })
 }
+
+export function getSchema() {
+    return {
+        name: "Reddit vers http",
+        description: "Envoyez une requête http à chaque nouveau post",
+        action: {
+            title: "Reddit Http",
+            config: {
+                name: {
+                    type: "string",
+                    label: "Nom du topic"
+                },
+            }
+        },
+        reaction: {
+            title: "Http",
+            config: {
+                method: {
+                    type: "checkbox",
+                    values: ["GET", "POST"],
+                    label: "HTTP verb"
+                },
+                url: {
+                    type: "string",
+                    label: "Url"
+                },
+                headers: {
+                    type: "object",
+                    label: "Variable d'en-tête"
+                }
+            }
+        },
+    }
+}
