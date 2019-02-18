@@ -2,7 +2,7 @@ import * as bdd from "./bdd";
 
 
 export async function findUrlToken(token) {
-    return bdd.query(`SELECT * FROM link WHERE subscribe_id = '5'
+    return bdd.query(`SELECT * FROM link WHERE subscribe_id = '91'
                     AND JSON_CONTAINS(config_action, '"${token}"', '$.token') LIMIT 1;`)
         .catch(error => {
             console.log(error);
