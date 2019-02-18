@@ -16,6 +16,7 @@ export async function run(widget) {
 
 export function getSchema() {
     return {
+		id: id,
         name: "Fortnite Stats To Github Issue",
 		description: "Créé une issue avec les infos de la personne",
 		action: {

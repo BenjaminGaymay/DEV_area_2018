@@ -20,6 +20,7 @@ export async function run(widget) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Clash Royale vers Mail",
         description: "Envoyez un mail à après une partie de clash royale",
         action: {

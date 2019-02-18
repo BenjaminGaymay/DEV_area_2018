@@ -17,6 +17,7 @@ export async function run(widget) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Imdb To Github Issue",
         description: "Créé une issue avec le dernier film sorti",
         reaction: {
