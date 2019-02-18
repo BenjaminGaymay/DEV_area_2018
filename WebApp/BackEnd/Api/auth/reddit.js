@@ -35,7 +35,7 @@ class RedditOauth2 {
         };
 
 
-        const response = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             request(options, (error, response, body) => {
                 if (!error && response.statusCode === 200) {
                     try {
@@ -44,16 +44,17 @@ class RedditOauth2 {
                         for (const i in body) {
                             trophies.push({name: body[i].data.name, image: body[i].data.icon_40});
                         }
-                        resolve(trophies);
+                        return resolve(trophies);
                     } catch {
-                        resolve([]);
+                        console.log(error);
+                        return reject('KO');
                     }
                 } else {
-                    resolve(error);
+                    console.log(error);
+                    return reject('KO');
                 }
             });
         });
-        return await response;
     }
 
     async getLastPostWithName(name) {
