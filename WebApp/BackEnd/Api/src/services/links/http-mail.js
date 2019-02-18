@@ -63,6 +63,7 @@ export async function subscribe(subscribeId, userId, bodyParam) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Http vers email",
         description: "Envoyez un email si votre url reçoit une requête",
         action: {

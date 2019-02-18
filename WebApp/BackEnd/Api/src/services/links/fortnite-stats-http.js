@@ -71,6 +71,7 @@ export async function subscribe(subscribeId, userId, bodyParam) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Fornite statistique vers Http",
         description: "Envoyez une requête Http avec vos statistique Fortnite quotidienne",
         action: {

@@ -57,6 +57,7 @@ export async function subscribe(subscribeId, userId, bodyParam) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Fornite shop vers email",
         description: "Recevez un email si votre skin est en boutique",
         action: {
