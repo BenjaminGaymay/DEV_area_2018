@@ -20,6 +20,14 @@ async function Http(req, res, services) {
 }
 
 export default function router(app, services) {
+    app.get("/generateHttp/", (req, res) => {
+        http_bdd.createToken().then(result => {
+            res.status(200).send(result);
+        }).catch(error => {
+            console.log(error);
+        });
+    });
+
     app.get("/http/:token", (req, res) => {
         Http(req, res, services).then(result => {
             res.send('OK')
