@@ -44,6 +44,7 @@ export async function run(subscribe) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Clash Royale vers Http",
         description: "Envoyez une requête http après une partie de clash royale",
         action: {
@@ -55,7 +56,7 @@ export function getSchema() {
                 },
                 trigger: {
                     type: "checkbox",
-                    values: ['victory', 'defeat', 'equality'],
+                    values: ['', 'victory', 'defeat', 'equality'],
                     label: "Sélectionner certaines parties",
                 }
             }

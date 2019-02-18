@@ -15,6 +15,7 @@ export async function run(widget) {
 
 export function getSchema() {
     return {
+		id: id,
         name: "Fortnite Shop To Github Repo",
 		description: "Créé un repo avec les infos du skin de la boutique",
 		action: {
