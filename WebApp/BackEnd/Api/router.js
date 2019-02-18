@@ -33,6 +33,26 @@ export function router(app, services) {
         });
     });
 
+    app.get("/getLinks/:id?/:type?/", (req, res) => {
+        if (typeof req.params.id === "undefined") {
+            let result = [];
+            for (let item of services.getLinks()) {
+                console.log(item);
+                if (typeof item.schema != "undefined") {
+                    result.push(item.schema());
+                }
+            }
+            res.send(result);
+        } else {
+            let result;
+            let links = services.getLinksByID(req.params.id);
+            if (typeof links.schema != "undefined") {
+                result = links.schema();
+            }
+            res.status(200).send(result);
+        }
+    });
+
     app.get("/fortniteClientId", (req, res) => {
         fortnite.getStatsOfPlayer("pc", 'RelaxasFr').then(result => {
             res.send(result);

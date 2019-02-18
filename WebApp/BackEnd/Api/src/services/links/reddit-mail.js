@@ -58,6 +58,7 @@ export async function subscribe(subscribeId, userId, bodyParam) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Reddit vers email",
         description: "Recevez un email à chaque nouveau post",
         action: {
