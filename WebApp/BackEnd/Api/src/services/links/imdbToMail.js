@@ -15,3 +15,19 @@ export async function run(widget) {
 		html: 'Un nouveau film est sorti aujourd\'hui : "' + await getServiceDatasByName('imdb') + '" waouh !'
 	});
 }
+
+export function getSchema() {
+    return {
+        name: "IMDb vers Mails",
+        description: "Recevez un email lorsqu'un nouveau film sort",
+        reaction: {
+            title: "Email",
+            config: {
+                to: {
+                    type: "string",
+                    label: "Destinataire"
+                },
+            }
+        },
+    }
+}

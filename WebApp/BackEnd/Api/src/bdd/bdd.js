@@ -13,7 +13,7 @@ const bdd = mysql.createConnection({
     // user: "uscw77drcqvxjvyzxe91",
     // password: "0mRr9qPZWeeBrcFU01R0",
     // database: "b7qwopagdzu8cljf9dtr"
-    /* dev */
+    // /* dev */
     host: process.env.BDD_HOST,
     user: process.env.BDD_USER,
     password: process.env.BDD_PASSWORD,
