@@ -37,7 +37,6 @@ export function router(app, services) {
         if (typeof req.params.id === "undefined") {
             let result = [];
             for (let item of services.getLinks()) {
-                console.log(item);
                 if (typeof item.schema != "undefined") {
                     result.push(item.schema());
                 }

@@ -68,13 +68,11 @@ export async function updateStats(ids) {
             item.datas = JSON.parse(item.datas);
             let stat = await getStatsOfPlayer(item.platform, item.pseudo);
             if (item.datas === null || stat !== item.datas) {
-                console.log('Update Stat: ' + item.id);
                 await fortnite_bdd.updateThisPlayerStat(item.id, stat);
             } else {
                 console.log('Not updated Stat: ' + item.id);
             }
         }
-        console.log(result);
     })
 }
 
