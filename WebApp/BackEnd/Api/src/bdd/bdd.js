@@ -204,7 +204,7 @@ export async function subscribeIntoLink(subscribeId, userId, action, reaction) {
     action = JSON.stringify(action);
     reaction = JSON.stringify(reaction);
 
-    return query(`INSERT INTO link (user_id, subscribe_id, config_action, config_reaction) 
+    return query(`INSERT INTO link (user_id, subscribe_id, config_action, config_reaction)
                             VALUES ('${userId}', '${subscribeId}', '${action}', '${reaction}')`)
         .catch(error => {
             console.log(error);

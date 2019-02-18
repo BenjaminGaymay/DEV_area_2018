@@ -12,5 +12,5 @@ export async function run(widget) {
 	const config = widget.config_reaction;
 	const title = await getServiceDatasByName('imdb');
 
-	github.createIssue(config.access_token, config.username, config.repoName, title, 'Va voir ce super film : "' + await getServiceDatasByName('imdb') + '" !');
+	github.createIssue(config.access_token, config.username, config.repoName, title, 'Va voir ce super film : ' + title + ' !');
 }
