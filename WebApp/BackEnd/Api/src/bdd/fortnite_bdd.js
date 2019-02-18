@@ -9,7 +9,7 @@ function findInShop(shop, skinName) {
     return null;
 }
 
-export async function updateShop(json) {
+export async function updateShop(json, ids) {
     json = JSON.parse(json);
     return query(`UPDATE service
                   set datas = '{"lastUpdate": "0"}',
@@ -21,7 +21,7 @@ export async function updateShop(json) {
         }).then(async result => {
             let array = await query(`SELECT id, json_extract(config_action, '$.skinName') as skinName
                                      From link
-                                     where subscribe_id in ('${id.toString()}')`);
+                                     where subscribe_id in (${ids.toString()})`);
             for (let index in array) {
                 let item = findInShop(json, JSON.parse(array[index].skinName));
                 if (item != null) {
@@ -55,7 +55,7 @@ export async function getStatsSubscribe(ids) {
                          JSON_VALUE(config_action, '$.platform') as platform,
                          JSON_VALUE(config_action, '$.pseudo')   as pseudo
                   FROM link
-                  WHERE (subscribe_id in ('${ids.toString()}')
+                  WHERE subscribe_id in (${ids.toString()})
                     AND updated = FALSE`)
         .catch(error => {
             console.log(error);
