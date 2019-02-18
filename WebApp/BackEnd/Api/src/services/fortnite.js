@@ -79,7 +79,7 @@ export async function updateStats(ids) {
 }
 
 export async function update() {
-    updateStore([71, 72]).then();
-    updateStats([81, 82]).then();
+    updateStore([71, 72, 73, 74]).then();
+    updateStats([81, 82, 83, 84]).then();
     return 'OK';
 }

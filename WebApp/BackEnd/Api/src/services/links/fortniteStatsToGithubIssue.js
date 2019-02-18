@@ -8,6 +8,12 @@ import { getServiceDatasByName } from '../../bdd/bdd';
 export const name = 'fortniteStatsToGithubIssue';
 export const id = 83;
 
+export async function run(widget) {
+	const config = widget.datas;
+
+	github.createIssue(widget.config_reaction.access_token, widget.config_reaction.username, widget.config_reaction.repoName, 'Stats for ' + widget.config_action.pseudo, 'Nouvelles stats : ' + 'Top1: ['+ config.top1 + '] ' + 'Pourcentage de win [' + config.winPourcentage + '] ' + 'ratio [' + config.ratio + '] matches [' + config.matches + '] kills [' + config.kills + ']' + ' !');
+}
+
 export function getSchema() {
     return {
         name: "Fortnite Stats To Github Issue",
