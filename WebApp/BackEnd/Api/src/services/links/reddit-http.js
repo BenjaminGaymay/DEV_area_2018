@@ -1,5 +1,8 @@
 import request from "request";
-import * as bdd from "../bdd/bdd";
+import * as bdd from "../../bdd/bdd";
+
+export const name = 'redditHttp';
+export const id = 21;
 
 export async function run(subscribe) {
     return new Promise((resolve, reject) => {
@@ -17,15 +20,15 @@ export async function run(subscribe) {
             clientServerOptions.headers['content-type'] = 'application/json';
         }
 
-        clientServerOptions[container].skinUrl = subscribe.datas.url;
-        clientServerOptions[container].skinName = subscribe.datas.skinName;
-        clientServerOptions[container].price = subscribe.datas.vBucks;
+        clientServerOptions[container].postTopic = subscribe.config_action.name;
+        clientServerOptions[container].postAuthor = subscribe.datas.author;
+        clientServerOptions[container].postUrl = subscribe.datas.url;
+        clientServerOptions[container].postTitle = subscribe.datas.title;
 
         clientServerOptions.body = JSON.stringify(clientServerOptions.body);
 
         request(clientServerOptions, function (error, response) {
             if (error || response.statusCode !== 200) {
-                console.log(error);
                 return reject('request cannot be send.');
             } else {
                 console.log('Success:', response.body);
@@ -36,7 +39,7 @@ export async function run(subscribe) {
 }
 
 function checkConfigAction(params) {
-    return !(!params.hasOwnProperty("skinName"));
+    return !(!params.hasOwnProperty("name"));
 }
 
 function checkConfigReaction(params) {
@@ -51,8 +54,8 @@ export async function subscribe(subscribeId, userId, bodyParam) {
             return reject('KO');
         }
 
-        let action = {"skinName": bodyParam.configAction.skinName};
-        let reaction = {"method": bodyParam.configReaction.method, "url": bodyParam.configReaction.url, "headers": bodyParam.configReaction.headers};
+        let action = {"name": bodyParam.configAction.name, "created": "0"};
+        let reaction = {"url": bodyParam.configReaction.url, "method": bodyParam.configReaction.method, "headers": bodyParam.configReaction.headers};
         bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
             return resolve('OK');
         }).catch(error => {

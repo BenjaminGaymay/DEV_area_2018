@@ -1,18 +1,22 @@
 import fs from "fs";
 import ejs from "ejs";
-import * as mail from "../services/mail";
-import * as bdd from "../bdd/bdd";
+import * as mail from "../mail";
+import * as bdd from "../../bdd/bdd";
+
+export const name = 'fortniteStatsMail';
+export const id = 82;
 
 export async function run(subscribe) {
     return new Promise((resolve, reject) => {
-        fs.readFile("./template/redditPost.ejs", "utf8", function (err, content) {
+        fs.readFile("./template/fortniteStats.ejs", "utf8", function (err, content) {
             if (err) return err;
-            subscribe.datas.topic = subscribe.config_action.name;
             let html = ejs.render(content, {
                 datas: subscribe.datas,
+                platform: subscribe.config_action.platform,
+                pseudo: subscribe.config_action.pseudo
             });
             let mailJson = {
-                subject: "Un nouveau post est disponible !",
+                subject: "Vos statistique sont disponibles !",
                 html: html,
                 to: [subscribe.config_reaction.to],
             };
@@ -28,7 +32,7 @@ export async function run(subscribe) {
 }
 
 function checkConfigAction(params) {
-    return !(!params.hasOwnProperty("name"));
+    return !(!params.hasOwnProperty("platform") || !params.hasOwnProperty("pseudo"));
 }
 
 function checkConfigReaction(params) {
@@ -43,7 +47,7 @@ export async function subscribe(subscribeId, userId, bodyParam) {
             return reject('KO');
         }
 
-        let action = {"name": bodyParam.configAction.name, "created": "0"};
+        let action = {"pseudo": bodyParam.configAction.pseudo, "platform": bodyParam.configAction.platform};
         let reaction = {"to": bodyParam.configReaction.to};
         bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
             return resolve('OK');

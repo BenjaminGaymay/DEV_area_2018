@@ -1,23 +1,21 @@
 import fs from "fs";
 import ejs from "ejs";
-import * as mail from "../services/mail";
-import * as bdd from "../bdd/bdd";
+import * as mail from "../mail";
+import * as bdd from "../../bdd/bdd";
 
-export async function run(subscribe, req, res) {
+export const name = 'redditMail';
+export const id = 22;
+
+export async function run(subscribe) {
     return new Promise((resolve, reject) => {
-        fs.readFile("./template/httpEmailRecap.ejs", "utf8", function (err, content) {
+        fs.readFile("./template/redditPost.ejs", "utf8", function (err, content) {
             if (err) return err;
-            if (subscribe.datas === null) subscribe.datas = {};
-            subscribe.datas.token = subscribe.config_action.token;
-            subscribe.datas.body = req.body;
-            subscribe.datas.headers = req.headers;
-            subscribe.datas.query = req.query;
+            subscribe.datas.topic = subscribe.config_action.name;
             let html = ejs.render(content, {
                 datas: subscribe.datas,
             });
-
             let mailJson = {
-                subject: "Une requête a été reçu !",
+                subject: "Un nouveau post est disponible !",
                 html: html,
                 to: [subscribe.config_reaction.to],
             };
@@ -33,7 +31,7 @@ export async function run(subscribe, req, res) {
 }
 
 function checkConfigAction(params) {
-    return !(!params.hasOwnProperty("token"));
+    return !(!params.hasOwnProperty("name"));
 }
 
 function checkConfigReaction(params) {
@@ -48,7 +46,7 @@ export async function subscribe(subscribeId, userId, bodyParam) {
             return reject('KO');
         }
 
-        let action = {"token": bodyParam.configAction.token};
+        let action = {"name": bodyParam.configAction.name, "created": "0"};
         let reaction = {"to": bodyParam.configReaction.to};
         bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
             return resolve('OK');
