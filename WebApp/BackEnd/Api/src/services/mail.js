@@ -43,6 +43,6 @@ export async function run(datas) {
     });
 }
 
-export async function update(widget) {
-
+export async function update() {
+    return 'OK';
 }

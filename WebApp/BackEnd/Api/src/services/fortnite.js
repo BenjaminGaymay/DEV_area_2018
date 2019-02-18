@@ -39,7 +39,7 @@ export async function getStatsOfPlayer(plateform, playerName) {
     });
 }
 
-export async function updateStore() {
+export async function updateStore(ids) {
     return new Promise((resolve, reject) => {
         let clientServerOptions = {
             uri: "https://api.fortnitetracker.com/v1/store",
@@ -51,7 +51,7 @@ export async function updateStore() {
         request(clientServerOptions, function (error, response) {
             if (error || response.statusCode !== 200) return reject('Fortnite request cannot be send.');
             else {
-                fortnite_bdd.updateShop(response.body).then(result => {
+                fortnite_bdd.updateShop(response.body, ids).then(result => {
                     resolve('OK');
                 }).catch(error => {
                     console.log(error);
@@ -62,8 +62,8 @@ export async function updateStore() {
     });
 }
 
-export async function updateStats() {
-    fortnite_bdd.getStatsSubscribe().then(async result => {
+export async function updateStats(ids) {
+    fortnite_bdd.getStatsSubscribe(ids).then(async result => {
         for (let item of result) {
             item.datas = JSON.parse(item.datas);
             let stat = await getStatsOfPlayer(item.platform, item.pseudo);
@@ -79,7 +79,7 @@ export async function updateStats() {
 }
 
 export async function update() {
-    updateStore().then();
-    updateStats().then();
+    updateStore([71, 72]).then();
+    updateStats([81, 82]).then();
     return 'OK';
 }

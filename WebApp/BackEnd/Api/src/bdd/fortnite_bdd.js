@@ -21,8 +21,7 @@ export async function updateShop(json) {
         }).then(async result => {
             let array = await query(`SELECT id, json_extract(config_action, '$.skinName') as skinName
                                      From link
-                                     where subscribe_id = 72
-                                        or subscribe_id = 71`);
+                                     where subscribe_id in ('${id.toString()}')`);
             for (let index in array) {
                 let item = findInShop(json, JSON.parse(array[index].skinName));
                 if (item != null) {
@@ -48,7 +47,7 @@ export async function getUpdatedUserShop(subscribe_id) {
         });
 }
 
-export async function getStatsSubscribe() {
+export async function getStatsSubscribe(ids) {
     return query(`SELECT id,
                          user_id,
                          subscribe_id,
@@ -56,7 +55,7 @@ export async function getStatsSubscribe() {
                          JSON_VALUE(config_action, '$.platform') as platform,
                          JSON_VALUE(config_action, '$.pseudo')   as pseudo
                   FROM link
-                  WHERE (subscribe_id = '81' or subscribe_id = '82')
+                  WHERE (subscribe_id in ('${ids.toString()}')
                     AND updated = FALSE`)
         .catch(error => {
             console.log(error);
