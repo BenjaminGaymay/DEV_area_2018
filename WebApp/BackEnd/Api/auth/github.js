@@ -27,30 +27,32 @@ class Github {
 
       const options = {
             url: 'https://api.github.com/user/repos',
-            headers: headers
+            headers: headers,
+            method: 'GET'
       };
 
-      const response = new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
           request(options, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode === 200) {
                 try {
-                    const repos = []
+                    const repos = [];
                     body = JSON.parse(body);
                     for (const i in body) {
                         repos.push({ 'name':body[i].name, 'url':body[i].html_url});
                     }
-                    resolve(repos);
+                    return resolve(repos);
                 }
                 catch {
-                    resolve([])
+                    console.log(error);
+                    return reject('KO');
                 }
             }
             else {
-                resolve(error);
+                console.log(error);
+                return reject('KO');
             }
             });
         });
-        return await response;
     }
 
     async getLastIssue(access_token, req, res) {
@@ -63,12 +65,14 @@ class Github {
 
         const options = {
               url: 'https://api.github.com/user/issues',
-              headers: headers
+              headers: headers,
+              method: 'GET',
+
         };
 
-        const response = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             request(options, (error, response, body) => {
-              if (!error && response.statusCode == 200) {
+              if (!error && response.statusCode === 200) {
                   try {
                       body = JSON.parse(body)[0]
                       let finalResponse = {id: body.id, url:body.html_url, title: body.title}
@@ -76,15 +80,16 @@ class Github {
                       resolve(finalResponse);
                   }
                   catch {
-                      resolve([])
+                      console.log(error);
+                      return reject('KO');
                   }
               }
               else {
-                  resolve(error);
+                  console.log(error);
+                  return reject('KO');
               }
               });
           });
-          return await response;
       }
 
     async getNotifs(access_token, req, res) {
@@ -98,12 +103,13 @@ class Github {
 
         const options = {
               url: 'https://api.github.com/notifications',
-              headers: headers
+              headers: headers,
+              method: 'GET'
         };
 
-        const response = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             request(options, (error, response, body) => {
-                if (!error && response.statusCode == 200) {
+                if (!error && response.statusCode === 200) {
                     let a = JSON.parse(body);
                     try {
                         a = {
@@ -113,18 +119,19 @@ class Github {
                             type: a[0].subject.type,
                             url: a[0].repository.html_url
                         };
-                        resolve(a);
+                        return resolve(a);
                     }
                     catch {
-                        resolve([])
+                        console.log(error);
+                        return reject('KO');
                     }
                 }
                 else {
-                    resolve(error);
+                    console.log(error);
+                    return reject('KO');
                 }
               });
           });
-          return await response;
       }
 
       async createRepo(access_token, name) {
@@ -144,13 +151,12 @@ class Github {
             body: dataString
         };
 
-        const response = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             request(options, (error, response, body) => {
                 console.log('Ok repo created')
-                // resolve('Ok')
+                resolve('Ok')
             });
         });
-        return await response;
       }
 
       async createIssue(access_token, username, repoName, title, description) {
@@ -170,12 +176,12 @@ class Github {
             body: dataString
         };
 
-        const response = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             request(options, (error, response, body) => {
                 console.log("Ok Issue created");
+                resolve('Ok');
             });
         });
-        return await response;
       }
 }
 

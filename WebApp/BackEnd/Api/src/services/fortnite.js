@@ -47,17 +47,20 @@ export async function updateStore(ids) {
             headers: headers,
             body: "",
         };
-
-        request(clientServerOptions, function (error, response) {
-            if (error || response.statusCode !== 200) return reject('Fortnite request cannot be send.');
-            else {
-                fortnite_bdd.updateShop(response.body, ids).then(result => {
-                    resolve('OK');
-                }).catch(error => {
-                    console.log(error);
-                    resolve('KO');
-                });
-            }
+        fortnite_bdd.canShopBeUpdated().then(result => {
+            request(clientServerOptions, function (error, response) {
+                if (error || response.statusCode !== 200) return reject('Fortnite request cannot be send.');
+                else {
+                    fortnite_bdd.updateShop(response.body, ids).then(result => {
+                        resolve('OK');
+                    }).catch(error => {
+                        console.log(error);
+                        resolve('KO');
+                    });
+                }
+            });
+        }).catch(error => {
+            console.log('Fortnite Shop alreay Updated for today');
         });
     });
 }
@@ -77,7 +80,7 @@ export async function updateStats(ids) {
 }
 
 export async function update() {
-    updateStore([71, 72, 73, 74]).then();
-    updateStats([81, 82, 83, 84]).then();
+    updateStore([71, 72, 73, 74]).catch();
+    updateStats([81, 82, 83, 84]).catch();
     return 'OK';
 }

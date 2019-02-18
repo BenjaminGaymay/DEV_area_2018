@@ -1,13 +1,10 @@
 "use strict";
 
 import * as bdd from "./src/bdd/bdd";
-import * as fortnite from "./src/services/fortnite"
-import * as reddit from "./src/services/reddit"
 import * as login_bdd from "./src/bdd/login_bdd";
 import fs from "fs";
 import login_router from "./src/router/login"
 import http_router from "./src/router/http"
-import ejs from "ejs";
 
 function getUnixTime() {
     return Date.now() / 1000 | 0;
@@ -52,76 +49,6 @@ export function router(app, services) {
         }
     });
 
-    app.get("/fortniteClientId", (req, res) => {
-        fortnite.getStatsOfPlayer("pc", 'RelaxasFr').then(result => {
-            res.send(result);
-        }).catch(error => {
-            res.status(500).send('ERROR');
-        })
-    });
-
-    app.get("/redditUpdateTest", (req, res) => {
-        reddit.update().then(result => {
-            res.send(result);
-        }).catch(error => {
-            res.status(500).send('ERROR');
-        })
-    });
-
-    app.get("/fortniteUpdateTst", (req, res) => {
-        fortnite.update().then(result => {
-            res.send(result);
-        }).catch(error => {
-            res.status(500).send('ERROR');
-        })
-    });
-
-    app.get("/allTest", (req, res) => {
-        bdd.getAllLinkUpdated().then(result => { // on chope toutes liens mis à jours
-            for (let item of result) {
-                item.config_action = JSON.parse(item.config_action);
-                item.config_reaction = JSON.parse(item.config_reaction);
-                item.datas = JSON.parse(item.datas);
-                //console.log(item);
-                services.getLinksByID(item.subscribe_id).run(item).then(result => { // on call la fonction run de l'abonnement en question
-                    console.log(result);
-                    // ici je dois mettre le bool update à false !
-                }).catch(error => {
-                    console.log(error);
-                });
-            }
-            res.status(200).send('OK');
-        });
-    });
-    /*services.getByName("fortnite").update().then(result => {
-        console.log(result);
-    });*/
-    // services.getByName("mail").update()
-    // bdd.getSubscribeById(6).then(results => {
-    //     //console.log(results);
-    //
-    //     bdd.getActionReaction(results[0]).then(result => {
-    //         let configData = tools.postTraitement(result);
-    //         console.log(configData);
-    //         services.getById(result.reaction.id).run('reaction', 'default', configData).then(result_1 => {
-    //             res.status(200).send(result_1);
-    //         }).catch(error => {
-    //             console.log(error);
-    //             res.status(500).send(error);
-    //         });
-    //     }).catch(error => {
-    //         console.log(error);
-    //     });
-    // });
-    /*services.getByName("reddit").update().then(result => {
-        services.getByName("reddit").run("action", "default", services).then(results => {
-            console.log(results);
-        });
-        res.status(200);
-        res.send("OK");
-    });
-});*/
-
     app.post("/subscribe", (req, res) => {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
             if (typeof req.body === "undefined" || !req.body.hasOwnProperty("subscribeId")
@@ -163,18 +90,6 @@ export function router(app, services) {
             res.send("KO");
         });
     });
-
-    /*app.get("/", function (req, res) {
-        bdd.getUserByName("admin").then(user => {
-            bdd.getUserServices(user.id).then(result => {
-                res.send(result);
-            }).catch(error => {
-                console.log(error); // aucun abonnement
-            });
-        }).catch(error => {
-            console.log(error); // user not found
-        });
-    });*/
 
     app.get("/about.json", (req, res) => {
         const about = JSON.parse(fs.readFileSync("about.json", "utf8"));
