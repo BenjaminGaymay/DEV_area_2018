@@ -36,7 +36,7 @@ export async function updateShop(json) {
 }
 
 export async function getUpdatedUserShop(subscribe_id) {
-    return query(`SELECT * FROM link WHERE id = ${subscribe_id} 
+    return query(`SELECT * FROM link WHERE id = ${subscribe_id}
                       AND updated = TRUE`)
         .catch(error => {
             console.log(error);

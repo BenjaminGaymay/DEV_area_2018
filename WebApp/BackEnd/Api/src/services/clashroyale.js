@@ -8,7 +8,7 @@ import * as bdd from '../bdd/bdd';
 const url = 'https://api.clashroyale.com/v1/players/<tag>/battlelog';
 
 // Recréer token : https://developer.clashroyale.com/#/
-const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImNjN2Q1MGExLWNjZmEtNGQxYy1hYjM3LTY5NjIxNDVjNjY3MyIsImlhdCI6MTU0OTk3MDgzOSwic3ViIjoiZGV2ZWxvcGVyL2FmYTAxMzk5LWJjNjItNjRjZi0wODZhLTYwMDY2Y2I5MDQ4YSIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI4MC4xMi40MS4yNDciXSwidHlwZSI6ImNsaWVudCJ9XX0.EPJW8TuU3VI6lxgYkubeOHkMINVu8wCXrMyGdK5BOVvhDtUBKlw5XfAH7yZ0OkL8lz9JDwTX98oNK2Nivfrywg';
+const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjAxNWVmYjgyLTBlYWEtNDg1YS1iNGJhLTU1ZGZhMmM0YmJlYiIsImlhdCI6MTU1MDQ4NzE3Mywic3ViIjoiZGV2ZWxvcGVyL2FmYTAxMzk5LWJjNjItNjRjZi0wODZhLTYwMDY2Y2I5MDQ4YSIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxNjMuNS4yMjAuMjUiLCIxNjMuNS4yMjAuMzEiLCIxNjMuNS4yMjAuMjMiLCIxNjMuNS4yMjAuNiJdLCJ0eXBlIjoiY2xpZW50In1dfQ.K1DIpsfzFalfXj2hZUAkNCs1PRa3y8vZjPreDLizL3nPfdBGyhOc3tfJfYFF8-YrLo9-_w-qz437VWGleKqLFw';
 
 export async function update() {
 	const widgets = await bdd.getLinkByActionLinkIdList(['11', '12', '13', '14', '15', '16', '17', '18', '19']);
@@ -20,7 +20,6 @@ export async function update() {
 		return;
 
 	for (const widget of widgets) {
-		console.log("ERTYUIOP");
 		request({
 			url: url.replace('<tag>', '%23' + widget.config_action.tag),
 			headers

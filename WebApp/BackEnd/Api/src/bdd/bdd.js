@@ -154,9 +154,13 @@ export async function getLinkByActionLinkIdList(idList) {
             }));
     }
 
-    if (list.length === 0 || list[0] === undefined)
+    var filtered = list.filter(function (el) {
+        return el != null;
+      });
+
+    if (filtered.length === 0 || filtered[0] === undefined)
         return undefined;
-    return list;
+    return filtered;
 }
 
 export async function updateLinkData(id, datas) {

@@ -36,14 +36,14 @@ async function init() {
                 setLinksUpdatedFalse(widget.id).then();
             }
         }
-    }, 3000);
+    }, 15000);
 
     return services;
 }
 
 init().then(result => {
     router(app, result);
-    /*result.updateServices(result);*/
+    result.updateServices(result);
 });
 
 app.listen(process.env.PORT, () => console.log(`Server is listening on port ${process.env.PORT}`));
