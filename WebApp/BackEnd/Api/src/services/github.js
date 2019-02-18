@@ -19,7 +19,7 @@ function arraysEqual(arr1, arr2) {
 }
 
 export  async function updateGetRepos() {
-    const widgets = await getLinkByActionLinkIdList([]);
+    const widgets = await getLinkByActionLinkIdList(['34']);
 
     console.log('GithubGetReposService: starting update..');
 
@@ -47,8 +47,8 @@ export  async function updateGetRepos() {
 					repos.push({ 'name':body[i].name, 'url':body[i].html_url});
 				}
 
-				if (JSON.stringify(repos) !== JSON.stringify(widget.datas.repos)) {
-					updateLinkData(widget.id, { repos }).then();
+				if (!widget.datas || JSON.stringify(repos) !== JSON.stringify(widget.datas.repos)) {
+					updateLinkData(widget.id, repos).then();
 				}
 			}
 		});
@@ -103,7 +103,7 @@ export async function updateGetNotifs() {
 }
 
 export async function updateGetLastIssue() {
-	const widgets = await getLinkByActionLinkIdList([]);
+	const widgets = await getLinkByActionLinkIdList(['20']);
 
     console.log('GithubGetLastIssueService: starting update..');
 
