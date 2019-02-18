@@ -11,6 +11,23 @@ import Context from "../../context/context";
 
 import './Appbar.css';
 
+function navIsLoggedIn() {
+  return (
+    <div>
+      <Button color="inherit" component={Link} to="/dashboard">Dashboard</Button>
+      <Button color="inherit" component={Link} to="/logout">Logout</Button>
+    </div>
+  )
+}
+
+function navIsNotLoggedIn() {
+  return(
+    <div>
+      <Button color="inherit" component={Link} to="/login">Login</Button>       
+    </div>
+  )
+}
+
 function AppBarConsumer(props) {
   return (
     <div className="root">
@@ -27,13 +44,7 @@ function AppBarConsumer(props) {
             Area
           </Typography>
           <Button color="inherit" component={Link} to="/">Home</Button>
-          {!props.context.isLogged ?
-          <Button color="inherit" component={Link} to="/login">Login</Button> :
-          <>
-            <Button color="inherit" component={Link} to="/dashboard">Dashboard</Button>
-            <Button color="inherit" component={Link} to="/logout">Logout</Button>
-          </>
-          }
+          {props.context.isLogged ? navIsLoggedIn() : navIsNotLoggedIn()}
         </Toolbar>
       </AppBar>
     </div>

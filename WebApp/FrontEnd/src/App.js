@@ -2,17 +2,18 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./guard/PrivateRoute";
 
-//components
+//Components
 import ButtonAppBar from "./components/Appbar/Appbar";
 
+//Context
 import Context from "./context/context";
 
 //pages
-import Dashboard from "./Pages/Dashboard";
-import Error from "./Pages/Error";
-import Home from "./Pages/Home";
-import Login from "./Pages/Login";
-import Logout from "./Pages/Logout";
+import Dashboard from "./Pages/Dashboard/Dashboard";
+import Error from "./Pages/Error/Error";
+import Home from "./Pages/Home/Home";
+import Login from "./Pages/Login/Login";
+import Logout from "./Pages/Logout/Logout";
 
 class AppConsumer extends React.Component {
   componentWillMount() {
