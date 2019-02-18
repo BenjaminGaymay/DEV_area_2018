@@ -74,7 +74,7 @@ export default function router(app, services) {
                             html: html,
                             to: [result.email],
                         };
-                        mail.run('reaction', 'default', mailJson).then(result => {
+                        mail.run(mailJson).then(result => {
                             console.log(result);
                         }).catch(error => {
                             console.log(error);
