@@ -18,7 +18,10 @@ export class Services {
                     this.links[this.links.length] = {
                         id: newLink.id,
                         name: newLink.name,
-                        run: newLink.run
+                        run: newLink.run,
+                        subscribe: newLink.subscribe,
+                        schema: newLink.getSchema
+
                     };
                 });
             });
