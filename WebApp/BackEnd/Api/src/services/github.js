@@ -103,7 +103,7 @@ export async function updateGetNotifs() {
 }
 
 export async function updateGetLastIssue() {
-	const widgets = await getLinkByActionLinkIdList(['20']);
+	const widgets = await getLinkByActionLinkIdList(['53']);
 
     console.log('GithubGetLastIssueService: starting update..');
 
