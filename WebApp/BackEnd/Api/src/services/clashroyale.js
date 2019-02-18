@@ -20,6 +20,7 @@ export async function update() {
 		return;
 
 	for (const widget of widgets) {
+		console.log(widget);
 		request({
 			url: url.replace('<tag>', '%23' + widget.config_action.tag),
 			headers
