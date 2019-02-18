@@ -6,7 +6,7 @@ import "./Home.css";
 import HomeImg from "../../assets/images/home.png";
 import RedditImg from "../../assets/images/reddit.png";
 import GithubImg from "../../assets/images/github.png";
-import ClashroyalImg from "../../assets/images/clash-royal.png";
+import ClashroyaleImg from "../../assets/images/clash-royale.png";
 import LolImg from "../../assets/images/lol.png";
 import ImdbImg from "../../assets/images/imdb.png";
 
@@ -38,8 +38,8 @@ export default class Home extends React.Component {
           </div>
 
           <div className="div">
-           <img src={ClashroyalImg} alt="clash-royal" className="img-right" />
-            <h1>Clash-Royal : The game in the future</h1>
+           <img src={ClashroyaleImg} alt="clash-royal" className="img-right" />
+            <h1>Clash-Royale : The game in the future</h1>
             <p>
             We’ll show you some of our favorite pairings. Just turn on what you like and we’ll make it happen for you.
             </p>
@@ -56,7 +56,7 @@ export default class Home extends React.Component {
 
           <div className="div">
            <img src={GithubImg} alt="github" className="img-right" />
-            <h1>Github : Share what you do</h1>
+            <h1>Github : Share your work</h1>
             <p>
             With github you can share your work through all over the world.
             </p>
@@ -64,9 +64,9 @@ export default class Home extends React.Component {
 
           <div className="div">
            <img src={LolImg} alt="lol" className="img-left" />
-            <h1>Lol : The game you should never buy</h1>
+            <h1>Lol : The MOBA game</h1>
             <p>
-            With github you can share your work through all over the world.
+            League of Legends (lol) is probably the most famous moba game all over the world.
             </p>
           </div>
 

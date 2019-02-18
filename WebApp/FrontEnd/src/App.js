@@ -4,6 +4,7 @@ import PrivateRoute from "./guard/PrivateRoute";
 
 //Components
 import ButtonAppBar from "./components/Appbar/Appbar";
+import Footer from "./components/Footer/Footer";
 
 //Context
 import Context from "./context/context";
@@ -50,6 +51,7 @@ class AppConsumer extends React.Component {
               <Route exact path="/logout" component={Logout} />
               <Route component={Error} />
             </Switch>
+            <Footer />
           </div>
         </BrowserRouter>
       </div>
