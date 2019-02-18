@@ -9,11 +9,26 @@ function findInShop(shop, skinName) {
     return null;
 }
 
+export async function canShopBeUpdated() {
+    return new Promise((resolve, reject) => {
+        return query(`SELECT IF(datas IS NULL, 'yes', 'no') as vide, IF(DATE_FORMAT(NOW(), '%y-%m-%d') + 0 > JSON_VALUE(datas, '$.lastUpdate'), 'yes', 'no') as value
+               FROM service
+               WHERE id = 1`)
+            .catch(error => {
+                console.log(error);
+            }).then(result => {
+            if (typeof result[0] == "undefined")
+                return reject('KO');
+            return (result[0].vide === 'yes' || (result[0].vide === 'no' && result[0].value === 'yes')) ? resolve('OK') : reject('KO');
+        })
+    })
+}
+
 export async function updateShop(json, ids) {
     json = JSON.parse(json);
     return query(`UPDATE service
                   set datas = '{"lastUpdate": "0"}',
-                      datas = JSON_SET(datas, '$.lastUpdate', NOW())
+                      datas = JSON_SET(datas, '$.lastUpdate', DATE_FORMAT(NOW(), '%y-%m-%d'))
                   WHERE id = 1`)
         .catch(error => {
             console.log(error);

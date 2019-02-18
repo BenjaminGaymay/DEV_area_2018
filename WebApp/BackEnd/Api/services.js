@@ -85,8 +85,11 @@ export class Services {
         console.log('Starting services update..');
 
         for (const name in this.services) {
-            if (this.exceptions.indexOf(name) === -1)
-                this.services[name].update();
+            if (this.exceptions.indexOf(name) === -1) {
+                this.services[name].update().catch(error => {
+                    console.log(error);
+                });
+            }
         }
 
         setInterval(() => {
@@ -96,7 +99,5 @@ export class Services {
                     this.services[name].update();
             }
         }, interval);
-
-        // }, interval);
     }
 }
