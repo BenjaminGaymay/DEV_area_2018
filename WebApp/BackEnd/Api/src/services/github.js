@@ -19,7 +19,7 @@ function arraysEqual(arr1, arr2) {
 }
 
 export  async function updateGetRepos() {
-    const widgets = await getLinkByActionLinkIdList(['30']);
+    const widgets = await getLinkByActionLinkIdList([]);
 
     console.log('GithubGetReposService: starting update..');
 
@@ -58,7 +58,7 @@ export  async function updateGetRepos() {
 }
 
 export async function updateGetNotifs() {
-	const widgets = await getLinkByActionLinkIdList(['40']);
+	const widgets = await getLinkByActionLinkIdList(['43', '44']);
 
     console.log('GithubGetNotifsService: starting update..');
 
@@ -103,7 +103,7 @@ export async function updateGetNotifs() {
 }
 
 export async function updateGetLastIssue() {
-	const widgets = await getLinkByActionLinkIdList(['50']);
+	const widgets = await getLinkByActionLinkIdList([]);
 
     console.log('GithubGetLastIssueService: starting update..');
 
