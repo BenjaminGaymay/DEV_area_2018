@@ -91,7 +91,7 @@ export function getSchema() {
                     label: "Url"
                 },
                 headers: {
-                    type: "object",
+                    type: "array",
                     label: "Variable d'en-tête"
                 }
             }
