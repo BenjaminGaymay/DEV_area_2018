@@ -9,10 +9,10 @@ const reddit = new RedditOauth2(
     process.env.REDDIT_CLIENT_SECRET
 );
 
-export async function updateGetLastPost() {
+export async function updateGetLastPost(ids) {
     return new Promise((resolve, reject) => {
         reddit.getLastPostWithName('funny').then(results => {
-            reddit_bdd.updateAllSubscribedUsers('funny', results.created, JSON.stringify(results)).then(result => {
+            reddit_bdd.updateAllSubscribedUsers('funny', results.created, JSON.stringify(results), ids).then(result => {
                 return resolve('OK');
             }).catch(error => {
                 console.log(error);
@@ -26,7 +26,7 @@ export async function updateGetLastPost() {
 }
 
 export async function update() {
-    updateGetLastPost().then();
+    updateGetLastPost([21, 22]).then();
     updateGetTrophies().then();
 }
 
