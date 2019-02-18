@@ -12,3 +12,10 @@ export async function run(widget) {
 	const token = widget.config_reaction.access_token;
 	github.createRepo(token, await getServiceDatasByName('imdb'));
 }
+
+export function getSchema() {
+    return {
+        name: "Imdb To Github Repo",
+        description: "Créé un dossier du nom du dernier film sorti",
+    }
+}
