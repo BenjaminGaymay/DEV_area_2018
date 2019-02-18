@@ -56,3 +56,32 @@ export async function subscribe(subscribeId, userId, bodyParam) {
         });
     })
 }
+
+export function getSchema() {
+    return {
+        name: "Fornite statistique vers Email",
+        description: "Recevez un email avec vos statistique Fortnite quotidienne",
+        action: {
+            title: "Fortnite Email",
+            config: {
+                pseudo: {
+                    type: "string",
+                    label: "Pseudo"
+                },
+                platform: {
+                    type: "string",
+                    label: "Plateforme"
+                }
+            }
+        },
+        reaction: {
+            title: "Http",
+            config: {
+                to: {
+                    type: "string",
+                    label: "Destinataire"
+                },
+            }
+        },
+    }
+}

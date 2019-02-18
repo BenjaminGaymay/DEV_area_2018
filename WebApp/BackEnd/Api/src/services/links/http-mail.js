@@ -60,3 +60,39 @@ export async function subscribe(subscribeId, userId, bodyParam) {
         });
     })
 }
+
+export function getSchema() {
+    return {
+        name: "Http vers email",
+        description: "Envoyez un email si votre url reçoit une requête",
+        action: {
+            title: "Http",
+            config: {
+                config: {
+                    method: {
+                        type: "checkbox",
+                        values: ["GET", "POST"],
+                        label: "HTTP verb"
+                    },
+                    url: {
+                        type: "string",
+                        label: "Url"
+                    },
+                    headers: {
+                        type: "object",
+                        label: "Variable d'en-tête"
+                    }
+                }
+            }
+        },
+        reaction: {
+            title: "Email",
+            config: {
+                to: {
+                    type: "string",
+                    label: "Destinataire"
+                },
+            }
+        },
+    }
+}
