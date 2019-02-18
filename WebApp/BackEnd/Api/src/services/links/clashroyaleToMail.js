@@ -14,8 +14,8 @@ export async function run(widget) {
 	sendMail({
 		to: widget.config_reaction.to,
 		subject: 'Du nouveau sur Clash Royale !',
-		html
-	});
+		html: JSON.stringify(widget.datas)
+	}).then();
 }
 
 export function getSchema() {
@@ -25,8 +25,15 @@ export function getSchema() {
         action: {
             title: "Clash Royale",
             config: {
-				tag: "Tag joueur",
-				trigger: "Sélectionner certaines parties : '', 'victory', 'defeat' ou 'equality'"
+                tag: {
+                    type: "string",
+                    label: "Tag joueur"
+                },
+                trigger: {
+                    type: "checkbox",
+                    values: ['victory', 'defeat', 'equality'],
+                    label: "Sélectionner certaines parties",
+                }
             }
         },
 		reaction: {
