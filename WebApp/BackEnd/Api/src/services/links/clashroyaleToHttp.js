@@ -55,7 +55,7 @@ export function getSchema() {
                 },
                 trigger: {
                     type: "checkbox",
-                    values: ['victory', 'defeat', 'equality'],
+                    values: ['', 'victory', 'defeat', 'equality'],
                     label: "Sélectionner certaines parties",
                 }
             }
