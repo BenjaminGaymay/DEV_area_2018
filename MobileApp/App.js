@@ -8,7 +8,8 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, ImageBackground, Image, StatusBar, ScrollView, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
+import {Header, Icon} from 'react-native-elements';
 
 /*const description = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -32,75 +33,76 @@ import {Platform, StyleSheet, Text, View, ImageBackground, Image, StatusBar, Scr
 type Props = {};
 export default class App extends Component<Props> {
   render() {
+    console.log('coucou 1');
     return (
-      <ScrollView style={styles.container}>
-        <View style={styles.bar}>
-          <Text style={styles.barText}>AREA</Text>
-        </View>
-        <View style={styles.item}>
-          <Image source={require('./assets/images/Home.png')}
-                 style={styles.itemImage}/>
-          <View style={styles.text}>
-            <Text style={styles.title}>AREA : A world that works for you</Text>
-            <Text style={styles.description}>AREA is the free way to get all your apps and devices talking to each other. Not everything on the internet plays nice, so we're on a mission to build a more connected world.</Text>
+      <View style={styles.page}>
+        <Header
+          leftComponent={{text: 'Area', style: {fontSize: 20, color: 'white'}}}
+          rightComponent={
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{fontSize: 18, color: 'white'}}>Login</Text>
+              <Icon name="person" size={26} color="#fff"/>
+            </View>
+          }
+        />
+        <ScrollView style={styles.container} onPress={console.log('coucou 2')}>
+          <View style={styles.item} onPress={console.log('coucou 3')}>
+            <Image source={require('./assets/images/Home.png')}
+                   style={styles.itemImage}/>
+            <View style={styles.text}>
+              <Text style={styles.title}>AREA : A world that works for you</Text>
+              <Text style={styles.description}>AREA is the free way to get all your apps and devices talking to each other. Not everything on the internet plays nice, so we're on a mission to build a more connected world.</Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.item}>
-          <View style={styles.text}>
-            <Text style={styles.title}>Clash-Royale : The game in the future</Text>
-            <Text style={styles.description}>We’ll show you some of our favorite pairings. Just turn on what you like and we’ll make it happen for you.</Text>
+          <View style={styles.item}>
+            <View style={styles.text}>
+              <Text style={styles.title}>Clash-Royale : The game in the future</Text>
+              <Text style={styles.description}>We’ll show you some of our favorite pairings. Just turn on what you like and we’ll make it happen for you.</Text>
+            </View>
+            <Image source={require('./assets/images/clash-royale.png')}
+                   style={styles.itemImage}/>
           </View>
-          <Image source={require('./assets/images/clash-royale.png')}
-                 style={styles.itemImage}/>
-        </View>
-        <View style={styles.item}>
-          <Image source={require('./assets/images/reddit.png')}
-                 style={styles.itemImage}/>
-          <View style={styles.text}>
-            <Text style={styles.title}>Reddit : share what you think</Text>
-            <Text style={styles.description}>AREA is the free way to get all your apps and devices talking to each other. Not everything on the internet plays nice, so we're on a mission to build a more connected world.</Text>
+          <View style={styles.item}>
+            <Image source={require('./assets/images/reddit.png')}
+                   style={styles.itemImage}/>
+            <View style={styles.text}>
+              <Text style={styles.title}>Reddit : share what you think</Text>
+              <Text style={styles.description}>AREA is the free way to get all your apps and devices talking to each other. Not everything on the internet plays nice, so we're on a mission to build a more connected world.</Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.item}>
-          <View style={styles.text}>
-            <Text style={styles.title}>Github : Share your work</Text>
-            <Text style={styles.description}>AREA is the free way to get all your apps and devices talking to each other. Not everything on the internet plays nice, so we're on a mission to build a more connected world.</Text>
+          <View style={styles.item}>
+            <View style={styles.text}>
+              <Text style={styles.title}>Github : Share your work</Text>
+              <Text style={styles.description}>AREA is the free way to get all your apps and devices talking to each other. Not everything on the internet plays nice, so we're on a mission to build a more connected world.</Text>
+            </View>
+            <Image source={require('./assets/images/Github.png')}
+                   style={styles.itemImage}/>
           </View>
-          <Image source={require('./assets/images/Github.png')}
-                 style={styles.itemImage}/>
-        </View>
-        <View style={styles.item}>
-          <Image source={require('./assets/images/lol.png')}
-                 style={styles.itemImage}/>
-          <View style={styles.text}>
-            <Text style={styles.title}>Lol : The MOBA game</Text>
-            <Text style={styles.description}>League of Legends (lol) is probably the most famous moba game all over the world.</Text>
+          <View style={styles.item}>
+            <Image source={require('./assets/images/lol.png')}
+                   style={styles.itemImage}/>
+            <View style={styles.text}>
+              <Text style={styles.title}>Lol : The MOBA game</Text>
+              <Text style={styles.description}>League of Legends (lol) is probably the most famous moba game all over the world.</Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.item}>
-          <View style={styles.text}>
-            <Text style={styles.title}>Imdb : The best internet movie database</Text>
-            <Text style={styles.description}>IMDB is a movie internet database that deals with the cinema, the television and video games.</Text>
+          <View style={styles.item}>
+            <View style={styles.text}>
+              <Text style={styles.title}>Imdb : The best internet movie database</Text>
+              <Text style={styles.description}>IMDB is a movie internet database that deals with the cinema, the television and video games.</Text>
+            </View>
+            <Image source={require('./assets/images/imdb.png')}
+                   style={styles.itemImage}/>
           </View>
-          <Image source={require('./assets/images/imdb.png')}
-                 style={styles.itemImage}/>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  bar: {
-    backgroundColor: "#3f51b5",
-    width: "100%",
-    height: 50,
-    marginBottom: 20,
-  },
-  barText: {
-    marginTop: 10,
-    marginLeft: 10,
-    color: "white",
+  page: {
+    flex: 1,
   },
   /*  backgroundImage: {
       flex: 1,
@@ -113,7 +115,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: "100%",
     height: "100%",
-    backgroundColor: "white",
   },
   item: {
     flexDirection: 'row',
