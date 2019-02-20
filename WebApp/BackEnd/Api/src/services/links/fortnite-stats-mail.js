@@ -70,7 +70,8 @@ export function getSchema() {
                     label: "Pseudo"
                 },
                 platform: {
-                    type: "string",
+                    type: "checkbox",
+                    values: ['pc', 'xbox', 'ps4'],
                     label: "Plateforme"
                 }
             }
