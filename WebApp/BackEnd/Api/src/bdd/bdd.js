@@ -112,21 +112,6 @@ export async function getAllServices() {
     });
 }
 
-/**
- * @returns {Promise<void>}
- */
-export async function getAllSubscribes() {
-    return query(`SELECT *
-                  FROM subscribe`).catch(error => {
-        return Promise.reject('subscribe unknown error.');
-    }).then(result => {
-        if (typeof result[0] == "undefined") {
-            return Promise.reject('Any service available.');
-        }
-        return result;
-    });
-}
-
 export async function isTokenExist(token) {
     return query(`SELECT * FROM user_tmp WHERE token = ${token};`)
         .catch(error => {

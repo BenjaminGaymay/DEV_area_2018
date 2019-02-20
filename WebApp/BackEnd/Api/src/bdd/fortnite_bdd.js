@@ -11,7 +11,7 @@ function findInShop(shop, skinName) {
 
 export async function canShopBeUpdated() {
     return new Promise((resolve, reject) => {
-        return query(`SELECT IF(datas IS NULL, 'yes', 'no') as vide, IF(DATE_FORMAT(NOW(), '%y-%m-%d') + 0 > JSON_VALUE(datas, '$.lastUpdate'), 'yes', 'no') as value
+        return query(`SELECT IF(datas IS NULL, 'yes', 'no') as vide, IF(DATE_FORMAT(NOW(), '%y-%m-%d') > JSON_EXTRACT(datas, '$.lastUpdate'), 'yes', 'no') as value
                FROM service
                WHERE id = 1`)
             .catch(error => {
@@ -67,8 +67,8 @@ export async function getStatsSubscribe(ids) {
                          user_id,
                          subscribe_id,
                          datas,
-                         JSON_VALUE(config_action, '$.platform') as platform,
-                         JSON_VALUE(config_action, '$.pseudo')   as pseudo
+                         JSON_EXTRACT(config_action, '$.platform') as platform,
+                         JSON_EXTRACT(config_action, '$.pseudo')   as pseudo
                   FROM link
                   WHERE subscribe_id in (${ids.toString()})
                     AND updated = FALSE`)
