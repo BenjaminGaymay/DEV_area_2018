@@ -1,47 +1,31 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {View, StyleSheet, Button, Text} from 'react-native';
 import t from 'tcomb-form-native';
 import {Icon} from "react-native-elements";
+import * as env from '../env'
 
 const Form = t.form.Form;
 
 const User = t.struct({
-  email: t.String,
-  username: t.String,
+  login: t.String,
   password: t.String,
 });
 
 const formStyles = {
   ...Form.stylesheet,
   formGroup: {
-    normal: {
-      marginBottom: 10
-    },
+    normal: {marginBottom: 10},
   },
   controlLabel: {
-    normal: {
-      color: 'blue',
-      fontSize: 18,
-      marginBottom: 7,
-      fontWeight: '600'
-    },
-    // the style applied when a validation error occours
-    error: {
-      color: 'red',
-      fontSize: 18,
-      marginBottom: 7,
-      fontWeight: '600'
-    }
+    normal: {color: '#3C55B0', fontSize: 18, marginBottom: 7, fontWeight: '600'},
+    error: {color: '#3C55B0', fontSize: 18, marginBottom: 7, fontWeight: '600'}
   }
 };
 
 const options = {
   fields: {
-    email: {
-      error: 'Email pls'
-    },
-    username: {
-      error: 'Email pls'
+    login: {
+      error: 'login pls'
     },
     password: {
       error: 'Password pls'
@@ -68,9 +52,35 @@ export default class Login extends Component {
       </View>,
   });
 
+  error = '';
+
   handleSubmit = () => {
     const value = this._form.getValue();
-    console.log('value: ', value);
+    if (value != null) {
+
+      fetch(env.API + "/login", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          login: value.login,
+          password: value.password
+        }),
+      }).then(result => {
+        //value.login
+        //value.password
+        // store ça sur appareil
+        console.log('GOOD');
+      }).catch(error => {
+        console.log('BAD');
+        console.log(error);
+      });
+
+      console.log('value: ', value);
+      console.log('api: ', env.API);
+    }
   };
 
   render() {
