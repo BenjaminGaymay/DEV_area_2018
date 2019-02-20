@@ -60,7 +60,7 @@ export async function subscribe(subscribeId, userId, bodyParam) {
 export function getSchema() {
     return {
         id: id,
-        name: "Fornite statistique vers Email",
+        name: "ForTnite statistique vers Email",
         description: "Recevez un email avec vos statistiques Fortnite quotidienne",
         action: {
             title: "Fortnite Email",
