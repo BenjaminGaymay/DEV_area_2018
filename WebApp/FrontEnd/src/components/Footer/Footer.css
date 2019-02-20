@@ -1,12 +1,13 @@
 .footer {
-    margin-top: 15%;
-    height: 200px;
+    margin-top: 16%;
+    height: 140px;
     background-color: #3C55B0;
     text-align: center;
+    color: white;
 }
 
 .logo {
-    height: 150px;
-    width: 150px;
-    margin-top: 20px;
+    height: 80px;
+    width: 80px;
+    margin-top: 5px;
 }

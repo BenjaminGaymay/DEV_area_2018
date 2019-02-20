@@ -1,5 +1,4 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
 
 import "./Home.css";
 
@@ -22,11 +21,6 @@ export default class Home extends React.Component {
     return (
       <div style={{ margin: 0 }}>
         <div style={{ minheight: "800px" }}>
-          <Grid container spacing={16}>
-            <Grid item xs={12}>
-              <Grid container justify="center" spacing={16} />
-            </Grid>
-          </Grid>
 
           <div className="div">
             <img src={HomeImg} alt="Area" className="img-left" />
@@ -78,7 +72,7 @@ export default class Home extends React.Component {
             </p>
           </div>
 
-        </div>
+       </div>  
       </div>
     );
   }
