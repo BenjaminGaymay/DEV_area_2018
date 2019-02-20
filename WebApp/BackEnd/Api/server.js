@@ -21,7 +21,7 @@ authRouter(app);
 async function init() {
     let services = new Services();
     await services.build();
-    /*setInterval(async () => {
+    setInterval(async () => {
         const widgets = await getAllLinkUpdated();
 
         console.log('Check for new updated services..');
@@ -36,7 +36,7 @@ async function init() {
                 setLinksUpdatedFalse(widget.id).then();
             }
         }
-    }, 15000);*/
+    }, 15000);
 
     return services;
 }
