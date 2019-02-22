@@ -16,6 +16,7 @@ export async function run(widget) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Last Reddit Post Infos To Github Issue",
 		description: "Créé une issue avec les infos du dernier post",
 		action: {

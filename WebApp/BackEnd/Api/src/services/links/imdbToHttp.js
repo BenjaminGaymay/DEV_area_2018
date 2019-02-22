@@ -36,3 +36,11 @@ export async function run(widget) {
 		});
 	});
 }
+
+export function getSchema() {
+    return {
+        id: id,
+        name: "Imdb To Http",
+        description: "Créé une requete http du nom du dernier film sorti",
+    }
+}
