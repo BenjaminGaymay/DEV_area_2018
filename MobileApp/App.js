@@ -9,14 +9,18 @@
 
 import React from "react";
 import {createAppContainer, createStackNavigator} from "react-navigation";
-import Home from "./pages/Home"
-import Login from "./pages/Login"
-import Register from "./pages/Register";
+import Home from "./src/pages/Home"
+import Login from "./src/pages/Login"
+import Register from "./src/pages/Register";
+import Dashboard from "./src/pages/Dashboard";
+import Logout from "./src/pages/Logout";
 
 const AppNavigator = createStackNavigator({
-  Login: {screen: Login},
   Home: {screen: Home},
+  Login: {screen: Login},
   Register: {screen: Register},
+  Dashboard: {screen: Dashboard},
+  Logout: {screen: Logout}
 });
 
 const App = createAppContainer(AppNavigator);

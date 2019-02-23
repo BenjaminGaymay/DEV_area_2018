@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Button, Text} from 'react-native';
 import t from 'tcomb-form-native';
 import {Icon} from "react-native-elements";
-import * as env from '../env'
+import * as env from '../../env'
+import * as Api from '../services/Api'
+import * as Account from "../services/Account"
 
 const Form = t.form.Form;
 
@@ -34,7 +36,19 @@ const options = {
   stylesheet: formStyles,
 };
 
-export default class Login extends Component {
+export default class Login extends Component<Props> {
+  constructor(props) {
+    super(props);
+    Account.getAccountInfo().then((credentials) => {
+      if (credentials !== false) {
+        console.log(credentials);
+        return props.navigation.navigate('Dashboard');
+      }
+    }).catch(function (error) {
+      console.log('Keychain couldn\'t be accessed! Maybe no value set?', error);
+    });
+  }
+
   static navigationOptions = ({navigation}) => ({
     headerTintColor: 'white',
     headerStyle: {
@@ -42,7 +56,7 @@ export default class Login extends Component {
     },
     title: "Login",
     headerRight:
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{marginRight: 10, flexDirection: 'row', alignItems: 'center'}}>
         <Text style={{fontSize: 18, color: 'white'}}
               onPress={() => {
                 navigation.navigate('Register')
@@ -57,29 +71,13 @@ export default class Login extends Component {
   handleSubmit = () => {
     const value = this._form.getValue();
     if (value != null) {
-
-      fetch(env.API + "/login", {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          login: value.login,
-          password: value.password
-        }),
-      }).then(result => {
-        //value.login
-        //value.password
-        // store ça sur appareil
-        console.log('GOOD');
-      }).catch(error => {
-        console.log('BAD');
-        console.log(error);
+      Account.setAccountInfo(value.login, value.password).then(() => {
+        return this.props.navigation.navigate('Dashboard');
+      }).catch(() => {
+        this.error = 'Error 1';
       });
-
-      console.log('value: ', value);
-      console.log('api: ', env.API);
+    } else {
+      this.error = 'Error 2';
     }
   };
 
