@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Button, Text} from 'react-native';
+import {ScrollView, View, StyleSheet, Button, Text} from 'react-native';
 import t from 'tcomb-form-native';
 import {Icon} from "react-native-elements";
 import * as env from '../../env'
@@ -66,43 +66,59 @@ export default class Login extends Component<Props> {
       </View>,
   });
 
-  error = '';
-
   handleSubmit = () => {
+    this.setState({error: null});
     const value = this._form.getValue();
+
     if (value != null) {
-      Account.setAccountInfo(value.login, value.password).then(() => {
-        return this.props.navigation.navigate('Dashboard');
+      Api.login(value.login, value.password).then(() => {
+        Account.setAccountInfo(value.login, value.password).then(() => {
+          return this.props.navigation.navigate('Dashboard');
+        }).catch(() => {
+          this.setState({error: 'Cannot save credentials'});
+        });
       }).catch(() => {
-        this.error = 'Error 1';
+        this.setState({error: 'Login and password not match'});
       });
     } else {
-      this.error = 'Error 2';
+      this.setState({error: 'Please fill the from'});
     }
   };
 
   render() {
     return (
-      <View style={styles.container}>
-        <Form
-          ref={c => this._form = c}
-          type={User}
-          options={options}
-        />
-        <Button
-          title="Sign Up!"
-          onPress={this.handleSubmit}
-        />
-      </View>
+      <ScrollView style={styles.container}>
+        <View style={styles.form}>
+          <Text style={styles.error}>
+            {this.state && this.state.error}
+          </Text>
+          <Form
+            ref={c => this._form = c}
+            type={User}
+            options={options}
+          />
+          <Button
+            title="Sign Up!"
+            onPress={this.handleSubmit}
+          />
+        </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    marginTop: "5%",
+  body: {
+    flex: 1,
+    flexDirection: 'column',
+    width: "100%",
+    height: "100%",
+  },
+  error: {
+    color: 'red',
+    marginBottom: 10,
+  },
+  form: {
     padding: 20,
-    backgroundColor: '#ffffff',
   },
 });

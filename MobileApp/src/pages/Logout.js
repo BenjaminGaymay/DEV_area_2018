@@ -8,7 +8,7 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image, ScrollView, Button} from 'react-native';
+import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Icon} from 'react-native-elements';
 import * as Account from '../services/Account'
 
@@ -51,48 +51,13 @@ export default class Logout extends Component<Props> {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    height: 10,
-  },
   page: {
     flex: 1,
   },
-  /*  backgroundImage: {
-      flex: 1,
-      width: "100%",
-      height: "100%",
-      resizeMode: "cover"
-    },*/
   container: {
     flex: 1,
     flexDirection: 'column',
     width: "100%",
     height: "100%",
   },
-  item: {
-    flexDirection: 'row',
-    //backgroundColor: "red",
-    marginBottom: 10,
-    marginLeft: 15,
-    marginRight: 15,
-  },
-  text: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  itemImage: {
-    flex: 1,
-    width: null,
-    height: null,
-    resizeMode: 'contain',
-    margin: 10,
-    /*width: "20%",
-    height: "20%"*/
-  },
-  title: {
-    color: "black",
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  description: {},
 });
