@@ -71,8 +71,8 @@ export default class Dashboard extends Component<Props> {
                             this.props.navigation.navigate('LinkAction', {item: item});
                           }}>
                           <View style={styles.item}>
-                            <Image style={{flex: 0.25, width: null, height: null, resizeMode: 'contain'}}
-                                   source={require('../../assets/images/smallTest.png')}
+                            <Image style={{flex: 0.25, marginRight: 10, width: null, height: null, resizeMode: 'contain'}}
+                                   source={{uri: item.url}}
                             />
                             <View style={styles.text}>
                               <Text style={{fontWeight: "bold", marginBottom: 10}}>{item.name}</Text>
