@@ -1,60 +1,87 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
  * @flow
- * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
-import {Icon} from 'react-native-elements';
-import * as Account from '../../services/Account'
-import * as Api from "../../services/Api";
+import {KeyboardAvoidingView, TouchableHighlight, View} from 'react-native'
+import {Icon, Text} from "react-native-elements";
+import t from 'tcomb-form-native';
 
-type Props = {};
-export default class LinkAction extends Component<Props> {
-  constructor(props) {
-    super(props);
+const Form = t.form.Form;
 
-    Account.getAccountInfo().then(async result => {
-      //this.setState({links: links});
-      //this.props.navigation.setParams({isConnected: true});
-    }).catch(() => {
-      return this.props.navigation.navigate('Logins');
-    });
-    console.log(this.props.navigation.getParam('item'));
-  }
+type Props = { navigation: Object };
+type State = {
+  atype: string, // Activity type. E.g. the content type.
+  type: Object, // This is "type" in the tcomb-form sense.  The struct.
+  options: Object, // Form options.
+  value: Object // Form values.
+};
 
+export default class LinkAction extends Component<Props, State> {
   static navigationOptions = ({navigation}) => ({
     headerTintColor: 'white',
     headerStyle: {
       backgroundColor: '#3C55B0'
     },
     title: "Action",
-    headerRight: null,
+    headerRight: null
   });
+
+  form: Form;
+
+  constructor(props) {
+    super(props);
+  }
+
+  getType() {
+    return t.struct({
+      label: t.String,
+      team: t.String,
+    });
+  }
+
+  teams = [
+    {value: 'or', text: 'Orioles'},
+    {value: 'ya', text: 'Yankees'},
+    {value: 're', text: 'Red Sox'},
+    {value: 'other', text: 'Other'}
+  ];
+
+  options = {
+    fields: {
+      label: {
+        error: 'coucou',
+      },
+      team: {
+        error: 'dommage',
+        factory: t.form.Select,
+        options: this.teams,
+        nullOption: {value: '', text: 'Choose your team'}
+      },
+    }
+  };
+
+
+  async onPress() {
+    const value = this._form.getValue();
+
+    if (value != null) {
+      console.log(value);
+    }
+  }
 
   render() {
     return (
-      <View style={styles.page}>
-        <ScrollView style={styles.container}>
-          <Text>coucou</Text>
-        </ScrollView>
+      <View>
+        <Form
+          ref={c => this._form = c}
+          type={this.getType()}
+          options={this.options}
+        />
+        <TouchableHighlight style={{}} onPress={this.onPress.bind(this)}>
+          <Text style={{}}>Submit</Text>
+        </TouchableHighlight>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    width: "100%",
-    height: "100%",
-  },
-});
