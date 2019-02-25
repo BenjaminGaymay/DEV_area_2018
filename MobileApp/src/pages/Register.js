@@ -68,7 +68,7 @@ export default class Register extends Component<Props> {
     headerStyle: {
       backgroundColor: '#3C55B0'
     },
-    title: "Login",
+    title: "Register",
     headerRight: null
   });
 

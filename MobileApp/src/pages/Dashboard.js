@@ -8,14 +8,13 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, FlatList, Image, ScrollView, Button, ListView} from 'react-native';
-import {Icon, ListItem} from 'react-native-elements';
+import {TouchableOpacity, StyleSheet, Text, View, FlatList, Image} from 'react-native';
+import {Icon} from 'react-native-elements';
 import * as Account from '../services/Account';
 import * as Api from '../services/Api';
 
 type Props = {};
 export default class Dashboard extends Component<Props> {
-
   state: {
     links: [];
   };
@@ -40,7 +39,7 @@ export default class Dashboard extends Component<Props> {
       headerStyle: {
         backgroundColor: '#3C55B0'
       },
-      title: "Area",
+      title: "Dashboard",
       headerLeft: null,
       gesturesEnabled: false,
       headerRight:
@@ -66,14 +65,21 @@ export default class Dashboard extends Component<Props> {
         {this.state && this.state.links ? (
           <FlatList data={this.state.links}
                     renderItem={({item}) =>
-                      <View style={[styles.shadow, styles.item]}>
-                        <Image style={{flex: 0.25, width: null, height: null, resizeMode: 'contain'}}
-                               source={require('../../assets/images/smallTest.png')}
-                        />
-                        <View style={styles.text}>
-                          <Text style={{fontWeight: "bold", marginBottom: 10}}>{item.name}</Text>
-                          <Text>{item.description}</Text>
-                        </View>
+                      <View style={styles.shadow}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.props.navigation.navigate('LinkAction', {item: item});
+                          }}>
+                          <View style={styles.item}>
+                            <Image style={{flex: 0.25, width: null, height: null, resizeMode: 'contain'}}
+                                   source={require('../../assets/images/smallTest.png')}
+                            />
+                            <View style={styles.text}>
+                              <Text style={{fontWeight: "bold", marginBottom: 10}}>{item.name}</Text>
+                              <Text>{item.description}</Text>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
                       </View>
                     }
                     keyExtractor={(item, index) => index.toString()}

@@ -14,13 +14,16 @@ import Login from "./src/pages/Login"
 import Register from "./src/pages/Register";
 import Dashboard from "./src/pages/Dashboard";
 import Logout from "./src/pages/Logout";
+import LinkAction from "./src/pages/Link/Action";
 
 const AppNavigator = createStackNavigator({
   Dashboard: {screen: Dashboard},
   Home: {screen: Home},
   Login: {screen: Login},
   Register: {screen: Register},
-  Logout: {screen: Logout}
+  Logout: {screen: Logout},
+  LinkAction: {screen: LinkAction},
+  //LinkReaction: {screen: LinkReaction},
 });
 
 const App = createAppContainer(AppNavigator);

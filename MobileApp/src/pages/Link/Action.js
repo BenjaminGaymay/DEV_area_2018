@@ -10,16 +10,21 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Icon} from 'react-native-elements';
-import * as Account from '../services/Account'
+import * as Account from '../../services/Account'
+import * as Api from "../../services/Api";
 
 type Props = {};
-export default class Logout extends Component<Props> {
+export default class LinkAction extends Component<Props> {
   constructor(props) {
     super(props);
 
-    Account.resetAccount().then(result => {
-      return props.navigation.navigate('Home');
+    Account.getAccountInfo().then(async result => {
+      //this.setState({links: links});
+      //this.props.navigation.setParams({isConnected: true});
+    }).catch(() => {
+      return this.props.navigation.navigate('Logins');
     });
+    console.log(this.props.navigation.getParam('item'));
   }
 
   static navigationOptions = ({navigation}) => ({
@@ -27,23 +32,15 @@ export default class Logout extends Component<Props> {
     headerStyle: {
       backgroundColor: '#3C55B0'
     },
-    title: "Logout",
-    headerRight:
-      <View style={{marginRight: 10, flexDirection: 'row', alignItems: 'center'}}>
-        <Text style={{fontSize: 18, color: 'white'}}
-              onPress={() => {
-                navigation.navigate('Home')
-              }}>Home
-        </Text>
-        <Icon name="person" size={26} color="white"/>
-      </View>,
+    title: "Action",
+    headerRight: null,
   });
 
   render() {
     return (
       <View style={styles.page}>
         <ScrollView style={styles.container}>
-          <Text>Waiting to logout...</Text>
+          <Text>coucou</Text>
         </ScrollView>
       </View>
     );
