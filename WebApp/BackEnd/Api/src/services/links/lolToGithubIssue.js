@@ -18,6 +18,7 @@ export async function run(widget) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Lol To Github Issue",
 		description: "Créé une issue avec les stats du joueur",
 		action: {

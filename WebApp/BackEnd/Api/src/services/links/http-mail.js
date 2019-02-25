@@ -69,20 +69,18 @@ export function getSchema() {
         action: {
             title: "Http",
             config: {
-                config: {
-                    method: {
-                        type: "checkbox",
-                        values: ["GET", "POST"],
-                        label: "HTTP verb"
-                    },
-                    url: {
-                        type: "string",
-                        label: "Url"
-                    },
-                    headers: {
-                        type: "array",
-                        label: "Variable d'en-tête"
-                    }
+                method: {
+                    type: "checkbox",
+                    values: ["GET", "POST"],
+                    label: "HTTP verb"
+                },
+                url: {
+                    type: "string",
+                    label: "Url"
+                },
+                headers: {
+                    type: "array",
+                    label: "Variable d'en-tête"
                 }
             }
         },

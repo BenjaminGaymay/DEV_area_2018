@@ -18,6 +18,7 @@ export async function run(widget) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "IMDb vers Mails",
         description: "Recevez un email lorsqu'un nouveau film sort",
         reaction: {

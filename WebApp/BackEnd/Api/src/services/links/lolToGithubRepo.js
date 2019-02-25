@@ -16,6 +16,7 @@ export async function run(widget) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Lol Stats To Github Repo",
 		description: "Créé un repo avec les stats de la personne",
 		action: {

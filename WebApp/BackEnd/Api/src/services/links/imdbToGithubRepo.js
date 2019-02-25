@@ -15,6 +15,7 @@ export async function run(widget) {
 
 export function getSchema() {
     return {
+        id: id,
         name: "Imdb To Github Repo",
         description: "Créé un dossier du nom du dernier film sorti",
     }
