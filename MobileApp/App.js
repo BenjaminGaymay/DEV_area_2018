@@ -16,10 +16,10 @@ import Dashboard from "./src/pages/Dashboard";
 import Logout from "./src/pages/Logout";
 
 const AppNavigator = createStackNavigator({
+  Dashboard: {screen: Dashboard},
   Home: {screen: Home},
   Login: {screen: Login},
   Register: {screen: Register},
-  Dashboard: {screen: Dashboard},
   Logout: {screen: Logout}
 });
 
