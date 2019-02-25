@@ -1,38 +1,83 @@
 {
-	"client": {
-		"host": ""
-	},
-	"server": {
-		"current_time": 0,
-		"services": [{
-			"name": "facebook",
-			"actions": [{
-				"name": "new_message_in_group",
-				"description": "A new  message  is  posted  in the  group"
-			}, {
-				"name": "new_message_inbox",
-				"description": "A new  private  message  is  received  by the  user"
-			}, {
-				"name": "new_like",
-				"description": "The  user  gains a like  from  one of their  messages"
-			}],
-			"reactions": [{
-				"name": "like_message",
-				"description": "The  user  likes a message"
-			}]
-		}, {
-			"name": "intra",
-			"actions": [{
-				"name": "new_project_subscription",
-				"description": "The  user  signs  up for a project"
-			}],
-			"reactions": [{
-				"name": "activity_subscribe",
-				"description": "The  user  signs  up for an  activity"
-			}, {
-				"name": "module_subscribe",
-				"description": "The  user  signs  up for a unit"
-			}]
-		}]
-	}
+  "client": {
+    "host": ""
+  },
+  "server": {
+    "current_time": 0,
+    "services": [
+      {
+        "name": "facebook",
+        "actions": [
+          {
+            "name": "new_message_in_group",
+            "description": "A new  message  is  posted  in the  group"
+          },
+          {
+            "name": "new_message_inbox",
+            "description": "A new  private  message  is  received  by the  user"
+          },
+          {
+            "name": "new_like",
+            "description": "The  user  gains a like  from  one of their  messages"
+          }
+        ],
+        "reactions": [
+          {
+            "name": "like_message",
+            "description": "The  user  likes a message"
+          }
+        ]
+      },
+      {
+        "name": "intra",
+        "actions": [
+          {
+            "name": "new_project_subscription",
+            "description": "The  user  signs  up for a project"
+          }
+        ],
+        "reactions": [
+          {
+            "name": "activity_subscribe",
+            "description": "The  user  signs  up for an  activity"
+          },
+          {
+            "name": "module_subscribe",
+            "description": "The  user  signs  up for a unit"
+          }
+        ]
+      },
+      {
+        "name": "fortnite",
+        "actions": [
+          {
+            "name": "shop",
+            "description": "Get a specific item from the fortnite shop"
+          },
+          {
+            "name": "stats",
+            "description": "Get your daily stats"
+          }
+        ],
+        "reactions": [
+          {
+            "name": "email",
+            "description": "Send a custom email with the result"
+          },
+          {
+            "name": "http",
+            "description": "Send a custom http request with the result"
+          },
+          {
+            "name": "githubRepo",
+            "description": "Create a custom repository with the result"
+          },
+          {
+            "name": "githubIssue",
+            "description": "Create a custom issue with the result"
+          }
+        ]
+      }
+    ]
+  }
 }

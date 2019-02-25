@@ -1,44 +1,88 @@
 "use strict";
 import request from "request";
-import {jsonCompare as compare} from "../jsonSchemaCompare";
-import * as bdd from "../bdd/bdd";
+import * as fortnite_bdd from "../bdd/fortnite_bdd";
 
-const schemaMail = {
-    url: "",
-    method: "",
-};
+let headers = {"TRN-Api-Key": "2bf71bbd-2bac-49b8-a1da-b8af2d4a0a50"};
 
-const schema = JSON.stringify(schemaMail);
-
-async function action(widget, data, resolve, reject) {
-    resolve('OK');
-}
-
-async function reaction(widget, data, resolve, reject) {
-    resolve('OK');
-
-}
-
-export async function run(type, widget, data) {
-    return new Promise((resolve, reject) => {
-        switch (type) {
-            case 'action':
-                return action(widget, data, resolve, reject);
-            case 'reaction':
-                return reaction(widget, data, resolve, reject);
-            default:
-                return reject('Type not found.');
+function getValueWithKey(json, key) {
+    for (let i of json) {
+        if (i.key === key) {
+            return i.value;
         }
+    }
+}
+
+export async function getStatsOfPlayer(plateform, playerName) {
+    return new Promise((resolve, reject) => {
+        let clientServerOptions = {
+            uri: `https://api.fortnitetracker.com/v1/profile/${plateform}/${playerName}`,
+            method: "GET",
+            headers: headers,
+            body: "",
+        };
+
+        request(clientServerOptions, function (error, response) {
+            if (error || response.statusCode !== 200) return reject('Fortnite request cannot be send.');
+            else {
+                let json = JSON.parse(response.body);
+                let result = {
+                    accountId: json.accountId,
+                    ratio: getValueWithKey(json.lifeTimeStats, "K/d"),
+                    matches: getValueWithKey(json.lifeTimeStats, "Matches Played"),
+                    kills: getValueWithKey(json.lifeTimeStats, "Kills"),
+                    top1: getValueWithKey(json.lifeTimeStats, "Wins"),
+                    winPourcentage: getValueWithKey(json.lifeTimeStats, "Win%"),
+                };
+                return resolve(result);
+            }
+        });
     });
 }
 
-export async function update() {
-
+export async function updateStore(ids) {
+    return new Promise((resolve, reject) => {
+        let clientServerOptions = {
+            uri: "https://api.fortnitetracker.com/v1/store",
+            method: "GET",
+            headers: headers,
+            body: "",
+        };
+        fortnite_bdd.canShopBeUpdated().then(result => {
+            request(clientServerOptions, function (error, response) {
+                if (error || response.statusCode !== 200) return reject('Fortnite request cannot be send.');
+                else {
+                    fortnite_bdd.updateShop(response.body, ids).then(result => {
+                        resolve('OK');
+                    }).catch(error => {
+                        console.log(error);
+                        resolve('KO');
+                    });
+                }
+            });
+        }).catch(error => {
+            console.log('Fortnite Shop alreay Updated for today');
+        });
+    });
 }
 
-export function getSchema() {
-    return {
-        action: {},
-        reaction: {}
-    }
+export async function updateStats(ids) {
+    fortnite_bdd.getStatsSubscribe(ids).then(async result => {
+        for (let item of result) {
+            item.datas = JSON.parse(item.datas);
+            item.platform = JSON.parse(item.platform);
+            item.pseudo = JSON.parse(item.pseudo);
+            let stat = await getStatsOfPlayer(item.platform, item.pseudo);
+            if (item.datas === null || stat !== item.datas) {
+                await fortnite_bdd.updateThisPlayerStat(item.id, stat);
+            } else {
+                console.log('Not updated Stat: ' + item.id);
+            }
+        }
+    })
+}
+
+export async function update() {
+    updateStore([71, 72, 73, 74]).catch();
+    updateStats([81, 82, 83, 84]).catch();
+    return 'OK';
 }

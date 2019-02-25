@@ -1,30 +1,24 @@
 import {query} from "./bdd";
 
-export async function updateAllSubscribedUsers(name, created, data) {
-    data = data.replace(/'/g, "\\'");
-    return query(`UPDATE subscribe set config_action_data=JSON_SET(config_action_data, '$.created', '${created}'), updated=TRUE,
-                      action_data='${data}'
-                      WHERE action_service_id = '10' 
+export async function updateAllSubscribedUsers(name, created, data, ids) {
+    return new Promise((resolve, reject) => {
+        data = data.replace(/'/g, '\\\'');
+        data = data.replace(/"/g, '\\\"');
+        return query(`UPDATE link set config_action=JSON_SET(config_action, '$.created', '${created}'), updated=TRUE,
+                      datas='${data}'
+                      WHERE subscribe_id in (${ids.toString()})
+                      AND datas != '${data}'
                       AND updated=FALSE
-                      AND JSON_CONTAINS(config_action_data, '"${name}"', '$.name')
-                      AND JSON_EXTRACT(config_action_data, '$.created') < '${created}';`)
-        .catch(error => {
-            console.log(error);
-            return Promise.reject('reddit_bdd update fail.');
-        })
-        .then(result => {
-            return 'Ok';
-        });
-}
-
-
-export async function getAllUpdated() {
-    return query(`SELECT * FROM subscribe WHERE action_service_id = '10'
-                      AND updated = TRUE`)
-        .catch(error => {
-            console.log(error);
-            return Promise.reject('Reddit bdd error in selection.');
-        }).then(result => {
-            return result;
-        });
+                      AND JSON_CONTAINS(config_action, '"${name}"', '$.name')
+                      AND (JSON_EXTRACT(config_action, '$.created') is NULL or JSON_EXTRACT(config_action, '$.created') < '${created}');`)
+            .catch(error => {
+                // console.log(error);
+                console.log(data);
+                console.log("reddit_bdd update fail. Reason can be the character encoding");
+                return reject('KO');
+            })
+            .then(result => {
+                return resolve('Ok');
+            });
+    });
 }

@@ -27,33 +27,35 @@ class Github {
 
       const options = {
             url: 'https://api.github.com/user/repos',
-            headers: headers
+            headers: headers,
+            method: 'GET'
       };
 
-      const response = new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
           request(options, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode === 200) {
                 try {
-                    const repos = []
+                    const repos = [];
                     body = JSON.parse(body);
                     for (const i in body) {
                         repos.push({ 'name':body[i].name, 'url':body[i].html_url});
                     }
-                    resolve(repos);
+                    return resolve(repos);
                 }
                 catch {
-                    resolve([])
+                    console.log(error);
+                    return reject('KO');
                 }
             }
             else {
-                resolve(error);
+                console.log(error);
+                return reject('KO');
             }
             });
         });
-        return await response;
     }
 
-    async getNotifs(access_token, req, res) {
+    async getLastIssue(access_token, req, res) {
         const request = require('request');
 
         const headers = {
@@ -62,13 +64,52 @@ class Github {
         };
 
         const options = {
-              url: 'https://api.github.com/notifications',
-              headers: headers
+              url: 'https://api.github.com/user/issues',
+              headers: headers,
+              method: 'GET',
+
         };
 
-        const response = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             request(options, (error, response, body) => {
-                if (!error && response.statusCode == 200) {
+              if (!error && response.statusCode === 200) {
+                  try {
+                      body = JSON.parse(body)[0]
+                      let finalResponse = {id: body.id, url:body.html_url, title: body.title}
+
+                      resolve(finalResponse);
+                  }
+                  catch {
+                      console.log(error);
+                      return reject('KO');
+                  }
+              }
+              else {
+                  console.log(error);
+                  return reject('KO');
+              }
+              });
+          });
+      }
+
+    async getNotifs(access_token, req, res) {
+        const request = require('request');
+
+        console.log(access_token)
+        const headers = {
+          Authorization: 'token ' + access_token,
+          'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
+        };
+
+        const options = {
+              url: 'https://api.github.com/notifications',
+              headers: headers,
+              method: 'GET'
+        };
+
+        return new Promise((resolve, reject) => {
+            request(options, (error, response, body) => {
+                if (!error && response.statusCode === 200) {
                     let a = JSON.parse(body);
                     try {
                         a = {
@@ -78,20 +119,70 @@ class Github {
                             type: a[0].subject.type,
                             url: a[0].repository.html_url
                         };
-                        resolve(a);
+                        return resolve(a);
                     }
                     catch {
-                        resolve([])
+                        console.log(error);
+                        return reject('KO');
                     }
                 }
                 else {
-                    resolve(error);
+                    console.log(error);
+                    return reject('KO');
                 }
               });
           });
-          return await response;
       }
 
+      async createRepo(access_token, name) {
+        const request = require('request');
+
+        const headers = {
+          Authorization: 'token ' + access_token,
+          'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
+        };
+
+        const dataString = '{ "name": "' + name + '","homepage": "https://github.com","private": false,"has_issues": true,"has_projects": true,"has_wiki": true}';
+
+        const options = {
+            url: 'https://api.github.com/user/repos',
+            method: 'POST',
+            headers: headers,
+            body: dataString
+        };
+
+        return new Promise((resolve, reject) => {
+            request(options, (error, response, body) => {
+                console.log('Ok repo created')
+                resolve('Ok')
+            });
+        });
+      }
+
+      async createIssue(access_token, username, repoName, title, description) {
+        const request = require('request');
+
+        const headers = {
+          Authorization: 'token ' + access_token,
+          'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
+        };
+
+        const dataString = '{"title": "' + title + '","body": "' + description + '"}';
+
+        const options = {
+            url: 'https://api.github.com/repos/' + username + '/' + repoName + '/issues',
+            method: 'POST',
+            headers: headers,
+            body: dataString
+        };
+
+        return new Promise((resolve, reject) => {
+            request(options, (error, response, body) => {
+                console.log("Ok Issue created");
+                resolve('Ok');
+            });
+        });
+      }
 }
 
 const github = new Github();

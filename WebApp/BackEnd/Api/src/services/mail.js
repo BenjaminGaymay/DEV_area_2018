@@ -2,17 +2,13 @@
 import nodemailer from 'nodemailer';
 import striptags from 'striptags';
 
-export async function run(type, widget, json) {
+export async function run(datas) {
     return new Promise(function (resolve, reject) {
-
-        let to = json.to ? json.to : json.data.to;
-        let html = json.html ? json.html : json.data.html;
-        let subject = json.subject ? json.subject : json.data.subject;
-        if (to == null || html == null || subject == null) {
+        if (!datas.hasOwnProperty("to") || !datas.hasOwnProperty("html") || !datas.hasOwnProperty("subject")) {
             return reject('Mail: Some params in bundle are missing.');
         }
 
-        let text = striptags(json.html);
+        let text = striptags(datas.html);
         let user = "poubelleapipoubelle@gmail.com";
         let pass = "88KVueuWJ7juyDU";
         let from = `"📧 AREA 📧" <${user}>`;
@@ -30,41 +26,23 @@ export async function run(type, widget, json) {
 
         let mailOptions = {
             from: from, // sender address
-            to: to.toString(), // list of receivers
-            subject: subject, // Subject line
+            to: datas.to.toString(), // list of receivers
+            subject: datas.subject, // Subject line
             text: text, // plain text body
-            html: html // html body
+            html: datas.html // html body
         };
 
-        // send mail with defined transport object
-        /*console.log(mailOptions);*/
         transporter.sendMail(mailOptions, (err, result) => { // catch invalid email
             if (err) {
                 console.log(err);
                 console.log('Email non envoyé');
-                reject(err);
+                return reject(err);
             }
-            resolve('OK');
+            return resolve('OK');
         });
     });
 }
 
 export async function update() {
-
-}
-
-export function getSchema() {
-    return {
-        action: {},
-        reaction: {
-            sendEmail: {
-                description: 'Send an email',
-                schema: {
-                    subject: typeof "",
-                    html: typeof "",
-                    to: typeof [],
-                },
-            }
-        },
-    }
+    return 'OK';
 }

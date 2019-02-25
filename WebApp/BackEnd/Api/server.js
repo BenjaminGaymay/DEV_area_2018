@@ -4,7 +4,8 @@ import {router} from "./router"
 import {Services} from "./services"
 import authRouter from './auth';
 import bodyParser from 'body-parser';
-import { getUpdatedSubscribe, setSubscribeUpdatedFalse } from './src/bdd/bdd';
+import ejs from "ejs";
+import { getAllLinkUpdated, setLinksUpdatedFalse } from './src/bdd/bdd';
 
 
 const app = express();
@@ -12,32 +13,37 @@ app.use(cors({origin: '*'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/assets"));
-app.set('view_engine', 'ejs');
+app.engine('ejs', ejs.renderFile);
+app.set('view engine', 'ejs');
 
 authRouter(app);
-let services = new Services();
-services.build().then(result => {
-    router(app, services);
-    services.updateServices(services);
 
+async function init() {
+    let services = new Services();
+    await services.build();
     setInterval(async () => {
-        const widgets = await getUpdatedSubscribe();
-        for (const widget of widgets) {
-            services.getById(widget.action_service_id).run('action', undefined, undefined);
-            setSubscribeUpdatedFalse(widget.id);
-        }
-    }, 1500);
-}).catch(error => {
-    console.log(error);
-});
+        const widgets = await getAllLinkUpdated();
 
-app.get("/", (req, res) => {
-    res.send(`
-    <a href="/auth/reddit">Reddit</a>
-    <a href="/auth/facebook">Facebook</a>
-    <a href="/auth/github">Github</a>
-    <a href="/auth/try">Try</a>
-    `);
+        console.log('Check for new updated services..');
+        for (const widget of widgets) {
+            widget.config_action = JSON.parse(widget.config_action);
+            widget.config_reaction = JSON.parse(widget.config_reaction);
+            widget.datas = JSON.parse(widget.datas);
+            const link = services.getLinksByID(widget.subscribe_id);
+
+            if (link) {
+                link.run(widget).then();
+                setLinksUpdatedFalse(widget.id).then();
+            }
+        }
+    }, 15000);
+
+    return services;
+}
+
+init().then(result => {
+    router(app, result);
+    result.updateServices(result);
 });
 
 app.listen(process.env.PORT, () => console.log(`Server is listening on port ${process.env.PORT}`));

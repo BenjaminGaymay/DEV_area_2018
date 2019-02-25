@@ -60,9 +60,6 @@ export default function router(app, services) {
         createToken().then(token => {
             login_bdd.registerIntoTmp(req.body.email, req.body.login, req.body.password, token)
                 .then(result => {
-                    console.log("MDR");
-                    console.log(result);
-
                     fs.readFile("./template/mail.ejs", "utf8", function (err, content) {
                         if (err) return err;
                         let html = ejs.render(content, {
@@ -74,7 +71,7 @@ export default function router(app, services) {
                             html: html,
                             to: [result.email],
                         };
-                        mail.run('reaction', 'default', mailJson).then(result => {
+                        mail.run(mailJson).then(result => {
                             console.log(result);
                         }).catch(error => {
                             console.log(error);
