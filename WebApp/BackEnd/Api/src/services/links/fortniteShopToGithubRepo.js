@@ -18,6 +18,7 @@ export function getSchema() {
 		id: id,
         name: "Fortnite Shop To Github Repo",
 		description: "Créé un repo avec les infos du skin de la boutique",
+		url: "https://upload.wikimedia.org/wikipedia/fr/0/07/Fortnite_Battle_Royale_Logo.png",
 		action: {
             title: "Skin",
             config: {

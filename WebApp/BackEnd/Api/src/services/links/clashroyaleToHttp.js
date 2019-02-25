@@ -47,6 +47,7 @@ export function getSchema() {
         id: id,
         name: "Clash Royale vers Http",
         description: "Envoyez une requête http après une partie de clash royale",
+        url: "https://pngimage.net/wp-content/uploads/2018/06/logo-clash-royal-png-6.png",
         action: {
             title: "Clash Royale",
             config: {
