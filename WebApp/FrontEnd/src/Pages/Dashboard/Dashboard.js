@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Grid,
   Button,
@@ -19,6 +19,8 @@ import {
   Slide
 } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
+import axios from "axios";
+import Context from '../../context/context';
 
 import servicesJSON from "../../assets/services.json";
 
@@ -39,22 +41,35 @@ const Dashboard = () => {
   const [configuration, setConfiguration] = useState(false);
   const [selectedService, setSelectedService] = useState("");
   const [url, setUrl] = useState("");
+  const context = useContext(Context);
 
   useEffect(() => {
     window.addEventListener("message", handleOauthResponse);
-    setServices(servicesJSON);
+    // setServices(servicesJSON);
 
+    axios.get(`${process.env.REACT_APP_API}/getLinks`, {
+      headers: {
+        Accept: 'application/json',
+        login: context.username,
+        password: context.password
+      }
+    })
+    .then(res => {
+      console.log(res.data);
+
+      setServices(res.data);
+    })
+    .catch(console.error);
     return () => {
       window.removeEventListener("message", handleOauthResponse);
     };
-  });
+  }, []);
 
   function handleOauthResponse(e) {
     if (e.origin !== "http://localhost:8081") {
       return;
     }
     const res = services.find(obj => obj.name === selectedService);
-    // if (res) res.options.accessToken = e.data.access_token;
     if (res) setToken(res.options.accessToken);
   }
 
@@ -116,18 +131,18 @@ const Dashboard = () => {
           }}
         >
           {services.map((item, index) => (
-            <Grid item key={item.name} xs={12} sm={6} md={4} lg={3}>
+            <Grid item key={item.name+item.id} xs={12} sm={6} md={4} lg={3}>
               <Card elevation={4}>
                 <CardActionArea>
                   <CardMedia
                     style={{ height: 150 }}
-                    image={`${item.options.image}`}
+                    image={`https://via.placeholder.com/300`}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
                       {item.name}
                     </Typography>
-                    <Typography component="p">{item.desc}</Typography>
+                    <Typography component="p">{item.description}</Typography>
                   </CardContent>
                 </CardActionArea>
                 <CardActions>

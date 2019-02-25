@@ -210,7 +210,7 @@ class LoginConsumer extends React.Component {
       },
       () => {
         axios
-          .post("http://localhost:8081/register", {
+          .post(`${process.env.REACT_APP_API}/register`, {
             login: this.state.login,
             email: this.state.email,
             password: this.state.password
@@ -239,7 +239,7 @@ class LoginConsumer extends React.Component {
       },
       () => {
         axios
-          .post("http://localhost:8081/login", {
+          .post(`${process.env.REACT_APP_API}/login`, {
             login: this.state.login,
             password: this.state.password
           })
