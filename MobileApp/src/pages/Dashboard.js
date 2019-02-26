@@ -86,7 +86,7 @@ export default class Dashboard extends Component<Props> {
                                    source={{uri: item.url}}
                             />
                             <View style={styles.text}>
-                              <Text style={{fontWeight: "bold", marginBottom: 10}}>{item.name}</Text>
+                              <Text style={{color: "black", fontWeight: "bold", marginBottom: 10}}>{item.name}</Text>
                               <Text>{item.description}</Text>
                             </View>
                           </View>
