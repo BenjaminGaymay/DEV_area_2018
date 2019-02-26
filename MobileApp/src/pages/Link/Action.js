@@ -3,20 +3,12 @@
  */
 
 import React, {Component} from 'react';
-import {KeyboardAvoidingView, TouchableHighlight, View} from 'react-native'
+import {Button, KeyboardAvoidingView, TouchableHighlight, View} from 'react-native'
 import {Icon, Text} from "react-native-elements";
 import t from 'tcomb-form-native';
 
 const Form = t.form.Form;
-
 type Props = { navigation: Object };
-type State = {
-  atype: string, // Activity type. E.g. the content type.
-  type: Object, // This is "type" in the tcomb-form sense.  The struct.
-  options: Object, // Form options.
-  value: Object // Form values.
-};
-
 export default class LinkAction extends Component<Props, State> {
   static navigationOptions = ({navigation}) => ({
     headerTintColor: 'white',
@@ -27,17 +19,63 @@ export default class LinkAction extends Component<Props, State> {
     headerRight: null
   });
 
-  form: Form;
+  formStyles = {
+    ...Form.stylesheet,
+    formGroup: {
+      normal: {marginBottom: 10},
+    },
+    controlLabel: {
+      normal: {color: '#3C55B0', fontSize: 18, marginBottom: 7, fontWeight: '600'},
+      error: {color: '#3C55B0', fontSize: 18, marginBottom: 7, fontWeight: '600'}
+    }
+  };
+
+  generateType(part) {
+    let type = {};
+    for (let index in part.config) {
+      type[index] = t.String;
+    }
+    return t.struct(type);
+  }
+
+  generateOptions(part) {
+    let options = {fields: {}, stylesheet: this.formStyles,};
+    for (let index in part.config) {
+      let item = part.config[index];
+      if (item.type === "checkbox") {
+        let values = part.config[index].values;
+        let valuesFormat = [];
+        for (let val of values) {
+          let text = val === '' ? 'All' : val;
+          valuesFormat.push({value: val, text: text});
+        }
+        options.fields[index] = {
+          label: part.config[index].label,
+          factory: t.form.Select,
+          options: valuesFormat,
+          nullOption: {value: null, text: 'Choose one'}
+        };
+      } else {
+        options.fields[index] = {
+          label: part.config[index].label,
+        };
+      }
+    }
+    return options;
+  }
 
   constructor(props) {
     super(props);
-  }
 
-  getType() {
-    return t.struct({
-      label: t.String,
-      team: t.String,
-    });
+    let item = this.props.navigation.getParam('item');
+    let type = this.generateType(item.action);
+    let options = this.generateOptions(item.action);
+
+    this.state = {
+      /*item: item,*/
+      type: type,
+      options: options,
+    }
   }
 
   teams = [
@@ -47,40 +85,25 @@ export default class LinkAction extends Component<Props, State> {
     {value: 'other', text: 'Other'}
   ];
 
-  options = {
-    fields: {
-      label: {
-        error: 'coucou',
-      },
-      team: {
-        error: 'dommage',
-        factory: t.form.Select,
-        options: this.teams,
-        nullOption: {value: '', text: 'Choose your team'}
-      },
-    }
-  };
 
-
-  async onPress() {
+  handleSubmit() {
     const value = this._form.getValue();
-
-    if (value != null) {
-      console.log(value);
-    }
+    console.log(value);
   }
 
   render() {
+    console.log(this.state);
     return (
-      <View>
+      <View style={{padding: 10}}>
         <Form
           ref={c => this._form = c}
-          type={this.getType()}
-          options={this.options}
+          type={this.state.type}
+          options={this.state.options}
         />
-        <TouchableHighlight style={{}} onPress={this.onPress.bind(this)}>
-          <Text style={{}}>Submit</Text>
-        </TouchableHighlight>
+        <Button
+          title="Configure reaction"
+          onPress={this.handleSubmit.bind(this)}
+        />
       </View>
     );
   }
