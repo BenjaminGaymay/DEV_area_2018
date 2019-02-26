@@ -14,6 +14,18 @@ export async function run(widget) {
 	github.createRepo(widget.config_reaction.access_token, config.title);
 }
 
+export async function subscribe(subscribeId, userId, bodyParam) {
+    return new Promise((resolve, reject) => {
+        let action = null;
+        let reaction = null;
+        bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
+            return resolve('OK');
+        }).catch(error => {
+            return reject('KO');
+        });
+    })
+}
+
 export function getSchema() {
     return {
 		id: id,

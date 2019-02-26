@@ -21,6 +21,32 @@ export async function run(widget) {
 	github.createRepo(token, repoName);
 }
 
+function checkConfigAction(params) {
+    return !(!params.hasOwnProperty("tag") || !params.hasOwnProperty("trigger"));
+}
+
+// function checkConfigReaction(params) {
+//     return true;
+// }
+
+export async function subscribe(subscribeId, userId, bodyParam) {
+    return new Promise((resolve, reject) => {
+        if (!checkConfigAction(bodyParam.configAction)) {
+            console.log(bodyParam);
+            console.log("Missing subscribe parameters !");
+            return reject('KO');
+        }
+
+        let action = {"tag": bodyParam.configAction.tag, "trigger": bodyParam.configAction.trigger};
+        let reaction = null;
+        bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
+            return resolve('OK');
+        }).catch(error => {
+            return reject('KO');
+        });
+    })
+}
+
 export function getSchema() {
     return {
         id: id,
@@ -41,14 +67,5 @@ export function getSchema() {
                 }
             }
         },
-		reaction: {
-            title: "Email",
-            config: {
-                to: {
-                    type: "string",
-                    label: "Destinataire"
-                },
-            }
-        }
     }
 }
