@@ -86,8 +86,13 @@ export default class LinkAction extends Component<Props, State> {
     });
 
     this.state.item = this.props.navigation.getParam('item');
-    this.state.type = this.generateType(this.state.item.action);
-    this.state.options = this.generateOptions(this.state.item.action);
+
+    if (typeof this.state.item.action === "undefined") {
+      this.props.navigation.navigate('LinkReaction', {item: this.state.item, actionConfig: null});
+    } else {
+      this.state.type = this.generateType(this.state.item.action);
+      this.state.options = this.generateOptions(this.state.item.action);
+    }
   }
 
 
@@ -109,15 +114,16 @@ export default class LinkAction extends Component<Props, State> {
         <View style={styles.form}>
           <Text style={{color: "black", fontWeight: "bold", marginBottom: 10}}>{this.state.item.name}</Text>
           {this.state && this.state.error ? (<Text style={styles.error}>{this.state.error}</Text>) : null}
-          <Form
-            ref={c => this._form = c}
-            type={this.state.type}
-            options={this.state.options}
-          />
-          <Button
-            title="Configure reaction"
-            onPress={this.handleSubmit.bind(this)}
-          />
+          {this.state && this.state.type && this.state.options ? [(
+            <Form key={0}
+              ref={c => this._form = c}
+              type={this.state.type}
+              options={this.state.options}
+            />), (
+            <Button key={1}
+              title="Configure reaction"
+              onPress={this.handleSubmit.bind(this)}
+            />)] : null}
         </View>
       </ScrollView>
     );

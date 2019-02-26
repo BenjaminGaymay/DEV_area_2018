@@ -75,6 +75,7 @@ export default class LinkReaction extends Component<Props, State> {
     super(props);
 
     this.state = {
+      actionConfig: null,
       error: null,
       item: null,
       type: null,
@@ -89,36 +90,42 @@ export default class LinkReaction extends Component<Props, State> {
     });
 
     this.state.item = this.props.navigation.getParam('item');
-    this.state.actionConfig = this.props.navigation.getParam('actionConfig');
-    this.state.type = this.generateType(this.state.item.reaction);
-    this.state.options = this.generateOptions(this.state.item.reaction);
+    if (typeof this.state.item.reaction !== "undefined") {
+      this.state.actionConfig = this.props.navigation.getParam('actionConfig');
+      this.state.type = this.generateType(this.state.item.reaction);
+      this.state.options = this.generateOptions(this.state.item.reaction);
+    }
   }
 
+  validAndSend(value) {
+    console.log(value);
+    let reactionConfig = value;
+    for (let item of this.state.banned) {
+      reactionConfig = {...reactionConfig, ...item};
+    }
+
+    /*subscribe to api*/
+    /*console.log(this.state.actionConfig);
+    console.log(reactionConfig);
+    console.log(this.state.account.login);
+    console.log(this.state.account.password);
+    console.log("**********");*/
+    Api.subscribe(this.state.account.login, this.state.account.password, this.state.item.id, this.state.actionConfig, reactionConfig).catch()
+      .then(result => {
+        console.log("> Send with success !");
+        this.props.navigation.navigate('Dashboard', {message: "Subscribed with success !"});
+      })
+      .catch(error => {
+        console.log("> Cannot be send !");
+        console.log(error);
+      });
+  }
 
   handleSubmit() {
     const value = this._form.getValue();
 
     if (value) {
-      let reactionConfig = value;
-      for (let item of this.state.banned) {
-        reactionConfig = {...reactionConfig, ...item};
-      }
-
-      /*subscribe to api*/
-      /*console.log(this.state.actionConfig);
-      console.log(reactionConfig);
-      console.log(this.state.account.login);
-      console.log(this.state.account.password);
-      console.log("**********");*/
-      Api.subscribe(this.state.account.login, this.state.account.password, this.state.item.id, this.state.actionConfig, reactionConfig).catch()
-        .then(result => {
-          console.log("> Send with success !");
-          this.props.navigation.navigate('Dashboard', {message: "Subscribed with success !"});
-        })
-        .catch(error => {
-          console.log("> Cannot be send !");
-          console.log(error);
-        });
+      this.validAndSend(value);
     }
   }
 
@@ -128,15 +135,20 @@ export default class LinkReaction extends Component<Props, State> {
         <View style={styles.form}>
           <Text style={{color: "black", fontWeight: "bold", marginBottom: 10}}>{this.state.item.name}</Text>
           {this.state && this.state.error ? (<Text style={styles.error}>{this.state.error}</Text>) : null}
-          <Form
-            ref={c => this._form = c}
-            type={this.state.type}
-            options={this.state.options}
-          />
-          <Button
-            title="Send !"
-            onPress={this.handleSubmit.bind(this)}
-          />
+          {this.state && this.state.type && this.state.options ? [(
+            <Form key={0}
+              ref={c => this._form = c}
+              type={this.state.type}
+              options={this.state.options}
+            />), (
+            <Button key={1}
+              title="Send !"
+              onPress={this.handleSubmit.bind(this)}
+            />)] : (
+            <Button
+              title="No configuration required,  submit :) !"
+              onPress={this.validAndSend.bind(this, null)}
+            />)}
         </View>
       </ScrollView>
     );
