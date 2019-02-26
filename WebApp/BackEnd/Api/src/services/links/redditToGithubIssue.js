@@ -19,6 +19,7 @@ export function getSchema() {
         id: id,
         name: "Last Reddit Post Infos To Github Issue",
 		description: "Créé une issue avec les infos du dernier post",
+        url: "https://www.redditstatic.com/new-icon.png",
 		action: {
             title: "Name",
             config: {

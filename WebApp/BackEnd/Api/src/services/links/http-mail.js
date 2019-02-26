@@ -66,6 +66,7 @@ export function getSchema() {
         id: id,
         name: "Http vers email",
         description: "Envoyez un email si votre url reçoit une requête",
+        url: "http://pngimages.net/sites/default/files/letter-closed-png-image-38869.png",
         action: {
             title: "Http",
             config: {
