@@ -29,7 +29,7 @@ const App = () => {
         isLogged: true
       });
     }
-  });
+  }, []);
 
   return (
     <div className="App">

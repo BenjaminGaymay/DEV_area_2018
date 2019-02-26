@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 
 import Context from "../../context/context";
 
-const Logout = props => {
+const Logout = () => {
   const context = useContext(Context);
   context.setUser({
     isLogged: false,
