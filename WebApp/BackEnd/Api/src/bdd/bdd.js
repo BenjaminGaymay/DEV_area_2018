@@ -14,16 +14,30 @@ const bdd = mysql.createConnection({
     password: "0mRr9qPZWeeBrcFU01R0",
     database: "b7qwopagdzu8cljf9dtr"
     // /* dev */
-    // host: process.env.BDD_HOST,
-    // user: process.env.BDD_USER,
-    // password: process.env.BDD_PASSWORD,
-    // database: process.env.BDD_NAME
+    /*
+    host: process.env.BDD_HOST,
+    user: process.env.BDD_USER,
+    password: process.env.BDD_PASSWORD,
+    database: process.env.BDD_NAME
+    */
 });
 
 bdd.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
 });
+handleDisconnect(bdd);
+
+function handleDisconnect(client) {
+    client.on('error', function (error) {
+        if (!error.fatal) return;
+        if (error.code !== 'PROTOCOL_CONNECTION_LOST') throw error;
+        console.error('Re-connection to mysql');
+        let mysqlClient = mysql.createConnection(client.config);
+        handleDisconnect(mysqlClient);
+        mysqlClient.connect();
+    });
+}
 
 /**
  *

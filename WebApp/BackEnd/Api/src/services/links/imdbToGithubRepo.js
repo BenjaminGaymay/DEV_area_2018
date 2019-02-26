@@ -18,5 +18,6 @@ export function getSchema() {
         id: id,
         name: "Imdb To Github Repo",
         description: "Créé un dossier du nom du dernier film sorti",
+        url: "https://m.media-amazon.com/images/G/01/IMDb/BG_icon_iOS._CB511761981_SY230_SX307_AL_.png",
     }
 }

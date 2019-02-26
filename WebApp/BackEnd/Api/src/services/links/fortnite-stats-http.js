@@ -74,6 +74,7 @@ export function getSchema() {
         id: id,
         name: "Fortnite statistique vers Http",
         description: "Envoyez une requête Http avec vos statistiques Fortnite quotidiennes",
+        url: "https://upload.wikimedia.org/wikipedia/fr/0/07/Fortnite_Battle_Royale_Logo.png",
         action: {
             title: "Fortnite Stats",
             config: {

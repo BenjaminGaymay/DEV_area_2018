@@ -60,6 +60,7 @@ export function getSchema() {
         id: id,
         name: "Fortnite shop vers email",
         description: "Recevez un email si votre skin est en boutique",
+        url: "https://upload.wikimedia.org/wikipedia/fr/0/07/Fortnite_Battle_Royale_Logo.png",
         action: {
             title: "Fortnite Shop",
             config: {

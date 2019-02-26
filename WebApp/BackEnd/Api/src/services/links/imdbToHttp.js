@@ -42,5 +42,24 @@ export function getSchema() {
         id: id,
         name: "Imdb To Http",
         description: "Créé une requete http du nom du dernier film sorti",
+		url: "https://m.media-amazon.com/images/G/01/IMDb/BG_icon_iOS._CB511761981_SY230_SX307_AL_.png",
+		reaction: {
+			title: "Http",
+			config: {
+				method: {
+					type: "checkbox",
+					values: ["GET", "POST"],
+					label: "HTTP verb"
+				},
+				url: {
+					type: "string",
+					label: "Url"
+				},
+				headers: {
+					type: "array",
+					label: "Variable d'en-tête"
+				}
+			}
+		},
     }
 }

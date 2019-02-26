@@ -19,6 +19,7 @@ export function getSchema() {
 		id: id,
         name: "Github Notifs To Github Issue",
 		description: "Créé une issue avec la dernière notif github",
+		url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
 		reaction: {
 			title: "GithubIssue",
 			config: {
