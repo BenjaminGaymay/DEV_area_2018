@@ -3,9 +3,10 @@
  */
 
 import React, {Component} from 'react';
-import {Button, KeyboardAvoidingView, TouchableHighlight, View} from 'react-native'
-import {Icon, Text} from "react-native-elements";
+import {Button, View} from 'react-native'
 import t from 'tcomb-form-native';
+import * as Account from "../../services/Account";
+import * as Api from "../../services/Api";
 
 const Form = t.form.Form;
 type Props = { navigation: Object };
@@ -67,32 +68,31 @@ export default class LinkAction extends Component<Props, State> {
   constructor(props) {
     super(props);
 
+    Account.getAccountInfo().catch(error => {
+      return this.props.navigation.navigate('Login');
+    });
+
     let item = this.props.navigation.getParam('item');
     let type = this.generateType(item.action);
     let options = this.generateOptions(item.action);
 
     this.state = {
-      /*item: item,*/
+      item: item,
       type: type,
       options: options,
     }
   }
 
-  teams = [
-    {value: 'or', text: 'Orioles'},
-    {value: 'ya', text: 'Yankees'},
-    {value: 're', text: 'Red Sox'},
-    {value: 'other', text: 'Other'}
-  ];
-
 
   handleSubmit() {
     const value = this._form.getValue();
-    console.log(value);
+    if (value) {
+      console.log(value);
+      this.props.navigation.navigate('LinkReaction', {item: this.state.item, actionConfig: value});
+    }
   }
 
   render() {
-    console.log(this.state);
     return (
       <View style={{padding: 10}}>
         <Form

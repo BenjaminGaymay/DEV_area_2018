@@ -15,6 +15,7 @@ import Register from "./src/pages/Register";
 import Dashboard from "./src/pages/Dashboard";
 import Logout from "./src/pages/Logout";
 import LinkAction from "./src/pages/Link/Action";
+import LinkReaction from "./src/pages/Link/Reaction";
 
 const AppNavigator = createStackNavigator({
   Dashboard: {screen: Dashboard},
@@ -23,7 +24,7 @@ const AppNavigator = createStackNavigator({
   Register: {screen: Register},
   Logout: {screen: Logout},
   LinkAction: {screen: LinkAction},
-  //LinkReaction: {screen: LinkReaction},
+  LinkReaction: {screen: LinkReaction},
 });
 
 const App = createAppContainer(AppNavigator);

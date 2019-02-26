@@ -21,8 +21,8 @@ export async function getAccountInfo() {
   return new Promise((resolve, reject) => {
     Keychain.getGenericPassword()
       .then(function (credentials) {
-        console.log(credentials);
-        return credentials !== false ? resolve({login: credentials.login, password: credentials.password}) : reject('KO');
+        //console.log(credentials);
+        return credentials !== false ? resolve({login: credentials.username, password: credentials.password}) : reject('KO');
       })
       .catch(function (error) {
         console.log('Keychain couldn\'t be accessed! Maybe no value set?', error);
