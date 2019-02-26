@@ -32,27 +32,27 @@ export default function router(app, services) {
         login_bdd.login(req.body.login, req.body.password).then(result => {
             console.log(result);
             res.status(200);
-            res.send("OK");
+            res.send(JSON.stringify({status: "OK"}));
         }).catch(error => {
             console.log(error);
             res.status(500);
-            res.send("KO");
+            res.send(JSON.stringify({status: "KO"}));
         });
     });
 
     app.get("/validationAccount/:login/:token", (req, res) => {
         if (typeof req.params.login !== "string" && typeof req.params.token !== "string") {
             res.status(500);
-            res.send("KO");
+            res.send(JSON.stringify({status: "KO"}));
         }
         login_bdd.register(req.params.login, req.params.token).then(result => {
             console.log(result);
             res.status(200);
-            res.send("OK");
+            res.send(JSON.stringify({status: "OK"}));
         }).catch(error => {
             console.log(error);
             res.status(500);
-            res.send("KO");
+            res.send(JSON.stringify({status: "KO"}));
         });
     });
 
@@ -78,12 +78,12 @@ export default function router(app, services) {
                         });
                     });
                     res.status(200);
-                    res.send("OK");
+                    res.send(JSON.stringify({status: "OK"}));
                 })
                 .catch(error => {
                     console.log(error);
                     res.status(500);
-                    res.send("KO");
+                    res.send(JSON.stringify({status: "KO"}));
                 });
         });
     });
