@@ -21,6 +21,7 @@ export function getSchema() {
         id: id,
         name: "Lol To Github Issue",
 		description: "Créé une issue avec les stats du joueur",
+        url: "https://ih0.redbubble.net/image.413056780.7429/sticker,375x360-bg,ffffff.u1.png",
 		action: {
             title: "Name",
             config: {

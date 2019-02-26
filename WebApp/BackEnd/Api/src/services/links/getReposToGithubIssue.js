@@ -24,6 +24,7 @@ export function getSchema() {
 		id: id,
         name: "get Github Repos To Github Issue",
 		description: "Créé une issue avec le dernier repo créé",
+		url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
 		reaction: {
 			title: "GithubIssue",
 			config: {

@@ -19,6 +19,7 @@ export function getSchema() {
         id: id,
         name: "Lol Stats To Github Repo",
 		description: "Créé un repo avec les stats de la personne",
+		url: "https://ih0.redbubble.net/image.413056780.7429/sticker,375x360-bg,ffffff.u1.png",
 		action: {
             title: "Name",
             config: {

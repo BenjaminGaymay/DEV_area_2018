@@ -21,6 +21,7 @@ export function getSchema() {
         id: id,
         name: "IMDb vers Mails",
         description: "Recevez un email lorsqu'un nouveau film sort",
+        url: "https://m.media-amazon.com/images/G/01/IMDb/BG_icon_iOS._CB511761981_SY230_SX307_AL_.png",
         reaction: {
             title: "Email",
             config: {
