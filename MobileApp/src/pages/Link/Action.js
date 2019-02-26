@@ -6,7 +6,7 @@ import React, {Component} from 'react';
 import {Button, ScrollView, StyleSheet, View} from 'react-native'
 import t from 'tcomb-form-native';
 import * as Account from "../../services/Account";
-import * as Api from "../../services/Api";
+import {Text} from "react-native-elements";
 
 const Form = t.form.Form;
 type Props = { navigation: Object };
@@ -34,7 +34,12 @@ export default class LinkAction extends Component<Props, State> {
   generateType(part) {
     let type = {};
     for (let index in part.config) {
-      type[index] = t.String;
+      if (part.config[index].type === "array") {
+        this.state.banned.push({[index]: null});
+        this.state.error = 'Certain champs sont indisponibles sur mobile';
+      } else {
+        type[index] = t.String;
+      }
     }
     return t.struct(type);
   }
@@ -68,27 +73,33 @@ export default class LinkAction extends Component<Props, State> {
   constructor(props) {
     super(props);
 
+    this.state = {
+      error: null,
+      item: null,
+      type: null,
+      options: null,
+      banned: [],
+    };
+
     Account.getAccountInfo().catch(error => {
       return this.props.navigation.navigate('Login');
     });
 
-    let item = this.props.navigation.getParam('item');
-    let type = this.generateType(item.action);
-    let options = this.generateOptions(item.action);
-
-    this.state = {
-      item: item,
-      type: type,
-      options: options,
-    }
+    this.state.item = this.props.navigation.getParam('item');
+    this.state.type = this.generateType(this.state.item.action);
+    this.state.options = this.generateOptions(this.state.item.action);
   }
 
 
   handleSubmit() {
     const value = this._form.getValue();
     if (value) {
-      console.log(value);
-      this.props.navigation.navigate('LinkReaction', {item: this.state.item, actionConfig: value});
+      let actionConfig = value;
+      for (let item of this.state.banned) {
+        actionConfig = {...value, ...item};
+      }
+      console.log(actionConfig);
+      this.props.navigation.navigate('LinkReaction', {item: this.state.item, actionConfig: actionConfig});
     }
   }
 
@@ -96,15 +107,16 @@ export default class LinkAction extends Component<Props, State> {
     return (
       <ScrollView>
         <View style={styles.form}>
-        <Form
-          ref={c => this._form = c}
-          type={this.state.type}
-          options={this.state.options}
-        />
-        <Button
-          title="Configure reaction"
-          onPress={this.handleSubmit.bind(this)}
-        />
+          <Text style={styles.error}>{this.state.error}</Text>
+          <Form
+            ref={c => this._form = c}
+            type={this.state.type}
+            options={this.state.options}
+          />
+          <Button
+            title="Configure reaction"
+            onPress={this.handleSubmit.bind(this)}
+          />
         </View>
       </ScrollView>
     );
@@ -114,5 +126,9 @@ export default class LinkAction extends Component<Props, State> {
 const styles = StyleSheet.create({
   form: {
     padding: 20,
+  },
+  error: {
+    color: 'red',
+    marginBottom: 10,
   },
 });
