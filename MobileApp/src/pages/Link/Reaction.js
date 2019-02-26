@@ -3,7 +3,7 @@
  */
 
 import React, {Component} from 'react';
-import {Button, View} from 'react-native'
+import {Button, ScrollView, StyleSheet, View} from 'react-native'
 import t from 'tcomb-form-native';
 import * as Account from "../../services/Account";
 
@@ -105,7 +105,8 @@ export default class LinkReaction extends Component<Props, State> {
 
   render() {
     return (
-      <View style={{padding: 10}}>
+      <ScrollView>
+        <View style={styles.form}>
         <Form
           ref={c => this._form = c}
           type={this.state.type}
@@ -115,7 +116,14 @@ export default class LinkReaction extends Component<Props, State> {
           title="Send !"
           onPress={this.handleSubmit.bind(this)}
         />
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  form: {
+    padding: 20,
+  },
+});

@@ -86,7 +86,7 @@ export default class Login extends Component<Props> {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView>
         <View style={styles.form}>
           <Text style={styles.error}>
             {this.state && this.state.error}
