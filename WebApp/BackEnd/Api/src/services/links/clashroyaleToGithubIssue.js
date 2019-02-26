@@ -24,8 +24,9 @@ export async function run(widget) {
 export function getSchema() {
     return {
         id: id,
-        name: "Clash Royale vers Mail",
-        description: "Envoyez un mail à après une partie de clash royale",
+        name: "Clash Royale vers GitHub issue",
+        description: "Créer une issue github après une partie de clash royale",
+        url: "https://www.clashroyalefr.fr/android-chrome-384x384.png",
         action: {
             title: "Clash Royale",
             config: {
