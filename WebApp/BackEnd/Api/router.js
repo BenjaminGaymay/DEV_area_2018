@@ -54,20 +54,23 @@ export function router(app, services) {
             if (typeof req.body === "undefined" || !req.body.hasOwnProperty("subscribeId")
                 || !req.body.hasOwnProperty("configAction") || !req.body.hasOwnProperty("configReaction")) {
                 console.log("Subscribe body missing parameters");
-                res.status(500).send("KO");
+                return res.status(500).send(JSON.stringify({status: "KO"}));
             }
 
-            req.body.configAction = JSON.parse(req.body.configAction);
-            req.body.configReaction = JSON.parse(req.body.configReaction);
+            try {
+                req.body.configAction = JSON.parse(req.body.configAction);
+                req.body.configReaction = JSON.parse(req.body.configReaction);
+            } catch (e) {
+            }
             services.getLinksByID(req.body.subscribeId).subscribe(req.body.subscribeId, result.id, req.body).then(result => {
-                res.status(200).send("OK");
+                res.status(200).send(JSON.stringify({status: "OK"}));
             }).catch(error => {
                 console.log(error);
-                res.status(500).send("KO");
+                res.status(500).send(JSON.stringify({status: "KO"}));
             });
         }).catch(error => {
             console.log(error);
-            res.status(500).send("KO");
+            res.status(500).send(JSON.stringify({status: "KO"}));
         });
     });
 
@@ -75,19 +78,19 @@ export function router(app, services) {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
             if (typeof req.body === "undefined" || !req.body.hasOwnProperty("subscribeId")) {
                 console.log("Unsubscribe body missing parameters");
-                res.status(500).send("KO");
+                res.status(500).send(JSON.stringify({status: "KO"}));
             }
 
             bdd.unsubscribeFromLink(req.body.subscribeId, result.id).then(result => {
-                res.status(200).send("OK");
+                res.status(200).send(JSON.stringify({status: "OK"}));
             }).catch(error => {
                 console.log(error);
-                res.status(500).send("KO");
+                res.status(500).send(JSON.stringify({status: "KO"}));
             });
         }).catch(error => {
             console.log(error);
             res.status(500);
-            res.send("KO");
+            res.send(JSON.stringify({status: "KO"}));
         });
     });
 
