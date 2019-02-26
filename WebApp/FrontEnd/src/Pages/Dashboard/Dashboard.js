@@ -136,7 +136,7 @@ const Dashboard = () => {
                 <CardActionArea>
                   <CardMedia
                     style={{ height: 150 }}
-                    image={`https://via.placeholder.com/300`}
+                    image={`${item.url}`}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
