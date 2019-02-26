@@ -37,6 +37,20 @@ export async function login(login, password) {
   });
 }
 
+export async function subscribe(login, password, subscribeId, configAction, configReaction) {
+  return post(env.API + "/subscribe",
+    {
+      login: login,
+      password: password,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    }, {
+      subscribeId: subscribeId,
+      configAction: configAction,
+      configReaction: configReaction
+    });
+}
+
 export async function register(login, email, password) {
   return post(env.API + "/register", {
     Accept: 'application/json',

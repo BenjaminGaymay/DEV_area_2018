@@ -107,7 +107,7 @@ export default class LinkAction extends Component<Props, State> {
     return (
       <ScrollView>
         <View style={styles.form}>
-          <Text style={styles.error}>{this.state.error}</Text>
+          {this.state && this.state.error ? (<Text style={styles.error}>{this.state.error}</Text>) : null}
           <Form
             ref={c => this._form = c}
             type={this.state.type}

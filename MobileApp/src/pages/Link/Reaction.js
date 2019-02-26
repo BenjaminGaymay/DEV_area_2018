@@ -4,9 +4,10 @@
 
 import React, {Component} from 'react';
 import {Button, ScrollView, StyleSheet, View} from 'react-native'
+import {Text} from "react-native-elements";
 import t from 'tcomb-form-native';
 import * as Account from "../../services/Account";
-import {Text} from "react-native-elements";
+import * as Api from "../../services/Api";
 
 const Form = t.form.Form;
 type Props = { navigation: Object };
@@ -103,13 +104,21 @@ export default class LinkReaction extends Component<Props, State> {
         reactionConfig = {...reactionConfig, ...item};
       }
 
-      console.log("Send to api: ");
       /*subscribe to api*/
-      console.log(this.state.actionConfig);
+      /*console.log(this.state.actionConfig);
       console.log(reactionConfig);
       console.log(this.state.account.login);
       console.log(this.state.account.password);
-      console.log("**********");
+      console.log("**********");*/
+      Api.subscribe(this.state.account.login, this.state.account.password, this.state.item.id, this.state.actionConfig, reactionConfig).catch()
+        .then(result => {
+          console.log("> Send with success !");
+          this.props.navigation.navigate('Dashboard', {message: "Subscribed with success !"});
+        })
+        .catch(error => {
+          console.log("> Cannot be send !");
+          console.log(error);
+        });
     }
   }
 
@@ -117,7 +126,7 @@ export default class LinkReaction extends Component<Props, State> {
     return (
       <ScrollView>
         <View style={styles.form}>
-          <Text style={styles.error}>{this.state.error}</Text>
+          {this.state && this.state.error ? (<Text style={styles.error}>{this.state.error}</Text>) : null}
           <Form
             ref={c => this._form = c}
             type={this.state.type}

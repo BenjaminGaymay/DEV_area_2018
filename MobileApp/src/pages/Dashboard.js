@@ -15,13 +15,22 @@ import * as Api from '../services/Api';
 
 type Props = {};
 export default class Dashboard extends Component<Props> {
-  state: {
-    links: [];
-  };
 
   constructor(props) {
     super(props);
 
+    this.state = {
+      message: null,
+      links: [],
+    };
+
+    this.props.navigation.addListener(
+      'willFocus', () => {
+        this.refresh();
+      });
+  }
+
+  refresh() {
     Account.getAccountInfo().then(async result => {
       let links = await Api.getLinks(result.login, result.password);
       /*console.log(links);*/
@@ -30,6 +39,7 @@ export default class Dashboard extends Component<Props> {
     }).catch(() => {
       this.props.navigation.setParams({isConnected: false});
     });
+    this.state.message = this.props.navigation.getParam('message');
   }
 
   static navigationOptions = ({navigation}) => {
@@ -61,7 +71,8 @@ export default class Dashboard extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.page}>
+      <View>
+        {this.state && this.state.message ? (<Text style={styles.message}>{this.state.message}</Text>) : null}
         {this.state && this.state.links ? (
           <FlatList data={this.state.links}
                     renderItem={({item}) =>
@@ -90,6 +101,14 @@ export default class Dashboard extends Component<Props> {
 }
 
 const styles = StyleSheet.create({
+  message: {
+    marginTop: 10,
+    marginBottom:10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    color: '#00cc00',
+  },
   text: {
     flex: 1,
     flexDirection: 'column',
