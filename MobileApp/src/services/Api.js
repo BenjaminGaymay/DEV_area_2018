@@ -69,3 +69,11 @@ export async function getLinks(login, password) {
     password: password,
   });
 }
+
+export async function getMyLinks(login, password) {
+  return get(env.API + "/subscribe", {
+    Accept: 'application/json',
+    login: login,
+    password: password,
+  });
+}

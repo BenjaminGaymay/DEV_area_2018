@@ -41,6 +41,8 @@ export default class Home extends React.Component<Props> {
         backgroundColor: '#3C55B0'
       },
       title: "Area",
+      headerLeft: null,
+      gesturesEnabled: false,
       headerRight:
         <View style={{marginRight: 10, flexDirection: 'row', alignItems: 'center'}}>
           <Text style={{fontSize: 18, color: 'white'}}
