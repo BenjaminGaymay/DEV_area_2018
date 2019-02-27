@@ -9,17 +9,15 @@ import sha1 from 'sha1'; // gnégnégné j'encrypte en sha1, go me hack
 
 const bdd = mysql.createConnection({
     /* prod*/
-    host: "b7qwopagdzu8cljf9dtr-mysql.services.clever-cloud.com",
-    user: "uscw77drcqvxjvyzxe91",
-    password: "0mRr9qPZWeeBrcFU01R0",
-    database: "b7qwopagdzu8cljf9dtr"
+    // host: "b7qwopagdzu8cljf9dtr-mysql.services.clever-cloud.com",
+    // user: "uscw77drcqvxjvyzxe91",
+    // password: "0mRr9qPZWeeBrcFU01R0",
+    // database: "b7qwopagdzu8cljf9dtr"
     // /* dev */
-    /*
     host: process.env.BDD_HOST,
     user: process.env.BDD_USER,
     password: process.env.BDD_PASSWORD,
     database: process.env.BDD_NAME
-    */
 });
 
 bdd.connect(function (err) {
@@ -141,21 +139,21 @@ export async function getLinkByActionLinkIdList(idList) {
 
     for (const id of idList) {
         list.push(await query(`SELECT * FROM link WHERE subscribe_id = '${id}';`).catch(error => {
-                console.log(error);
-            }).then(result => {
-                if (typeof result[0] != "undefined") {
-                    let datas = JSON.parse(JSON.stringify(result))[0];
-                    datas.config_action = datas.config_action == null ? null : JSON.parse(datas.config_action);
-                    datas.config_reaction = datas.config_reaction == null ? null : JSON.parse(datas.config_reaction);
-                    datas.datas = datas.datas == null ? null : JSON.parse(datas.datas);
-                    return datas;
-                }
-            }));
+            console.log(error);
+        }).then(result => {
+            if (typeof result[0] != "undefined") {
+                let datas = JSON.parse(JSON.stringify(result))[0];
+                datas.config_action = datas.config_action == null ? null : JSON.parse(datas.config_action);
+                datas.config_reaction = datas.config_reaction == null ? null : JSON.parse(datas.config_reaction);
+                datas.datas = datas.datas == null ? null : JSON.parse(datas.datas);
+                return datas;
+            }
+        }));
     }
 
     var filtered = list.filter(function (el) {
         return el != null;
-      });
+    });
 
     if (filtered.length === 0 || filtered[0] === undefined)
         return undefined;
@@ -232,4 +230,21 @@ export async function unsubscribeFromLink(subscribeId, userId) {
         .then(result => {
             return 'OK';
         });
+}
+
+export async function getAllUserLinks(userId) {
+    return query(`SELECT id, subscribe_id, config_action, config_reaction FROM link where user_id = '${userId}'`).catch(error => {
+        console.log(error);
+        return Promise.reject('KO');
+    }).then(result => {
+        for (let item of result) {
+            if (item.config_action != null) {
+                item.config_action = JSON.parse(item.config_action);
+            }
+            if (item.config_reaction != null) {
+                item.config_reaction = JSON.parse(item.config_reaction);
+            }
+        }
+        return result;
+    })
 }

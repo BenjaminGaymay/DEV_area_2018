@@ -49,10 +49,25 @@ export function router(app, services) {
         }
     });
 
+    app.get("/subscribe", (req, res) => {
+        login_bdd.login(req.headers.login, req.headers.password).then(result => {
+            bdd.getAllUserLinks(result.id).then(result => {
+                res.status(500).send(result);
+            }).catch(error => {
+                console.log(error);
+                res.status(500).send(JSON.stringify({status: "KO"}));
+            });
+        }).catch(error => {
+            console.log(error);
+            res.status(500).send(JSON.stringify({status: "KO"}));
+        });
+    });
+
     app.post("/subscribe", (req, res) => {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
             if (typeof req.body === "undefined" || !req.body.hasOwnProperty("subscribeId")
                 || !req.body.hasOwnProperty("configAction") || !req.body.hasOwnProperty("configReaction")) {
+                console.log(req.body);
                 console.log("Subscribe body missing parameters");
                 return res.status(500).send(JSON.stringify({status: "KO"}));
             }
