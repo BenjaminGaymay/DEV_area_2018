@@ -20,9 +20,8 @@ import {
 } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import axios from "axios";
-import Context from '../../context/context';
-
-import servicesJSON from "../../assets/services.json";
+import Context from "../../context/context";
+import Service from "../../components/Dashboard/Service";
 
 import CR from "../../components/ServiceConfiguration/CR";
 import LoL from "../../components/ServiceConfiguration/LoL";
@@ -45,21 +44,19 @@ const Dashboard = () => {
 
   useEffect(() => {
     window.addEventListener("message", handleOauthResponse);
-    // setServices(servicesJSON);
 
-    axios.get(`${process.env.REACT_APP_API}/getLinks`, {
-      headers: {
-        Accept: 'application/json',
-        login: context.username,
-        password: context.password
-      }
-    })
-    .then(res => {
-      console.log(res.data);
-
-      setServices(res.data);
-    })
-    .catch(console.error);
+    axios
+      .get(`${process.env.REACT_APP_API}/getLinks`, {
+        headers: {
+          Accept: "application/json",
+          login: context.username,
+          password: context.password
+        }
+      })
+      .then(res => {
+        setServices(res.data);
+      })
+      .catch(console.error);
     return () => {
       window.removeEventListener("message", handleOauthResponse);
     };
@@ -71,10 +68,6 @@ const Dashboard = () => {
     }
     const res = services.find(obj => obj.name === selectedService);
     if (res) setToken(res.options.accessToken);
-  }
-
-  function handleCloseDialog() {
-    setConfiguration(false);
   }
 
   function oauth(service) {
@@ -131,6 +124,9 @@ const Dashboard = () => {
           }}
         >
           {services.map((item, index) => (
+            <Service key={item.name + item.id + index} item={item} />
+          ))}
+          {/* {services.map((item, index) => (
             <Grid item key={item.name+item.id} xs={12} sm={6} md={4} lg={3}>
               <Card elevation={4}>
                 <CardActionArea>
@@ -156,20 +152,20 @@ const Dashboard = () => {
                 </CardActions>
               </Card>
             </Grid>
-          ))}
+          ))} */}
         </Grid>
       </Grid>
       <Dialog
         fullScreen
         open={configuration}
-        onClose={handleCloseDialog}
+        onClose={() => setConfiguration(false)}
         TransitionComponent={Transition}
       >
         <AppBar>
           <Toolbar>
             <IconButton
               color="inherit"
-              onClick={handleCloseDialog}
+              onClick={() => setConfiguration(false)}
               aria-label="Close"
             >
               <Close />
@@ -177,7 +173,7 @@ const Dashboard = () => {
             <Typography variant="h6" color="inherit" style={{ flex: 1 }}>
               {selectedService}
             </Typography>
-            <Button color="inherit" onClick={handleCloseDialog}>
+            <Button color="inherit" onClick={() => setConfiguration(false)}>
               save
             </Button>
           </Toolbar>
