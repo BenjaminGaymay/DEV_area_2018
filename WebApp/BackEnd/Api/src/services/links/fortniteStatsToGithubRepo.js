@@ -13,6 +13,32 @@ export async function run(widget) {
 	github.createRepo(token, widget.config_action.pseudo + ' ' + widget.datas.top1 + 'Top1');
 }
 
+function checkConfigAction(params) {
+    return !(!params.hasOwnProperty("platform") || !params.hasOwnProperty("pseudo"));
+}
+
+// function checkConfigReaction(params) {
+//     return true;
+// }
+
+export async function subscribe(subscribeId, userId, bodyParam) {
+    return new Promise((resolve, reject) => {
+        if (!checkConfigAction(bodyParam.configAction)) {
+            console.log(bodyParam);
+            console.log("Missing subscribe parameters !");
+            return reject('KO');
+        }
+
+        let action = {"pseudo": bodyParam.configAction.pseudo, "platform": bodyParam.configAction.platform};
+        let reaction = null;
+        bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
+            return resolve('OK');
+        }).catch(error => {
+            return reject('KO');
+        });
+    })
+}
+
 export function getSchema() {
     return {
 		id: id,

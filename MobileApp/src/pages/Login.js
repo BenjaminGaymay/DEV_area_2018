@@ -44,7 +44,7 @@ export default class Login extends Component<Props> {
         return props.navigation.navigate('Dashboard');
       }
     }).catch(function (error) {
-      console.log('Keychain couldn\'t be accessed! Maybe no value set?', error);
+      console.log('No account info set in memory !', error);
     });
   }
 

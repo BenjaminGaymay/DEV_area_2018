@@ -13,6 +13,32 @@ export async function run(widget) {
 	github.createIssue(widget.config_reaction.access_token, widget.config_reaction.username, widget.config_reaction.repoName, 'Stats for ' + widget.config_action.pseudo, 'Nouvelles stats : ' + 'Top1: ['+ config.top1 + '] ' + 'Pourcentage de win [' + config.winPourcentage + '] ' + 'ratio [' + config.ratio + '] matches [' + config.matches + '] kills [' + config.kills + ']' + ' !');
 }
 
+function checkConfigAction(params) {
+    return !(!params.hasOwnProperty("platform") || !params.hasOwnProperty("pseudo"));
+}
+
+function checkConfigReaction(params) {
+    return !(!params.hasOwnProperty("username") || !params.hasOwnProperty("repoName"));
+}
+
+export async function subscribe(subscribeId, userId, bodyParam) {
+    return new Promise((resolve, reject) => {
+        if (!checkConfigAction(bodyParam.configAction) || !checkConfigReaction(bodyParam.configReaction)) {
+            console.log(bodyParam);
+            console.log("Missing subscribe parameters !");
+            return reject('KO');
+        }
+
+        let action = {"pseudo": bodyParam.configAction.pseudo, "platform": bodyParam.configAction.platform};
+        let reaction = {"username": bodyParam.configReaction.username, "repoName": bodyParam.configReaction.repoName};
+        bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
+            return resolve('OK');
+        }).catch(error => {
+            return reject('KO');
+        });
+    })
+}
+
 export function getSchema() {
     return {
 		id: id,

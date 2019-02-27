@@ -4,6 +4,7 @@ export async function resetAccount() {
   Keychain.resetGenericPassword().then(result => {
     return 'Ok';
   }).catch(error => {
+    console.log(error);
     return 'KO';
   });
 }

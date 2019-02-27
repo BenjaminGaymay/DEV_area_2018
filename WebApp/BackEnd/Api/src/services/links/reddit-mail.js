@@ -61,12 +61,17 @@ export function getSchema() {
         id: id,
         name: "Reddit vers email",
         description: "Recevez un email à chaque nouveau post",
+        url: "https://www.redditstatic.com/new-icon.png",
         action: {
             title: "Reddit Email",
             config: {
                 name: {
                     type: "string",
                     label: "Nom du topic"
+                },
+                created: {
+                    type: "string",
+                    label: "creationTime"
                 },
             }
         },

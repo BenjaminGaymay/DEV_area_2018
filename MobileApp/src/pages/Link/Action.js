@@ -78,6 +78,7 @@ export default class LinkAction extends Component<Props, State> {
       item: null,
       type: null,
       options: null,
+      value: null,
       banned: [],
     };
 
@@ -86,8 +87,17 @@ export default class LinkAction extends Component<Props, State> {
     });
 
     this.state.item = this.props.navigation.getParam('item');
-    this.state.type = this.generateType(this.state.item.action);
-    this.state.options = this.generateOptions(this.state.item.action);
+
+    if (typeof this.state.item.action === "undefined") {
+      this.props.navigation.navigate('LinkReaction', {item: this.state.item, actionConfig: null});
+    } else {
+      console.log(this.state.item);
+      this.state.type = this.generateType(this.state.item.action);
+      this.state.options = this.generateOptions(this.state.item.action);
+      if (typeof this.state.item.mod !== "undefined" && typeof this.state.item.data !== "undefined") {
+        this.state.value = this.state.item.data.config_action;
+      }
+    }
   }
 
 
@@ -107,16 +117,19 @@ export default class LinkAction extends Component<Props, State> {
     return (
       <ScrollView>
         <View style={styles.form}>
-          <Text style={styles.error}>{this.state.error}</Text>
-          <Form
-            ref={c => this._form = c}
-            type={this.state.type}
-            options={this.state.options}
-          />
-          <Button
-            title="Configure reaction"
-            onPress={this.handleSubmit.bind(this)}
-          />
+          <Text style={{color: "black", fontWeight: "bold", marginBottom: 10}}>{this.state.item.name}</Text>
+          {this.state && this.state.error ? (<Text style={styles.error}>{this.state.error}</Text>) : null}
+          {this.state && this.state.type && this.state.options ? [(
+            <Form key={0}
+                  ref={c => this._form = c}
+                  type={this.state.type}
+                  options={this.state.options}
+                  value={this.state.value}
+            />), (
+            <Button key={1}
+                    title="Configure reaction"
+                    onPress={this.handleSubmit.bind(this)}
+            />)] : null}
         </View>
       </ScrollView>
     );

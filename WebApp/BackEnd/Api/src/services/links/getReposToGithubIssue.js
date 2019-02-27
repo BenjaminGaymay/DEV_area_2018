@@ -19,11 +19,39 @@ export async function run(widget) {
 	github.createIssue(widget.config_reaction.access_token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouveau repo créé', 'Liste des repos:' + str);
 }
 
+// function checkConfigAction(params) {
+//     return !(!params.hasOwnProperty("skinName"));
+// }
+
+function checkConfigReaction(params) {
+    return !(!params.hasOwnProperty("username") || !params.hasOwnProperty("repoName"));
+}
+
+export async function subscribe(subscribeId, userId, bodyParam) {
+    return new Promise((resolve, reject) => {
+        if (!checkConfigReaction(bodyParam.configReaction)) {
+            console.log(bodyParam);
+            console.log("Missing subscribe parameters !");
+            return reject('KO');
+        }
+
+        let action = null;
+        let reaction = {"username": bodyParam.configReaction.username, "repoName": bodyParam.configReaction.repoName};
+        bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
+            return resolve('OK');
+        }).catch(error => {
+            return reject('KO');
+        });
+    })
+}
+
+
 export function getSchema() {
     return {
 		id: id,
         name: "get Github Repos To Github Issue",
 		description: "Créé une issue avec le dernier repo créé",
+		url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
 		reaction: {
 			title: "GithubIssue",
 			config: {

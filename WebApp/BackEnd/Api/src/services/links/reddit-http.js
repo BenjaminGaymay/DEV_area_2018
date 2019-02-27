@@ -69,12 +69,17 @@ export function getSchema() {
         id: id,
         name: "Reddit vers http",
         description: "Envoyez une requête http à chaque nouveau post",
+        url: "https://www.redditstatic.com/new-icon.png",
         action: {
             title: "Reddit Http",
             config: {
                 name: {
                     type: "string",
                     label: "Nom du topic"
+                },
+                created: {
+                    type: "string",
+                    label: "creationTime"
                 },
             }
         },

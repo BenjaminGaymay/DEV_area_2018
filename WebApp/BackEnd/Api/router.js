@@ -49,45 +49,97 @@ export function router(app, services) {
         }
     });
 
+    app.get("/subscribe", (req, res) => {
+        login_bdd.login(req.headers.login, req.headers.password).then(result => {
+            bdd.getAllUserLinks(result.id).then(result => {
+                res.status(200).send(result);
+            }).catch(error => {
+                console.log(error);
+                res.status(500).send(JSON.stringify({status: "KO"}));
+            });
+        }).catch(error => {
+            console.log(error);
+            res.status(500).send(JSON.stringify({status: "KO"}));
+        });
+    });
+
     app.post("/subscribe", (req, res) => {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
             if (typeof req.body === "undefined" || !req.body.hasOwnProperty("subscribeId")
                 || !req.body.hasOwnProperty("configAction") || !req.body.hasOwnProperty("configReaction")) {
+                console.log(req.body);
                 console.log("Subscribe body missing parameters");
-                res.status(500).send("KO");
+                return res.status(500).send(JSON.stringify({status: "KO"}));
             }
 
-            req.body.configAction = JSON.parse(req.body.configAction);
-            req.body.configReaction = JSON.parse(req.body.configReaction);
+            try {
+                req.body.configAction = JSON.parse(req.body.configAction);
+                req.body.configReaction = JSON.parse(req.body.configReaction);
+            } catch (e) {
+            }
             services.getLinksByID(req.body.subscribeId).subscribe(req.body.subscribeId, result.id, req.body).then(result => {
-                res.status(200).send("OK");
+                res.status(200).send(JSON.stringify({status: "OK"}));
             }).catch(error => {
                 console.log(error);
-                res.status(500).send("KO");
+                res.status(500).send(JSON.stringify({status: "KO"}));
             });
         }).catch(error => {
             console.log(error);
-            res.status(500).send("KO");
+            res.status(500).send(JSON.stringify({status: "KO"}));
         });
     });
+
+    app.put("/subscribe", (req, res) => {
+        login_bdd.login(req.headers.login, req.headers.password).then(result => {
+            if (typeof req.body === "undefined" || !req.body.hasOwnProperty("subscribeId")
+                || !req.body.hasOwnProperty("linkId")
+                || !req.body.hasOwnProperty("configAction") || !req.body.hasOwnProperty("configReaction")) {
+                console.log(req.body);
+                console.log("Subscribe body missing parameters");
+                return res.status(500).send(JSON.stringify({status: "KO"}));
+            }
+
+            try {
+                req.body.configAction = JSON.parse(req.body.configAction);
+                req.body.configReaction = JSON.parse(req.body.configReaction);
+            } catch (e) {
+            }
+            console.log(req.body);
+            bdd.unsubscribeFromLink(req.body.linkId, result.id).then(() => {
+                services.getLinksByID(req.body.subscribeId).subscribe(req.body.subscribeId, result.id, req.body).then(result => {
+                    res.status(200).send(JSON.stringify({status: "OK"}));
+                }).catch(error => {
+                    console.log(error);
+                    res.status(500).send(JSON.stringify({status: "KO"}));
+                });
+            }).catch(error => {
+                console.log(error);
+                res.status(500).send(JSON.stringify({status: "KO"}));
+            });
+        }).catch(error => {
+            console.log(error);
+            res.status(500).send(JSON.stringify({status: "KO"}));
+        });
+    });
+
 
     app.post("/unsubscribe", (req, res) => {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
             if (typeof req.body === "undefined" || !req.body.hasOwnProperty("subscribeId")) {
                 console.log("Unsubscribe body missing parameters");
-                res.status(500).send("KO");
+                res.status(500).send(JSON.stringify({status: "KO"}));
             }
 
             bdd.unsubscribeFromLink(req.body.subscribeId, result.id).then(result => {
-                res.status(200).send("OK");
+                res.status(200).send(JSON.stringify({status: "OK"}));
             }).catch(error => {
                 console.log(error);
-                res.status(500).send("KO");
+                res.status(500).send(JSON.stringify({status: "KO"}));
             });
         }).catch(error => {
             console.log(error);
             res.status(500);
-            res.send("KO");
+            res.send(JSON.stringify({status: "KO"}));
         });
     });
 
