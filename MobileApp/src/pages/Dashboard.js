@@ -8,9 +8,10 @@
  */
 
 import React, {Component} from 'react';
-import {TouchableOpacity, StyleSheet, Text, View, FlatList, Image, TouchableHighlight} from 'react-native';
-import {Button, Icon} from 'react-native-elements';
+import {TouchableOpacity, StyleSheet, Text, View, FlatList, TouchableHighlight} from 'react-native';
+import {Icon} from 'react-native-elements';
 import Swiper from 'react-native-swiper';
+import {CachedImage} from 'react-native-cached-image';
 import * as Account from '../services/Account';
 import * as Api from '../services/Api';
 
@@ -35,7 +36,6 @@ export default class Dashboard extends Component<Props> {
 
   findInLinks(id) {
     for (let item of this.state.links) {
-      console.log(item.id + " and " + id);
       if (item.id === id) {
         return item;
       }
@@ -55,6 +55,7 @@ export default class Dashboard extends Component<Props> {
       for (let data of mySubscribes) {
         let item = this.findInLinks(data.subscribe_id);
         if (item) {
+          item.mod = "edit";
           item.data = data;
           myLinks.push(item);
         }
@@ -65,9 +66,6 @@ export default class Dashboard extends Component<Props> {
       this.props.navigation.setParams({isConnected: false});
     });
     this.state.message = this.props.navigation.getParam('message');
-  }
-
-  generateMyLinks() {
   }
 
   static navigationOptions = ({navigation}) => {
@@ -139,8 +137,8 @@ export default class Dashboard extends Component<Props> {
                                 this.props.navigation.navigate('LinkAction', {item: item});
                               }}>
                               <View style={styles.item}>
-                                <Image style={{flex: 0.25, marginRight: 10, width: null, height: null, resizeMode: 'contain'}}
-                                       source={{uri: item.url}}
+                                <CachedImage style={{flex: 0.25, marginRight: 10, width: null, height: null, resizeMode: 'contain'}}
+                                             source={{uri: item.url}}
                                 />
                                 <View style={styles.text}>
                                   <Text style={{color: "black", fontWeight: "bold", marginBottom: 10}}>{item.name}</Text>
@@ -159,12 +157,12 @@ export default class Dashboard extends Component<Props> {
                         renderItem={({item}) =>
                           <View style={styles.shadow}>
                             <TouchableOpacity
-                              /*  onPress={() => {
+                                onPress={() => {
                                   this.props.navigation.navigate('LinkAction', {item: item});
-                                }}*/>
+                                }}>
                               <View style={styles.item}>
-                                <Image style={{flex: 0.25, marginRight: 10, width: null, height: null, resizeMode: 'contain'}}
-                                       source={{uri: item.url}}
+                                <CachedImage style={{flex: 0.25, marginRight: 10, width: null, height: null, resizeMode: 'contain'}}
+                                             source={{uri: item.url}}
                                 />
                                 <View style={styles.text}>
                                   <Text style={{color: "black", fontWeight: "bold", marginBottom: 10}}>{item.name}</Text>

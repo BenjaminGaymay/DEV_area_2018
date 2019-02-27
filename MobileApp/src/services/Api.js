@@ -19,6 +19,10 @@ async function request(url, method, headers, body) {
   }
 }
 
+export async function put(url, headers, body) {
+  return request(url, 'PUT', headers, body);
+}
+
 export async function post(url, headers, body) {
   return request(url, 'POST', headers, body);
 }
@@ -76,4 +80,19 @@ export async function getMyLinks(login, password) {
     login: login,
     password: password,
   });
+}
+
+export async function editThisLink(login, password, linkId, subscribeId, configAction, configReaction) {
+  return put(env.API + "/subscribe",
+    {
+      login: login,
+      password: password,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    }, {
+      linkId: linkId,
+      subscribeId: subscribeId,
+      configAction: configAction,
+      configReaction: configReaction
+    });
 }

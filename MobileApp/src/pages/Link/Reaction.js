@@ -80,6 +80,7 @@ export default class LinkReaction extends Component<Props, State> {
       item: null,
       type: null,
       options: null,
+      value: null,
       banned: [],
     };
 
@@ -94,6 +95,9 @@ export default class LinkReaction extends Component<Props, State> {
       this.state.actionConfig = this.props.navigation.getParam('actionConfig');
       this.state.type = this.generateType(this.state.item.reaction);
       this.state.options = this.generateOptions(this.state.item.reaction);
+      if (typeof this.state.item.mod !== "undefined" && typeof this.state.item.data !== "undefined") {
+        this.state.value = this.state.item.data.config_reaction;
+      }
     }
   }
 
@@ -110,15 +114,27 @@ export default class LinkReaction extends Component<Props, State> {
     console.log(this.state.account.login);
     console.log(this.state.account.password);
     console.log("**********");*/
-    Api.subscribe(this.state.account.login, this.state.account.password, this.state.item.id, this.state.actionConfig, reactionConfig).catch()
-      .then(result => {
-        console.log("> Send with success !");
-        this.props.navigation.navigate('Dashboard', {message: "Subscribed with success !"});
-      })
-      .catch(error => {
-        console.log("> Cannot be send !");
-        console.log(error);
-      });
+    if (typeof this.state.item.mod !== "undefined" && this.state.item.mod === "edit") {
+      Api.editThisLink(this.state.account.login, this.state.account.password, this.state.item.data.id, this.state.item.id, this.state.actionConfig, reactionConfig).catch()
+        .then(result => {
+          console.log("> Send with success !");
+          this.props.navigation.navigate('Dashboard', {message: "Subscribed with success !"});
+        })
+        .catch(error => {
+          console.log("> Cannot be send !");
+          console.log(error);
+        });
+    } else {
+      Api.subscribe(this.state.account.login, this.state.account.password, this.state.item.id, this.state.actionConfig, reactionConfig).catch()
+        .then(result => {
+          console.log("> Send with success !");
+          this.props.navigation.navigate('Dashboard', {message: "Subscribed with success !"});
+        })
+        .catch(error => {
+          console.log("> Cannot be send !");
+          console.log(error);
+        });
+    }
   }
 
   handleSubmit() {
@@ -137,13 +153,14 @@ export default class LinkReaction extends Component<Props, State> {
           {this.state && this.state.error ? (<Text style={styles.error}>{this.state.error}</Text>) : null}
           {this.state && this.state.type && this.state.options ? [(
             <Form key={0}
-              ref={c => this._form = c}
-              type={this.state.type}
-              options={this.state.options}
+                  ref={c => this._form = c}
+                  type={this.state.type}
+                  options={this.state.options}
+                  value={this.state.value}
             />), (
             <Button key={1}
-              title="Send !"
-              onPress={this.handleSubmit.bind(this)}
+                    title="Send !"
+                    onPress={this.handleSubmit.bind(this)}
             />)] : (
             <Button
               title="No configuration required,  submit :) !"
