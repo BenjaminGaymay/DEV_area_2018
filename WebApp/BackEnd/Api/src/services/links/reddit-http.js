@@ -77,6 +77,10 @@ export function getSchema() {
                     type: "string",
                     label: "Nom du topic"
                 },
+                created: {
+                    type: "string",
+                    label: "creationTime"
+                },
             }
         },
         reaction: {

@@ -21,6 +21,32 @@ export async function run(widget) {
 	github.createIssue(token, widget.config_reaction.username, widget.config_reaction.repoName, 'Clash Royale', issue);
 }
 
+function checkConfigAction(params) {
+    return !(!params.hasOwnProperty("tag") || !params.hasOwnProperty("trigger"));
+}
+
+function checkConfigReaction(params) {
+    return !(!params.hasOwnProperty("username") || !params.hasOwnProperty("repoName"));
+}
+
+export async function subscribe(subscribeId, userId, bodyParam) {
+    return new Promise((resolve, reject) => {
+        if (!checkConfigAction(bodyParam.configAction) || !checkConfigReaction(bodyParam.configReaction)) {
+            console.log(bodyParam);
+            console.log("Missing subscribe parameters !");
+            return reject('KO');
+        }
+
+        let action = {"tag": bodyParam.configAction.tag, "trigger": bodyParam.configAction.trigger};
+        let reaction = {"username": bodyParam.configReaction.username, "repoName": bodyParam.configReaction.repoName};
+        bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
+            return resolve('OK');
+        }).catch(error => {
+            return reject('KO');
+        });
+    })
+}
+
 export function getSchema() {
     return {
         id: id,
@@ -42,13 +68,17 @@ export function getSchema() {
             }
         },
 		reaction: {
-            title: "Email",
-            config: {
-                to: {
-                    type: "string",
-                    label: "Destinataire"
-                },
-            }
-        }
+			title: "GithubIssue",
+			config: {
+				username : {
+					type: "string",
+					label: "Username"
+				},
+				repoName: {
+					type: "string",
+					label: "Nom du repo"
+				}
+			}
+		}
     }
 }
