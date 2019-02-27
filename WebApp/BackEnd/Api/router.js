@@ -52,7 +52,7 @@ export function router(app, services) {
     app.get("/subscribe", (req, res) => {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
             bdd.getAllUserLinks(result.id).then(result => {
-                res.status(500).send(result);
+                res.status(200).send(result);
             }).catch(error => {
                 console.log(error);
                 res.status(500).send(JSON.stringify({status: "KO"}));
