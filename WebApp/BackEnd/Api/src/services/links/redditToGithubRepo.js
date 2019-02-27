@@ -14,6 +14,32 @@ export async function run(widget) {
 	github.createRepo(widget.config_reaction.access_token, 'Nouveau post reddit \'' + widget.config_action.name + ' \': '  + config.title);
 }
 
+function checkConfigAction(params) {
+    return !(!params.hasOwnProperty("name"));
+}
+
+// function checkConfigReaction(params) {
+//     return true;
+// }
+
+export async function subscribe(subscribeId, userId, bodyParam) {
+    return new Promise((resolve, reject) => {
+        if (!checkConfigAction(bodyParam.configAction)) {
+            console.log(bodyParam);
+            console.log("Missing subscribe parameters !");
+            return reject('KO');
+        }
+
+        let action = {"name": bodyParam.configAction.name, "created": "0"};
+        let reaction = null;
+        bdd.subscribeIntoLink(subscribeId, userId, action, reaction).then(result => {
+            return resolve('OK');
+        }).catch(error => {
+            return reject('KO');
+        });
+    })
+}
+
 export function getSchema() {
     return {
         id: id,
@@ -21,13 +47,17 @@ export function getSchema() {
 		description: "Créé un repo avec les infos du dernier post",
 		url: "https://www.redditstatic.com/new-icon.png",
 		action: {
-            title: "Name",
+            title: "Reddit Github Repo",
             config: {
-				name: {
+                name: {
                     type: "string",
-                    label: "Name"
-				}
-			},
+                    label: "Nom du topic"
+                },
+                created: {
+                    type: "string",
+                    label: "creationTime"
+                },
+            }
 		}
 	}
 }
