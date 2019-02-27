@@ -152,6 +152,7 @@ export default class Dashboard extends Component<Props> {
               />) : null}
           </View>
           <View>
+            {this.state && this.state.message ? (<Text style={styles.message}>{this.state.message}</Text>) : null}
             {this.state && this.state.myLinks ? (
               <FlatList data={this.state.myLinks}
                         renderItem={({item}) =>

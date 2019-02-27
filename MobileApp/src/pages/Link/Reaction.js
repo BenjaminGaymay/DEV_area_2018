@@ -118,7 +118,7 @@ export default class LinkReaction extends Component<Props, State> {
       Api.editThisLink(this.state.account.login, this.state.account.password, this.state.item.data.id, this.state.item.id, this.state.actionConfig, reactionConfig).catch()
         .then(result => {
           console.log("> Send with success !");
-          this.props.navigation.navigate('Dashboard', {message: "Subscribed with success !"});
+          this.props.navigation.navigate('Dashboard', {message: "Edited with success !"});
         })
         .catch(error => {
           console.log("> Cannot be send !");
