@@ -237,6 +237,8 @@ export async function getAllUserLinks(userId) {
         console.log(error);
         return Promise.reject('KO');
     }).then(result => {
+        if (result === null || typeof result[0] === "undefined")
+            return null;
         for (let item of result) {
             if (item.config_action != null) {
                 item.config_action = JSON.parse(item.config_action);
