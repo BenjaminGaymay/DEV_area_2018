@@ -6,49 +6,67 @@
     "current_time": 0,
     "services": [
       {
-        "name": "facebook",
+        "name": "Http",
         "actions": [
           {
-            "name": "new_message_in_group",
-            "description": "A new  message  is  posted  in the  group"
-          },
-          {
-            "name": "new_message_inbox",
-            "description": "A new  private  message  is  received  by the  user"
-          },
-          {
-            "name": "new_like",
-            "description": "The  user  gains a like  from  one of their  messages"
+            "name": "getHttp",
+            "description": "get infos about a custom http request"
           }
         ],
         "reactions": [
           {
-            "name": "like_message",
-            "description": "The  user  likes a message"
+            "name": "postHttp",
+            "description": "Send a custom http request"
           }
         ]
       },
       {
-        "name": "intra",
+        "name": "Mail",
+        "reactions": [
+          {
+            "name": "mail",
+            "description": "Send a custom mail"
+          }
+        ]
+      },
+      {
+        "name": "Github",
         "actions": [
           {
-            "name": "new_project_subscription",
-            "description": "The  user  signs  up for a project"
+            "name": "getRepoGithub",
+            "description": "list all repos of github user"
+          },
+          {
+            "name": "getNotifications",
+            "description": "recup last notification of github user"
+          },
+          {
+            "name": "getIssueGithub",
+            "description": "list last issue of github user"
           }
         ],
         "reactions": [
           {
-            "name": "activity_subscribe",
-            "description": "The  user  signs  up for an  activity"
+            "name": "createRepoGithub",
+            "description": "create repo of github user"
           },
           {
-            "name": "module_subscribe",
-            "description": "The  user  signs  up for a unit"
+            "name": "createIssueGithub",
+            "description": "create issue of github user"
           }
         ]
       },
       {
-        "name": "fortnite",
+        "name": "ClashRoyale",
+        "actions": [
+          {
+            "name": "getLastGame",
+            "description": "get infos of last game on ClashRoyale"
+          }
+        ]
+      },
+      {
+        "name": "Fortnite",
         "actions": [
           {
             "name": "shop",
@@ -67,17 +85,44 @@
           {
             "name": "http",
             "description": "Send a custom http request with the result"
-          },
-          {
-            "name": "githubRepo",
-            "description": "Create a custom repository with the result"
-          },
-          {
-            "name": "githubIssue",
-            "description": "Create a custom issue with the result"
           }
         ]
+      },
+      {
+        "name": "Imdb",
+        "actions": [
+          {
+            "name": "getLastFilm",
+            "description": "Get last film info"
+          }
+        ]
+      },
+      {
+        "name": "LeagueOfLegends",
+        "actions": [
+          {
+            "name": "getUserInfos",
+            "description": "Get infos of the account"
+          }
+        ]
+      },
+      {
+        "name": "Reddit",
+        "actions": [
+          {
+            "name": "getTrophies",
+            "description": "Get last trophies of connected user"
+          },
+          {
+            "name": "getLastPost",
+            "description": "Get last post of followed person"
+          }
+
+        ]
       }
+
+
+
     ]
   }
 }

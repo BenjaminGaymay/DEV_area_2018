@@ -12,7 +12,11 @@ async function request(url, method, headers, body) {
       console.log("Request failed: " + response.status);
       return Promise.reject('KO');
     }
-    return response.json();
+    return response.json().then(result => {
+      return result;
+    }).catch(error => {
+      return null;
+    });
   } catch (e) {
     console.log(e);
     return Promise.reject('KO');
@@ -52,6 +56,18 @@ export async function subscribe(login, password, subscribeId, configAction, conf
       subscribeId: subscribeId,
       configAction: configAction,
       configReaction: configReaction
+    });
+}
+
+export async function unsubscribe(login, password, subscribeId) {
+  return post(env.API + "/unsubscribe",
+    {
+      login: login,
+      password: password,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    }, {
+      subscribeId: subscribeId,
     });
 }
 

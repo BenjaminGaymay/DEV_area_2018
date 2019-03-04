@@ -1,6 +1,7 @@
 'use strict';
 
 import { run as sendMail } from '../mail';
+import * as bdd from '../../bdd/bdd';
 // import { getServiceDatasByName } from '../../bdd/bdd';
 
 // config_action: {"tag": "22RQY209Q", "trigger": ""} -> Trigger: "", "victory", "defeat", "equality"
