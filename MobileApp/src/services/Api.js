@@ -55,6 +55,18 @@ export async function subscribe(login, password, subscribeId, configAction, conf
     });
 }
 
+export async function unsubscribe(login, password, subscribeId) {
+  return post(env.API + "/unsubscribe",
+    {
+      login: login,
+      password: password,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    }, {
+      subscribeId: subscribeId,
+    });
+}
+
 export async function register(login, email, password) {
   return post(env.API + "/register", {
     Accept: 'application/json',
