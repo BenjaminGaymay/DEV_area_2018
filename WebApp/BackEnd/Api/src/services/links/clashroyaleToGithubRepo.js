@@ -1,6 +1,7 @@
 'use strict';
 
 import { github } from '../../../auth/github';
+import * as bdd from '../../bdd/bdd';
 
 // config_action: {"tag": "22RQY209Q", "trigger": ""} -> Trigger: "", "victory", "defeat", "equality"
 // config_reaction: {"access_token": "39aaa244d29216043d564f3b1563be995f7dac04"}

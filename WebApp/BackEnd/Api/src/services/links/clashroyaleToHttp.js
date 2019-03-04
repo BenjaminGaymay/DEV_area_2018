@@ -1,6 +1,7 @@
 'use strict';
 
 import request from "request";
+import * as bdd from '../../bdd/bdd';
 
 export const id = 12;
 export const name = 'clashroyaleToHttp';

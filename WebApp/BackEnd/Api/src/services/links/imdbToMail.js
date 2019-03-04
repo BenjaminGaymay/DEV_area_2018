@@ -2,6 +2,7 @@
 
 import { run as sendMail } from '../mail';
 import { getServiceDatasByName } from '../../bdd/bdd';
+import * as bdd from '../../bdd/bdd';
 
 // config_reaction: {"to": ["benjamingaymay@gmail.com"]}
 
