@@ -91,8 +91,8 @@ export default class LinkReaction extends Component<Props, State> {
     });
 
     this.state.item = this.props.navigation.getParam('item');
+    this.state.actionConfig = this.props.navigation.getParam('actionConfig');
     if (typeof this.state.item.reaction !== "undefined") {
-      this.state.actionConfig = this.props.navigation.getParam('actionConfig');
       this.state.type = this.generateType(this.state.item.reaction);
       this.state.options = this.generateOptions(this.state.item.reaction);
       if (typeof this.state.item.mod !== "undefined" && typeof this.state.item.data !== "undefined") {
