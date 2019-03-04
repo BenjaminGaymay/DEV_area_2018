@@ -80,6 +80,7 @@ export default class LinkAction extends Component<Props, State> {
       options: null,
       value: null,
       banned: [],
+      mod: "create",
     };
 
     Account.getAccountInfo().catch(error => {
@@ -87,14 +88,15 @@ export default class LinkAction extends Component<Props, State> {
     });
 
     this.state.item = this.props.navigation.getParam('item');
+    this.state.mod = this.props.navigation.getParam('mod');
 
     if (typeof this.state.item.action === "undefined") {
-      this.props.navigation.navigate('LinkReaction', {item: this.state.item, actionConfig: null});
+      this.props.navigation.navigate('LinkReaction', {item: this.state.item, mod: this.state.mod, actionConfig: null});
     } else {
       console.log(this.state.item);
       this.state.type = this.generateType(this.state.item.action);
       this.state.options = this.generateOptions(this.state.item.action);
-      if (typeof this.state.item.mod !== "undefined" && typeof this.state.item.data !== "undefined") {
+      if (this.state.mod === "edit") {
         this.state.value = this.state.item.data.config_action;
       }
     }
@@ -109,7 +111,7 @@ export default class LinkAction extends Component<Props, State> {
         actionConfig = {...value, ...item};
       }
       console.log(actionConfig);
-      this.props.navigation.navigate('LinkReaction', {item: this.state.item, actionConfig: actionConfig});
+      this.props.navigation.navigate('LinkReaction', {item: this.state.item, mod: this.state.mod, actionConfig: actionConfig});
     }
   }
 

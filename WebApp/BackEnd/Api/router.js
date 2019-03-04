@@ -38,28 +38,28 @@ export function router(app, services) {
                     result.push(item.schema());
                 }
             }
-            res.send(result);
+            return res.status(200).send(result);
         } else {
             let result;
             let links = services.getLinksByID(req.params.id);
             if (typeof links.schema != "undefined") {
                 result = links.schema();
             }
-            res.status(200).send(result);
+            return res.status(200).send(result);
         }
     });
 
     app.get("/subscribe", (req, res) => {
         login_bdd.login(req.headers.login, req.headers.password).then(result => {
             bdd.getAllUserLinks(result.id).then(result => {
-                res.status(200).send(result);
+                return res.status(200).send(result);
             }).catch(error => {
                 console.log(error);
-                res.status(500).send(JSON.stringify({status: "KO"}));
+                return res.status(500).send(JSON.stringify({status: "KO"}));
             });
         }).catch(error => {
             console.log(error);
-            res.status(500).send(JSON.stringify({status: "KO"}));
+            return res.status(500).send(JSON.stringify({status: "KO"}));
         });
     });
 
@@ -131,15 +131,14 @@ export function router(app, services) {
             }
 
             bdd.unsubscribeFromLink(req.body.subscribeId, result.id).then(result => {
-                res.status(200).send(JSON.stringify({status: "OK"}));
+                return res.status(200).send(JSON.stringify({status: "OK"}));
             }).catch(error => {
                 console.log(error);
-                res.status(500).send(JSON.stringify({status: "KO"}));
+                return res.status(500).send(JSON.stringify({status: "KO"}));
             });
         }).catch(error => {
             console.log(error);
-            res.status(500);
-            res.send(JSON.stringify({status: "KO"}));
+            return res.status(500).send(JSON.stringify({status: "KO"}));
         });
     });
 

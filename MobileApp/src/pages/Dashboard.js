@@ -14,6 +14,7 @@ import Swiper from 'react-native-swiper';
 import {CachedImage} from 'react-native-cached-image';
 import * as Account from '../services/Account';
 import * as Api from '../services/Api';
+import * as Alert from "react-native";
 
 type Props = {};
 export default class Dashboard extends Component<Props> {
@@ -22,6 +23,7 @@ export default class Dashboard extends Component<Props> {
     super(props);
 
     this.state = {
+      account: null,
       index: 0,
       message: null,
       links: [],
@@ -46,18 +48,19 @@ export default class Dashboard extends Component<Props> {
 
   refresh() {
     Account.getAccountInfo().then(async result => {
+      this.setState({account: result});
       let links = await Api.getLinks(result.login, result.password);
       /*console.log(links);*/
       this.setState({links: links});
-
       let myLinks = [];
       let mySubscribes = await Api.getMyLinks(result.login, result.password);
-      for (let data of mySubscribes) {
-        let item = this.findInLinks(data.subscribe_id);
-        if (item) {
-          item.mod = "edit";
-          item.data = data;
-          myLinks.push(item);
+      if (mySubscribes != null) {
+        for (let data of mySubscribes) {
+          let item = this.findInLinks(data.subscribe_id);
+          if (item) {
+            item.data = data;
+            myLinks.push(item);
+          }
         }
       }
       this.setState({myLinks: myLinks});
@@ -99,6 +102,40 @@ export default class Dashboard extends Component<Props> {
     this.setState({index: index});
   }
 
+  confirmDelete(item) {
+    Alert.Alert.alert(
+      'Delete confirmation',
+      'Do you want remove this link form your account ?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Remove', onPress: () => {
+            Api.unsubscribe(this.state.account.login, this.state.account.password, item.data.id).then(result => {
+              Api.getMyLinks(this.state.account.login, this.state.account.password).then(mySubscribes => {
+                let myLinks = [];
+                for (let data of mySubscribes) {
+                  let item = this.findInLinks(data.subscribe_id);
+                  if (item) {
+                    item.data = data;
+                    myLinks.push(item);
+                  }
+                }
+                this.setState({myLinks: myLinks});
+              });
+            }).catch(error => {
+              console.log(error);
+            });
+          }
+        },
+      ],
+      {cancelable: false},
+    );
+  }
+
   render() {
     return (
       <View style={styles.swiper}>
@@ -134,7 +171,7 @@ export default class Dashboard extends Component<Props> {
                           <View style={styles.shadow}>
                             <TouchableOpacity
                               onPress={() => {
-                                this.props.navigation.navigate('LinkAction', {item: item});
+                                this.props.navigation.navigate('LinkAction', {item: item, mod: "create"});
                               }}>
                               <View style={styles.item}>
                                 <CachedImage style={{flex: 0.25, marginRight: 10, width: null, height: null, resizeMode: 'contain'}}
@@ -152,14 +189,15 @@ export default class Dashboard extends Component<Props> {
               />) : null}
           </View>
           <View>
+            {this.state && this.state.message ? (<Text style={styles.message}>{this.state.message}</Text>) : null}
             {this.state && this.state.myLinks ? (
               <FlatList data={this.state.myLinks}
                         renderItem={({item}) =>
                           <View style={styles.shadow}>
                             <TouchableOpacity
-                                onPress={() => {
-                                  this.props.navigation.navigate('LinkAction', {item: item});
-                                }}>
+                              onPress={() => {
+                                this.props.navigation.navigate('LinkAction', {item: item, mod: "edit"});
+                              }}>
                               <View style={styles.item}>
                                 <CachedImage style={{flex: 0.25, marginRight: 10, width: null, height: null, resizeMode: 'contain'}}
                                              source={{uri: item.url}}
@@ -168,6 +206,9 @@ export default class Dashboard extends Component<Props> {
                                   <Text style={{color: "black", fontWeight: "bold", marginBottom: 10}}>{item.name}</Text>
                                   <Text>{item.description}</Text>
                                 </View>
+                                <TouchableOpacity onPress={this.confirmDelete.bind(this, item)}>
+                                  <Icon name="trash" type='font-awesome' size={26} color="red"/>
+                                </TouchableOpacity>
                               </View>
                             </TouchableOpacity>
                           </View>
