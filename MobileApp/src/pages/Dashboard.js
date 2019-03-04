@@ -55,7 +55,6 @@ export default class Dashboard extends Component<Props> {
       for (let data of mySubscribes) {
         let item = this.findInLinks(data.subscribe_id);
         if (item) {
-          item.mod = "edit";
           item.data = data;
           myLinks.push(item);
         }
@@ -134,7 +133,7 @@ export default class Dashboard extends Component<Props> {
                           <View style={styles.shadow}>
                             <TouchableOpacity
                               onPress={() => {
-                                this.props.navigation.navigate('LinkAction', {item: item});
+                                this.props.navigation.navigate('LinkAction', {item: item, mod: "create"});
                               }}>
                               <View style={styles.item}>
                                 <CachedImage style={{flex: 0.25, marginRight: 10, width: null, height: null, resizeMode: 'contain'}}
@@ -159,7 +158,7 @@ export default class Dashboard extends Component<Props> {
                           <View style={styles.shadow}>
                             <TouchableOpacity
                                 onPress={() => {
-                                  this.props.navigation.navigate('LinkAction', {item: item});
+                                  this.props.navigation.navigate('LinkAction', {item: item, mod: "edit"});
                                 }}>
                               <View style={styles.item}>
                                 <CachedImage style={{flex: 0.25, marginRight: 10, width: null, height: null, resizeMode: 'contain'}}
