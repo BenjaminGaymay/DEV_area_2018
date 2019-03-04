@@ -1,38 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  Grid,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Card,
-  Dialog,
-  AppBar,
-  Toolbar,
-  Divider,
-  IconButton,
-  Typography,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Slide
-} from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import { Grid } from "@material-ui/core";
+
 import axios from "axios";
 import Context from "../../context/context";
 import Service from "../../components/Dashboard/Service";
-
-import CR from "../../components/ServiceConfiguration/CR";
-import LoL from "../../components/ServiceConfiguration/LoL";
-import Imdb from "../../components/ServiceConfiguration/Imdb";
-import Email from "../../components/ServiceConfiguration/Email";
-import Github from "../../components/ServiceConfiguration/Github";
-import Reddit from "../../components/ServiceConfiguration/Reddit";
-import Facebook from "../../components/ServiceConfiguration/Facebook";
-import Fortnite from "../../components/ServiceConfiguration/Fortnite";
-
-const Transition = props => <Slide direction="up" {...props} />;
 
 const Dashboard = () => {
   const [token, setToken] = useState("");
@@ -83,29 +54,6 @@ const Dashboard = () => {
     }
   }
 
-  function renderSwitch() {
-    switch (selectedService) {
-      case "reddit":
-        return <Reddit />;
-      case "github":
-        return <Github />;
-      case "facebook":
-        return <Facebook />;
-      case "league of legends":
-        return <LoL />;
-      case "imdb":
-        return <Imdb />;
-      case "email":
-        return <Email />;
-      case "fortnite":
-        return <Fortnite />;
-      case "clash royale":
-        return <CR />;
-      default:
-        return <></>;
-    }
-  }
-
   return (
     <Grid
       container
@@ -126,66 +74,8 @@ const Dashboard = () => {
           {services.map((item, index) => (
             <Service key={item.name + item.id + index} item={item} />
           ))}
-          {/* {services.map((item, index) => (
-            <Grid item key={item.name+item.id} xs={12} sm={6} md={4} lg={3}>
-              <Card elevation={4}>
-                <CardActionArea>
-                  <CardMedia
-                    style={{ height: 150 }}
-                    image={`${item.url}`}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {item.name}
-                    </Typography>
-                    <Typography component="p">{item.description}</Typography>
-                  </CardContent>
-                </CardActionArea>
-                <CardActions>
-                  <Button
-                    size="small"
-                    color="primary"
-                    onClick={() => oauth(item)}
-                  >
-                    Configure
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))} */}
         </Grid>
       </Grid>
-      <Dialog
-        fullScreen
-        open={configuration}
-        onClose={() => setConfiguration(false)}
-        TransitionComponent={Transition}
-      >
-        <AppBar>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              onClick={() => setConfiguration(false)}
-              aria-label="Close"
-            >
-              <Close />
-            </IconButton>
-            <Typography variant="h6" color="inherit" style={{ flex: 1 }}>
-              {selectedService}
-            </Typography>
-            <Button color="inherit" onClick={() => setConfiguration(false)}>
-              save
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <List>
-          <ListItem button>
-            <ListItemText primary="Phone ringtone" secondary="Titania" />
-          </ListItem>
-          <Divider />
-        </List>
-        {renderSwitch()}
-      </Dialog>
     </Grid>
   );
 };
