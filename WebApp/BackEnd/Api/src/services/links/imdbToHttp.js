@@ -2,6 +2,7 @@
 
 import request from "request";
 import {getServiceDatasByName} from "../../bdd/bdd";
+import * as bdd from '../../bdd/bdd';
 
 export const name = 'imdbToHttp';
 export const id = 2;

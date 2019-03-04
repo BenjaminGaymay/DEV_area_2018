@@ -2,6 +2,7 @@
 
 import { github } from '../../../auth/github';
 import { getServiceDatasByName } from '../../bdd/bdd';
+import * as bdd from '../../bdd/bdd';
 
 // config_reaction: {"access_token": "39aaa244d29216043d564f3b1563be995f7dac04"}
 
