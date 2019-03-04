@@ -52,14 +52,15 @@ export default class Dashboard extends Component<Props> {
       let links = await Api.getLinks(result.login, result.password);
       /*console.log(links);*/
       this.setState({links: links});
-
       let myLinks = [];
       let mySubscribes = await Api.getMyLinks(result.login, result.password);
-      for (let data of mySubscribes) {
-        let item = this.findInLinks(data.subscribe_id);
-        if (item) {
-          item.data = data;
-          myLinks.push(item);
+      if (mySubscribes != null) {
+        for (let data of mySubscribes) {
+          let item = this.findInLinks(data.subscribe_id);
+          if (item) {
+            item.data = data;
+            myLinks.push(item);
+          }
         }
       }
       this.setState({myLinks: myLinks});

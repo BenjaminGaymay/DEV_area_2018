@@ -12,7 +12,11 @@ async function request(url, method, headers, body) {
       console.log("Request failed: " + response.status);
       return Promise.reject('KO');
     }
-    return response.json();
+    return response.json().then(result => {
+      return result;
+    }).catch(error => {
+      return null;
+    });
   } catch (e) {
     console.log(e);
     return Promise.reject('KO');
