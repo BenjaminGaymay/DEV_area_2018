@@ -4,12 +4,22 @@ import {Button} from '@material-ui/core';
 
 import createSchema from "./createSchema";
 
-const FormReaction = ({ reaction }) => {
+const FormReaction = ({ reaction, dispatch }) => {
   const schema = createSchema(reaction);
 
   schema.title = "Configurer la réaction";
+
+
   const handleSubmit = ({ formData }, e) => {
-    console.log(formData);
+    for (const i in formData) {
+      if (!formData[i]) {
+        dispatch({type: "alertError", value: true});
+        dispatch({type: "setError", value: "Merci de remplir tous les champs"});
+        return;
+      }
+    }
+    dispatch({type: "dataReaction", value: formData});
+    dispatch({type: "submit"});
   };
 
   return (

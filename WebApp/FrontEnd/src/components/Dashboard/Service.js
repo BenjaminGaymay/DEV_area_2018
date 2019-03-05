@@ -15,7 +15,7 @@ import MyDialog from './MyDialog';
 const UID = () => Math.random().toString(36).slice(2);
 
 const Service = props => {
-  const [item, setItem] = useState(props.item);
+  const [item] = useState(props.item);
   const [open, setOpen] = useState(false);
 
   return (

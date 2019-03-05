@@ -1,4 +1,4 @@
-const createSchema = (obj) => {
+const createSchema = obj => {
   let options = {
     title: "Configurer l'action",
     type: "object",
@@ -15,6 +15,12 @@ const createSchema = (obj) => {
       tmp.title = tmp.label;
     }
     if (tmp.values) {
+      console.log(tmp.values);
+      for (let it = 0; it < tmp.values.length; it++) {
+        if (tmp.values[it] === "") {
+          tmp.values[it] = "All";
+        }
+      }
       tmp.enum = tmp.values;
     }
     newConfig[i] = tmp;
