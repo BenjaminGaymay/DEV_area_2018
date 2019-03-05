@@ -10,13 +10,15 @@ import {
   Grid,
   Typography
 } from "@material-ui/core";
+
 import MyDialog from './MyDialog';
 
 const UID = () => Math.random().toString(36).slice(2);
 
-const Service = props => {
+const Service = (props) => {
   const [item] = useState(props.item);
   const [open, setOpen] = useState(false);
+  const context = props.context;
 
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -36,7 +38,7 @@ const Service = props => {
           </Button>
         </CardActions>
       </Card>
-      <MyDialog key={UID()} item={item} open={open} setOpen={setOpen}/>
+      <MyDialog key={UID()} item={item} open={open} setOpen={setOpen} context={context}/>
     </Grid>
   );
 };

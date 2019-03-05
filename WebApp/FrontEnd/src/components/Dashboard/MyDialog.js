@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useReducer } from "react";
 import {
   AppBar,
   Dialog,
@@ -18,74 +18,87 @@ import {
 } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import axios from "axios";
-
 import FormAction from "./FormAction";
 import FormReaction from "./FormReaction";
 import "./MyDialog.css";
 
 const Transition = props => <Slide direction="up" {...props} />;
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "mode":
-      return { ...state, mode: action.value };
-    case "dataAction":
-      return { ...state, dataAction: action.value };
-    case "dataReaction":
-      return { ...state, dataReaction: action.value };
-    case "alertError":
-      return { ...state, errorOpen: action.value };
-    case "setError":
-      return { ...state, error: action.value };
-    case "submit": {
-      axios.post(
-        `${process.env.REACT_APP_API}/subscribe`,
-        null,
-        {
-          headers: {
-            login: localStorage.getItem("username"),
-            password: localStorage.getItem("password"),
-          },
-          data: {
-            subscribeId: state.id,
-            configAction: state.dataAction,
-            configReaction: state.dataReaction
-          },
-        }
-      ).then(r => {
-        console.log('success');
-      }).catch(err => {
-        console.log('error');
-      });
-      return state;
-    }
-
-    default:
-      return state;
-  }
-};
-
-const MyDialog = ({ open, setOpen, item }) => {
+const MyDialog = ({ open, setOpen, item, context }) => {
   const { action, reaction, id } = item;
 
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "mode":
+        return { ...state, mode: action.value };
+      case "dataAction":
+        return { ...state, dataAction: action.value };
+      case "dataReaction":
+        return { ...state, dataReaction: action.value };
+      case "alertError":
+        return { ...state, errorOpen: action.value };
+      case "setError":
+        return {
+          ...state,
+          error: {
+            title: action.title,
+            subtitle: action.subtitle
+          }
+        };
+      default:
+        return state;
+    }
+  };
+
   const [
-    { mode, error, errorOpen },
+    { mode, error, errorOpen, dataAction, dataReaction },
     dispatch
   ] = useReducer(reducer, {
     mode: action ? "action" : "reaction",
     dataAction: null,
     dataReaction: null,
     error: "",
-    errorOpen: false,
-    id
+    errorOpen: false
   });
 
   const handleClose = () => setOpen(false);
   const handleCloseError = () => dispatch({ type: "alertError", value: false });
 
   const handleSubmit = () => {
-    console.log("yo");
-    dispatch({ type: "submit" });
+    axios
+      .post(
+        `${process.env.REACT_APP_API}/subscribe`,
+        {
+          subscribeId: id,
+          configAction: dataAction,
+          configReaction: dataReaction
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            login: context.username,
+            password: context.password
+          }
+        }
+      )
+      .then(r => {
+        dispatch({
+          type: "setError",
+          title: "Alerte",
+          subtitle: "Demande envoyée"
+        });
+        dispatch({ type: "alertError", value: true });
+        console.log("success");
+      })
+      .catch(err => {
+        dispatch({
+          type: "setError",
+          title: "Alerte",
+          subtitle: "Une erreur est survenue"
+        });
+        dispatch({ type: "alertError", value: true });
+        console.log("error");
+      });
   };
 
   return (
@@ -118,7 +131,11 @@ const MyDialog = ({ open, setOpen, item }) => {
             {mode === "action" ? (
               <FormAction action={action} dispatch={dispatch} />
             ) : reaction ? (
-              <FormReaction reaction={reaction} dispatch={dispatch} />
+              <FormReaction
+                reaction={reaction}
+                dispatch={dispatch}
+                handleSubmit={handleSubmit}
+              />
             ) : (
               <Grid container justify="center">
                 <Grid item style={{ textAlign: "center" }}>
@@ -145,10 +162,10 @@ const MyDialog = ({ open, setOpen, item }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Attention !"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{error.title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {error}
+            {error.subtitle}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
