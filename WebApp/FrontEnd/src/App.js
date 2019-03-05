@@ -32,7 +32,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App" style={{background: "#eeeeee"}}>
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"

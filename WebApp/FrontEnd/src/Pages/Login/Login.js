@@ -28,9 +28,10 @@ const Login = () => {
     return <Redirect to="/dashboard" />;
   }
 
-  const handleRegisterSubmit = e => {
+  const handleRegisterSubmit = async e => {
     e.preventDefault();
     setAnimation(true);
+
     axios
       .post(`${process.env.REACT_APP_API}/register`, {
         login,

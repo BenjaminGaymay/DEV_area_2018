@@ -38,7 +38,7 @@ const Service = (props) => {
           </Button>
         </CardActions>
       </Card>
-      <MyDialog key={UID()} item={item} open={open} setOpen={setOpen} context={context}/>
+      <MyDialog item={item} open={open} setOpen={setOpen} context={context}/>
     </Grid>
   );
 };
