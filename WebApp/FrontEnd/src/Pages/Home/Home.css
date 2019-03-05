@@ -1,0 +1,31 @@
+.div {
+    margin: 0 auto;
+    width: 70%;
+    margin-bottom: 6%;
+    padding: 0px;
+    width: 70%;
+    min-height: 300px;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+p {
+    font-size: 30px;
+    margin-top: 5%;
+}
+
+.img-left {
+    margin: 40px;
+    width: 300px;
+    height: 300px;
+    float: left;
+}
+
+.img-right {
+    margin: 40px;
+    width: 300px;
+    height: 300px;
+    float: right;
+}
