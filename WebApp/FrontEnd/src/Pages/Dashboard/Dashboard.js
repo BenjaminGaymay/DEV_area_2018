@@ -72,7 +72,7 @@ const Dashboard = () => {
           }}
         >
           {services.map((item, index) => (
-            <Service key={item.name + item.id + index} item={item} />
+            <Service key={item.name + item.id + index} item={item} context={context}/>
           ))}
         </Grid>
       </Grid>
