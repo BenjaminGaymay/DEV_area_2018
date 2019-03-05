@@ -65,6 +65,7 @@ const MyDialog = ({ open, setOpen, item, context }) => {
   const handleCloseError = () => dispatch({ type: "alertError", value: false });
 
   const handleSubmit = () => {
+    setOpen(false);
     axios
       .post(
         `${process.env.REACT_APP_API}/subscribe`,
