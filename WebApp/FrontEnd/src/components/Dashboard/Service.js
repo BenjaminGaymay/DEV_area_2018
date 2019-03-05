@@ -12,6 +12,8 @@ import {
 } from "@material-ui/core";
 import MyDialog from './MyDialog';
 
+const UID = () => Math.random().toString(36).slice(2);
+
 const Service = props => {
   const [item, setItem] = useState(props.item);
   const [open, setOpen] = useState(false);
@@ -34,7 +36,7 @@ const Service = props => {
           </Button>
         </CardActions>
       </Card>
-      <MyDialog item={item} open={open} setOpen={setOpen}/>
+      <MyDialog key={UID()} item={item} open={open} setOpen={setOpen}/>
     </Grid>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Dialog,
@@ -13,47 +13,24 @@ import {
 } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import Form from "react-jsonschema-form";
-
+import FormAction from './FormAction';
+import FormReaction from './FormReaction';
 import "./MyDialog.css";
+
+
 const Transition = props => <Slide direction="up" {...props} />;
 
 const MyDialog = ({ open, setOpen, item }) => {
   const handleClose = () => setOpen(false);
   const { action, reaction } = item;
+  const [mode, setMode] = useState(action ? "action" : "reaction");
 
-  if (!action) {
-    return <h1>Noob</h1>;
-  }
 
-  const createSchema = () => {
-    let options = {
-      title: "Configurer l'action",
-      type: "object",
-      properties: {}
-    };
-
-    const newConfig = {};
-    for (const i in action.config) {
-      let tmp = action.config[i];
-      if (tmp.type === "checkbox") {
-        tmp.type = "string";
-      }
-      if (tmp.label) {
-        tmp.title = tmp.label;
-      }
-      if (tmp.values) {
-        tmp.enum = tmp.values;
-      }
-      newConfig[i] = tmp;
-    }
-    options["properties"] = newConfig;
-    return options;
+  const handleSubmit = () => {
+    console.log("yo");
   };
 
-  const handleSubmit = ({formData}, e) => {
-    console.log(formData);
-  };
-  const schema = createSchema();
+
   return (
     <Dialog
       fullScreen
@@ -76,13 +53,10 @@ const MyDialog = ({ open, setOpen, item }) => {
       </AppBar>
       <List>
         <ListItem>
-          {schema && (
-            <div className="form-style">
-              <Form schema={schema} onSubmit={handleSubmit}>
-                <Button type="submit" variant="contained" color="primary">Configurer réaction</Button>
-              </Form>
-            </div>
-          )}
+          {mode === "action" ?
+            <FormAction action={action} setMode={setMode}/> :
+            reaction ? <FormReaction reaction={reaction}/> : <Button onClick={handleSubmit}>Valider</Button>
+            }
         </ListItem>
         <Divider />
       </List>
