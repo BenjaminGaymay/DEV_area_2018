@@ -1,4 +1,5 @@
-import * as env from "../../env";
+import * as Account from "./Account"
+
 
 async function request(url, method, headers, body) {
   let param = {
@@ -36,7 +37,8 @@ export async function get(url, headers) {
 }
 
 export async function login(login, password) {
-  return post(env.API + "/login", {
+  let url = await Account.getApiUrl();
+  return post(url + "/login", {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   }, {
@@ -46,7 +48,8 @@ export async function login(login, password) {
 }
 
 export async function subscribe(login, password, subscribeId, configAction, configReaction) {
-  return post(env.API + "/subscribe",
+  let url = await Account.getApiUrl();
+  return post(url + "/subscribe",
     {
       login: login,
       password: password,
@@ -60,7 +63,8 @@ export async function subscribe(login, password, subscribeId, configAction, conf
 }
 
 export async function unsubscribe(login, password, subscribeId) {
-  return post(env.API + "/unsubscribe",
+  let url = await Account.getApiUrl();
+  return post(url + "/unsubscribe",
     {
       login: login,
       password: password,
@@ -72,7 +76,8 @@ export async function unsubscribe(login, password, subscribeId) {
 }
 
 export async function register(login, email, password) {
-  return post(env.API + "/register", {
+  let url = await Account.getApiUrl();
+  return post(url + "/register", {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   }, {
@@ -83,7 +88,8 @@ export async function register(login, email, password) {
 }
 
 export async function getLinks(login, password) {
-  return get(env.API + "/getLinks", {
+  let url = await Account.getApiUrl();
+  return get(url + "/getLinks", {
     Accept: 'application/json',
     login: login,
     password: password,
@@ -91,15 +97,23 @@ export async function getLinks(login, password) {
 }
 
 export async function getMyLinks(login, password) {
-  return get(env.API + "/subscribe", {
+  let url = await Account.getApiUrl();
+  return get(url + "/subscribe", {
     Accept: 'application/json',
     login: login,
     password: password,
   });
 }
 
+export async function ping(url) {
+  return get(url + "/ping", {
+    Accept: 'application/json',
+  });
+}
+
 export async function editThisLink(login, password, linkId, subscribeId, configAction, configReaction) {
-  return put(env.API + "/subscribe",
+  let url = await Account.getApiUrl();
+  return put(url + "/subscribe",
     {
       login: login,
       password: password,
