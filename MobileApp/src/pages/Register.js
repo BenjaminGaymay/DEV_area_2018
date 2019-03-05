@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {TouchableHighlight, Modal, ScrollView, View, StyleSheet, Button, Text} from 'react-native';
 import t from 'tcomb-form-native';
 import {Icon} from "react-native-elements";
-import * as env from '../../env'
 import * as Api from '../services/Api'
 import * as Account from "../services/Account"
 

@@ -117,11 +117,13 @@ export default class Dashboard extends Component<Props> {
             Api.unsubscribe(this.state.account.login, this.state.account.password, item.data.id).then(result => {
               Api.getMyLinks(this.state.account.login, this.state.account.password).then(mySubscribes => {
                 let myLinks = [];
-                for (let data of mySubscribes) {
-                  let item = this.findInLinks(data.subscribe_id);
-                  if (item) {
-                    item.data = data;
-                    myLinks.push(item);
+                if (mySubscribes != null) {
+                  for (let data of mySubscribes) {
+                    let item = this.findInLinks(data.subscribe_id);
+                    if (item) {
+                      item.data = data;
+                      myLinks.push(item);
+                    }
                   }
                 }
                 this.setState({myLinks: myLinks});

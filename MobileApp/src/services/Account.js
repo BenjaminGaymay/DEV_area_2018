@@ -1,4 +1,23 @@
 import * as Keychain from "react-native-keychain";
+import {AsyncStorage} from "react-native";
+
+export async function setApiUrl(url) {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.setItem('ApiUrl', url, () => {
+      return resolve('OK');
+    });
+  })
+}
+
+export async function getApiUrl() {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.getItem('ApiUrl', (err, result) => {
+      console.log(result);
+      if (err || result === null) return resolve("http://localhost:8081");
+      return resolve(result);
+    });
+  });
+}
 
 export async function resetAccount() {
   Keychain.resetGenericPassword().then(result => {

@@ -149,4 +149,9 @@ export function router(app, services) {
         about.server.current_time = getUnixTime();
         res.send(about);
     });
+
+    app.get("/ping", (req, res) => {
+        console.log("Ping request");
+        res.status(200).send(JSON.stringify("Ok"));
+    })
 }

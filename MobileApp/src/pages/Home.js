@@ -8,15 +8,22 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image, ScrollView, Button} from 'react-native';
+import {TouchableOpacity, StyleSheet, Text, View, Image, ScrollView, Button, TextInput} from 'react-native';
 import {Icon} from 'react-native-elements';
 import * as Account from '../services/Account';
+import * as Api from '../services/Api';
+import * as Alert from "react-native";
 
 
 type Props = {};
 export default class Home extends React.Component<Props> {
   constructor(props) {
     super(props);
+
+    this.state = {
+      text: null,
+      url: null,
+    };
 
     this.props.navigation.addListener(
       'willFocus', () => {
@@ -25,6 +32,10 @@ export default class Home extends React.Component<Props> {
   }
 
   refresh() {
+    Account.getApiUrl().then(result => {
+      console.log(result);
+      this.setState({url: result});
+    });
     Account.getAccountInfo().then(() => {
       this.props.navigation.setParams({isConnected: true});
     }).catch(() => {
@@ -54,6 +65,36 @@ export default class Home extends React.Component<Props> {
         </View>
     }
   };
+
+  onSubmitEdit() {
+    Account.getApiUrl().then(result => {
+      console.log(result);
+    }).catch(error => {
+      console.log(error);
+    });
+    Api.ping(this.state.text).then(result => {
+      Alert.Alert.alert(
+        'Server changed !',
+        'Ping found a server\n :)',
+        [{
+          text: 'Ok',
+          onPress: () => {
+            Account.setApiUrl(this.state.text).then();
+          },
+          style: 'cancel'
+        },],
+        {cancelable: false},
+      );
+    }).catch(error => {
+      Alert.Alert.alert(
+        'Server not found !',
+        'Ping request failed',
+        [{text: 'Ok', style: 'cancel'},],
+        {cancelable: false},
+      );
+    });
+    console.log(this.state.text);
+  }
 
   render() {
     return (
@@ -107,6 +148,23 @@ export default class Home extends React.Component<Props> {
             <Image source={require('../../assets/images/imdb.png')}
                    style={styles.itemImage}/>
           </View>
+          <View style={[{marginBottom: 10, marginLeft: 15, marginRight: 15}, styles.textButton]}>
+            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
+              <Text style={{width: "60%"}}>
+                Replace default server url :
+              </Text>
+              <TextInput style={{width: "40%", height: 80}}
+                         placeholder={this.state.url}
+                         onChangeText={(text) => this.setState({text: text})}
+                         onSubmitEditing={this.onSubmitEdit.bind(this)}/>
+            </View>
+            <View style={{flexDirection: 'column'}}>
+              <Button
+                title="Submit"
+                onPress={this.onSubmitEdit.bind(this)}
+              />
+            </View>
+          </View>
         </ScrollView>
       </View>
     );
@@ -114,6 +172,11 @@ export default class Home extends React.Component<Props> {
 }
 
 const styles = StyleSheet.create({
+  textButton: {
+    flex: 1,
+    //alignItems: 'center',
+    borderWidth: 1,
+  },
   header: {
     height: 10,
   },
