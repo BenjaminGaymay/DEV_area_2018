@@ -47,7 +47,13 @@ export function getSchema() {
         name: "Github Notifs To Github Issue",
 		description: "Créé une issue avec la dernière notif github",
 		url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+		action: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
+		},
 		reaction: {
+			authorizationUrl: "/auth/github",
+			callbackUrl: "/auth/github/callback",
 			title: "GithubIssue",
 			config: {
 				username : {

@@ -32,6 +32,14 @@ export function getSchema() {
 		id: id,
         name: "Github Issue To Github Repo",
 		description: "Créé un repo avec la derniere issue github",
-		url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        action: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
+        },
+        reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
+		}
 	}
 }

@@ -57,6 +57,8 @@ export function getSchema() {
 			}
 		},
 		reaction: {
+			authorizationUrl: "/auth/github",
+			callbackUrl: "/auth/github/callback",
 			title: "GithubIssue",
 			config: {
 				username : {

@@ -59,6 +59,10 @@ export function getSchema() {
                     label: "creationTime"
                 },
             }
+        },
+        reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
 		}
 	}
 }

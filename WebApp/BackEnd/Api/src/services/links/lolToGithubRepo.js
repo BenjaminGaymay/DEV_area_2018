@@ -56,6 +56,10 @@ export function getSchema() {
                     label: "Name"
 				}
 			},
+        },
+        reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
 		}
 	}
 }

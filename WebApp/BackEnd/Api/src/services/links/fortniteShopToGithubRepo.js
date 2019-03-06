@@ -54,6 +54,10 @@ export function getSchema() {
                     label: "SkinName"
 				}
 			}
+        },
+        reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
 		}
 	}
 }
