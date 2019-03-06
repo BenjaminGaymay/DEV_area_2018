@@ -11,7 +11,7 @@ export const id = 14;
 export const name = 'clashroyaleToMail';
 
 export async function run(widget) {
-    const token = widget.config_reaction.access_token;
+    const token = await bdd.getUserToken(widget.user_id)
     let issue;
 
     switch (widget.datas.state) {

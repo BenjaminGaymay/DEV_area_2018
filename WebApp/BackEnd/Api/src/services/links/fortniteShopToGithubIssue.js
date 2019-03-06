@@ -10,9 +10,9 @@ export const name = 'fortniteShopToGithubIssue';
 export const id = 73;
 
 export async function run(widget) {
-	const config = widget.datas;
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createIssue(widget.config_reaction.access_token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouveau skin dans la boutique Fortnite ', 'Le skin '  + config.skinName + ' est disponible à ' + config.vBucks + 'Vbucks. Dépeche toi et va l\'acheter. Code créateur solary-kinstaar');
+	github.createIssue(token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouveau skin dans la boutique Fortnite ', 'Le skin '  + config.skinName + ' est disponible à ' + config.vBucks + 'Vbucks. Dépeche toi et va l\'acheter. Code créateur solary-kinstaar');
 }
 
 function checkConfigAction(params) {

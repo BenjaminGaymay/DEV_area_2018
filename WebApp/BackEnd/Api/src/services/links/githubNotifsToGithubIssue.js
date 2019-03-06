@@ -10,9 +10,10 @@ export const id = 44;
 
 export async function run(widget) {
 	const config = widget.datas;
-	console.log(widget)
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createIssue(widget.config_reaction.access_token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouvelle notification github', 'Raison: ' + config.reason + ' Titre: ' + config.title + ' Type: ' + config.type);
+
+	github.createIssue(token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouvelle notification github', 'Raison: ' + config.reason + ' Titre: ' + config.title + ' Type: ' + config.type);
 }
 
 // function checkConfigAction(params) {

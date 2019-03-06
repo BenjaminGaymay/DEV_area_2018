@@ -10,7 +10,7 @@ export const name = 'imdbToGithubRepo';
 export const id = 3;
 
 export async function run(widget) {
-	const token = widget.config_reaction.access_token;
+    const token = await bdd.getUserToken(widget.user_id)
 	github.createRepo(token, await getServiceDatasByName('imdb'));
 }
 

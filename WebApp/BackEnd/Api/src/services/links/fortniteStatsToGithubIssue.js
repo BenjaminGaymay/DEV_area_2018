@@ -10,8 +10,9 @@ export const id = 83;
 
 export async function run(widget) {
 	const config = widget.datas;
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createIssue(widget.config_reaction.access_token, widget.config_reaction.username, widget.config_reaction.repoName, 'Stats for ' + widget.config_action.pseudo, 'Nouvelles stats : ' + 'Top1: ['+ config.top1 + '] ' + 'Pourcentage de win [' + config.winPourcentage + '] ' + 'ratio [' + config.ratio + '] matches [' + config.matches + '] kills [' + config.kills + ']' + ' !');
+	github.createIssue(token, widget.config_reaction.username, widget.config_reaction.repoName, 'Stats for ' + widget.config_action.pseudo, 'Nouvelles stats : ' + 'Top1: ['+ config.top1 + '] ' + 'Pourcentage de win [' + config.winPourcentage + '] ' + 'ratio [' + config.ratio + '] matches [' + config.matches + '] kills [' + config.kills + ']' + ' !');
 }
 
 function checkConfigAction(params) {

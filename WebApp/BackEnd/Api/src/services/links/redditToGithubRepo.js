@@ -11,8 +11,9 @@ export const id = 23;
 
 export async function run(widget) {
 	const config = widget.datas;
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createRepo(widget.config_reaction.access_token, 'Nouveau post reddit \'' + widget.config_action.name + ' \': '  + config.title);
+	github.createRepo(token, 'Nouveau post reddit \'' + widget.config_action.name + ' \': '  + config.title);
 }
 
 function checkConfigAction(params) {

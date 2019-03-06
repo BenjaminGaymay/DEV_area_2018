@@ -10,7 +10,7 @@ export const name = 'fortniteStatsToGithubRepo';
 export const id = 84;
 
 export async function run(widget) {
-	const token = widget.config_reaction.access_token;
+    const token = await bdd.getUserToken(widget.user_id)
 	github.createRepo(token, widget.config_action.pseudo + ' ' + widget.datas.top1 + 'Top1');
 }
 

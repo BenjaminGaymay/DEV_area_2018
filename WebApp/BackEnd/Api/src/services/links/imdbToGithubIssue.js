@@ -11,9 +11,11 @@ export const id = 4;
 
 export async function run(widget) {
 	const config = widget.config_reaction;
-	const title = await getServiceDatasByName('imdb');
+    const title = await getServiceDatasByName('imdb');
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createIssue(config.access_token, config.username, config.repoName, title, 'Va voir ce super film : ' + title + ' !');
+
+	github.createIssue(token, config.username, config.repoName, title, 'Va voir ce super film : ' + title + ' !');
 }
 
 // function checkConfigAction(params) {

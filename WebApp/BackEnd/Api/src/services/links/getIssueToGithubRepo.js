@@ -11,8 +11,9 @@ export const id = 53;
 
 export async function run(widget) {
 	const config = widget.datas;
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createRepo(widget.config_reaction.access_token, config.title);
+	github.createRepo(token, config.title);
 }
 
 export async function subscribe(subscribeId, userId, bodyParam) {

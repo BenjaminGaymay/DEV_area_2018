@@ -12,9 +12,10 @@ export const id = 64;
 export async function run(widget) {
 	// console.log(widget)
 	const config = widget.datas;
+    const token = await bdd.getUserToken(widget.user_id)
 	// const title = await getServiceDatasByName('imdb');
 
-	github.createIssue(widget.config_reaction.access_token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouvelle game de League Of Legends', 'Vos stats en 5v5 ranked solo: rang [ ' + config.rank + ' ] league points [ ' + config.lp + ' ] win/lose [ ' + config.win + ' / ' + config.lose + ' ] dernier champion joué [ ' + config.lastChampion + ' ] niveau [ ' + config.level + ' ].');
+	github.createIssue(token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouvelle game de League Of Legends', 'Vos stats en 5v5 ranked solo: rang [ ' + config.rank + ' ] league points [ ' + config.lp + ' ] win/lose [ ' + config.win + ' / ' + config.lose + ' ] dernier champion joué [ ' + config.lastChampion + ' ] niveau [ ' + config.level + ' ].');
 }
 
 function checkConfigAction(params) {

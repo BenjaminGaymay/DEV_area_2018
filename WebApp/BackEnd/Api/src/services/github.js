@@ -1,6 +1,7 @@
 "use strict";
 
 import { getLinkByActionLinkIdList, updateLinkData } from '../bdd/bdd';
+import * as bdd from '../bdd/bdd';
 
 export async function update() {
     await updateGetRepos();
@@ -29,8 +30,10 @@ export  async function updateGetRepos() {
     for (const widget of widgets) {
 		const request = require('request');
 
+		const token = await bdd.getUserToken(widget.user_id)
+
 		const headers = {
-			Authorization: 'token ' + widget.config_action.access_token,
+			Authorization: 'token ' + token,
 			'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
 		};
 
@@ -48,6 +51,7 @@ export  async function updateGetRepos() {
 				}
 
 				if (!widget.datas || JSON.stringify(repos) !== JSON.stringify(widget.datas.repos)) {
+					console.log('rep', repos);
 					updateLinkData(widget.id, repos).then();
 				}
 			}
@@ -69,9 +73,12 @@ export async function updateGetNotifs() {
 
 		const request = require('request');
 
+		const token = await bdd.getUserToken(widget.user_id)
+		console.log(token);
+
 		const headers = {
-		Authorization: 'token ' + widget.config_action.access_token,
-		'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
+			Authorization: 'token ' + token,
+			'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
 		};
 
 		const options = {
@@ -113,9 +120,12 @@ export async function updateGetLastIssue() {
     for (const widget of widgets) {
 		const request = require('request');
 
+		const token = await bdd.getUserToken(widget.user_id)
+		console.log(token);
+
 		const headers = {
-		Authorization: 'token ' + widget.config_action.access_token,
-		'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
+			Authorization: 'token ' + token,
+			'User-Agent': 'ChangeMeClient/0.1 by YourUsername'
 		};
 
 		const options = {
