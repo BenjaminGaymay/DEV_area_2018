@@ -4,7 +4,6 @@ import {
   Button,
   List,
   ListItem,
-  Divider,
   ListSubheader,
   Paper
 } from "@material-ui/core";
@@ -18,7 +17,7 @@ const ConfirmConfig = ({ dataAction, dataReaction, handleSubmit }) => {
         <Paper>
           <p>Récapitulatif</p>
           <List
-            style={{ fontSize: "24px;" }}
+            style={{ fontSize: "24px" }}
             subheader={<ListSubheader component="div">Action</ListSubheader>}
           >
             {Object.keys(dataAction).map(i => (
@@ -34,7 +33,7 @@ const ConfirmConfig = ({ dataAction, dataReaction, handleSubmit }) => {
           {dataReaction && (
             <>
               <List
-                style={{ fontSize: "24px;" }}
+                style={{ fontSize: "24px" }}
                 subheader={
                   <ListSubheader component="div">Réaction</ListSubheader>
                 }

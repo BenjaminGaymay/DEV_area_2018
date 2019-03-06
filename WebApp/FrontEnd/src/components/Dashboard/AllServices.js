@@ -1,26 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { Grid, CircularProgress } from "@material-ui/core";
-import axios from "axios";
 
 import Service from "./Service";
 
-const AllServices = ({ context }) => {
-  const [services, setServices] = useState(null);
-
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API}/getLinks`, {
-        headers: {
-          Accept: "application/json",
-          login: context.username,
-          password: context.password
-        }
-      })
-      .then(res => setServices(res.data))
-      .catch(console.error);
-  }, []);
-
+const AllServices = ({context, services}) => {
   return (
     <>
       {services ? (

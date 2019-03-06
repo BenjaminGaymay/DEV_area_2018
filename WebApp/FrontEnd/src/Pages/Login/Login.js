@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import axios from "axios";
 import {
   Paper,
   Grid,
@@ -12,6 +11,7 @@ import {
 import { Redirect } from "react-router";
 import { AccountCircle, Lock, Close } from "@material-ui/icons";
 import Context from "../../context/context";
+import { register, login as _login } from "../../api";
 
 const Login = () => {
   const context = useContext(Context);
@@ -24,145 +24,128 @@ const Login = () => {
   const [animation, setAnimation] = useState(false);
   const [err, setErr] = useState("");
 
-  if (context.isLogged) {
-    return <Redirect to="/dashboard" />;
-  }
-
   const handleRegisterSubmit = async e => {
     e.preventDefault();
     setAnimation(true);
 
-    axios
-      .post(`${process.env.REACT_APP_API}/register`, {
-        login,
-        email,
-        password
-      })
-      .then(res => {
-        setAnimation(false);
-      })
-      .catch(err => {
-        setAnimation(false);
-        setOpen(true);
-        setErr("Oops, something bad happened !");
-      });
+    const r = await register(`${process.env.REACT_APP_API}/register`, {
+      login,
+      email,
+      password
+    });
+    setOpen(true);
+    if (!r) {
+      setErr("Oops, something bad happened");
+    } else {
+      setErr("Vous êtes enregistré ! Vous pouvez vous connecter !");
+    }
+    setAnimation(false);
   };
 
-  const handleLoginSubmit = e => {
+  const handleLoginSubmit = async e => {
     e.preventDefault();
     setAnimation(true);
-    console.log(login, password);
-    axios
-      .post(`${process.env.REACT_APP_API}/login`, {
-        login,
-        password
-      })
-      .then(res => {
-        setAnimation(false);
-        context.setUser({
-          isLogged: true,
-          username: login,
-          password: password
-        });
-      })
-      .catch(err => {
-        setAnimation(false);
-        setOpen(true);
-        setErr("Oops, something bad happened !");
-      });
+    const res = await _login(`${process.env.REACT_APP_API}/login`, {
+      login,
+      password
+    });
+    if (res) {
+      context.setUser({ isLogged: true, username: login, password });
+    } else {
+      setOpen(true);
+      setErr("Oops, something bad happened !");
+      setAnimation(false);
+    }
   };
 
-  const registerForm = () => {
-    return (
-      <div key="register" style={{ padding: 15 }}>
-        <h1 style={{ textAlign: "center", fontWeight: "lighter" }}>
-          S'inscrire
-        </h1>
-        <Grid container spacing={16} alignItems="center" justify="center">
-          <Grid item>
-            <AccountCircle />
-          </Grid>
-          <Grid item>
-            <TextField
-              fullWidth
-              label="Nom d'utilisateur"
-              name="login"
-              value={login}
-              onChange={e => setLogin(e.target.value)}
-            />
-          </Grid>
+  const registerForm = () => (
+    <div key="register" style={{ padding: 15 }}>
+      <h1 style={{ textAlign: "center", fontWeight: "lighter" }}>S'inscrire</h1>
+      <Grid container spacing={16} alignItems="center" justify="center">
+        <Grid item>
+          <AccountCircle />
         </Grid>
-        <Grid container spacing={16} alignItems="center" justify="center">
-          <Grid item>
-            <AccountCircle />
-          </Grid>
-          <Grid item>
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-            />
-          </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            label="Nom d'utilisateur"
+            name="login"
+            value={login}
+            onChange={e => setLogin(e.target.value)}
+          />
         </Grid>
-        <Grid container spacing={16} alignItems="center" justify="center">
-          <Grid item>
-            <Lock />
-          </Grid>
-          <Grid item>
-            <TextField
-              fullWidth
-              label="Mot de passe"
-              type="password"
-              name="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
-          </Grid>
+      </Grid>
+      <Grid container spacing={16} alignItems="center" justify="center">
+        <Grid item>
+          <AccountCircle />
         </Grid>
-        <Grid container spacing={16} alignItems="center" justify="center">
-          <Grid item>
-            <Lock />
-          </Grid>
-          <Grid item>
-            <TextField
-              fullWidth
-              label="Répéter"
-              type="password"
-              name="confPassword"
-              value={confirm}
-              onChange={e => setConfirm(e.target.value)}
-            />
-          </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            label="Email"
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+          return
         </Grid>
-        <Grid
-          style={{ marginTop: 25 }}
-          container
-          justify="center"
-          direction="column"
-          alignItems="center"
-        >
-          {!animation ? (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleRegisterSubmit}
-            >
-              S'inscrire'
-            </Button>
-          ) : (
-            <CircularProgress />
-          )}
+      </Grid>
+      <Grid container spacing={16} alignItems="center" justify="center">
+        <Grid item>
+          <Lock />
+        </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            label="Mot de passe"
+            type="password"
+            name="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+        </Grid>
+      </Grid>
+      <Grid container spacing={16} alignItems="center" justify="center">
+        <Grid item>
+          <Lock />
+        </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            label="Répéter"
+            type="password"
+            name="confPassword"
+            value={confirm}
+            onChange={e => setConfirm(e.target.value)}
+          />
+        </Grid>
+      </Grid>
+      <Grid
+        style={{ marginTop: 25 }}
+        container
+        justify="center"
+        direction="column"
+        alignItems="center"
+      >
+        {!animation ? (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleRegisterSubmit}
+          >
+            S'inscrire'
+          </Button>
+        ) : (
+          <CircularProgress />
+        )}
 
-          <div style={{ marginTop: 15 }}>
-            <i>Déjà un compte ?</i>
-          </div>
-          <Button onClick={() => setForm("login")}>Se connecter</Button>
-        </Grid>
-      </div>
-    );
-  };
+        <div style={{ marginTop: 15 }}>
+          <i>Déjà un compte ?</i>
+        </div>
+        <Button onClick={() => setForm("login")}>Se connecter</Button>
+      </Grid>
+    </div>
+  );
 
   const loginForm = () => (
     <div key="login" style={{ padding: 15 }}>
@@ -234,6 +217,7 @@ const Login = () => {
       alignContent="center"
       style={{ height: form === "login" ? 400 : 515 }}
     >
+      {context.isLogged && <Redirect to="/dashboard" />}
       <Grid item xs={12} sm={8} md={6}>
         <Paper elevation={10}>
           {form === "login" ? loginForm() : registerForm()}
@@ -241,7 +225,7 @@ const Login = () => {
       </Grid>
       <Snackbar
         open={open}
-        message={<p>{err}</p>}
+        message={<p style={{ fontSize: 15 }}>{err}</p>}
         onClose={() => setOpen(false)}
         action={[
           <IconButton

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Grid, CircularProgress, Tabs, Tab, Paper } from "@material-ui/core";
+import { Grid, Tabs, Tab, Paper } from "@material-ui/core";
 
-import axios from "axios";
 import Context from "../../context/context";
 import AllServices from "../../components/Dashboard/AllServices";
 import MyServices from "../../components/Dashboard/MyServices";
+
+import { allLinks } from "../../api";
 
 const Dashboard = () => {
   const [token, setToken] = useState("");
@@ -14,8 +15,19 @@ const Dashboard = () => {
   const [url, setUrl] = useState("");
   const context = useContext(Context);
   const [value, setValue] = useState(0);
+  const [_services, _setServices] = useState(null);
+
+  const fetchServices = async () => {
+    const res = await allLinks({
+      Accept: "application/json",
+      login: context.username,
+      password: context.password
+    });
+    if (Array.isArray(res)) _setServices(res);
+  };
 
   useEffect(() => {
+    fetchServices();
     // window.addEventListener("message", handleOauthResponse);
     return () => {
       // window.removeEventListener("message", handleOauthResponse);
@@ -76,8 +88,10 @@ const Dashboard = () => {
             width: "100%"
           }}
         >
-          {value === 0 && <AllServices context={context} />}
-          {value === 1 && <MyServices context={context} />}
+          {value === 0 && (
+            <AllServices services={_services} context={context} />
+          )}
+          {value === 1 && <MyServices services={_services} context={context} />}
         </Grid>
       </Grid>
     </Grid>

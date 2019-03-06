@@ -1,9 +1,8 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useReducer } from "react";
 import {
   AppBar,
   Dialog,
   Slide,
-  Grid,
   Toolbar,
   IconButton,
   Button,
@@ -62,7 +61,10 @@ const MyDialog = ({ open, setOpen, item, context }) => {
     errorOpen: false
   });
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    dispatch({ type: "mode", value: "action" });
+    setOpen(false);
+  };
   const handleCloseError = () => dispatch({ type: "alertError", value: false });
 
   const handleSubmit = () => {
@@ -87,11 +89,10 @@ const MyDialog = ({ open, setOpen, item, context }) => {
       .then(r => {
         dispatch({
           type: "setError",
-          title: "Alerte",
+          title: "Youpi !",
           subtitle: "Demande envoyée"
         });
         dispatch({ type: "alertError", value: true });
-        console.log("success");
       })
       .catch(err => {
         dispatch({
@@ -100,14 +101,7 @@ const MyDialog = ({ open, setOpen, item, context }) => {
           subtitle: "Une erreur est survenue"
         });
         dispatch({ type: "alertError", value: true });
-        console.log("error");
       });
-  };
-
-  const vv = () => {
-    console.log(dataAction);
-    console.log(dataReaction);
-    return true;
   };
 
   return (
@@ -138,14 +132,18 @@ const MyDialog = ({ open, setOpen, item, context }) => {
         <List>
           <ListItem>
             {mode === "action" ? (
-              <FormAction action={action} dispatch={dispatch} />
+              <FormAction
+                reaction={reaction}
+                action={action}
+                dispatch={dispatch}
+              />
             ) : (
               reaction &&
               mode === "reaction" && (
                 <FormReaction reaction={reaction} dispatch={dispatch} />
               )
             )}
-            {mode === "confirm" && vv() && (
+            {mode === "confirm" && (
               <ConfirmConfig
                 dataAction={dataAction}
                 dataReaction={dataReaction}
