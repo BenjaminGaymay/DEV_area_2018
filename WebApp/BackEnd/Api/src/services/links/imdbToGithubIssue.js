@@ -11,9 +11,11 @@ export const id = 4;
 
 export async function run(widget) {
 	const config = widget.config_reaction;
-	const title = await getServiceDatasByName('imdb');
+    const title = await getServiceDatasByName('imdb');
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createIssue(config.access_token, config.username, config.repoName, title, 'Va voir ce super film : ' + title + ' !');
+
+	github.createIssue(token, config.username, config.repoName, title, 'Va voir ce super film : ' + title + ' !');
 }
 
 // function checkConfigAction(params) {
@@ -49,6 +51,8 @@ export function getSchema() {
         description: "Créé une issue avec le dernier film sorti",
         url: "https://m.media-amazon.com/images/G/01/IMDb/BG_icon_iOS._CB511761981_SY230_SX307_AL_.png",
         reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
             title: "GithubIssue",
             config: {
                 username : {

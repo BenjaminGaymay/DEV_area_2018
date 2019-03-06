@@ -11,8 +11,9 @@ export const id = 43;
 
 export async function run(widget) {
 	const config = widget.datas;
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createRepo(widget.config_reaction.access_token, 'Nouvelle notif github: ' + config.title);
+	github.createRepo(token, 'Nouvelle notif github: ' + config.title);
 }
 
 // function checkConfigAction(params) {
@@ -41,6 +42,15 @@ export function getSchema() {
 		id: id,
         name: "Github Notifs To Github Repo",
 		description: "Créé un repo avec la derniere notif github",
-		url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        action: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
+		},
+        reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
+		}
+
 	}
 }

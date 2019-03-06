@@ -10,7 +10,7 @@ export const name = 'fortniteShopToGithubRepo';
 export const id = 74;
 
 export async function run(widget) {
-	const token = widget.config_reaction.access_token;
+    const token = await bdd.getUserToken(widget.user_id)
 	github.createRepo(token, widget.datas.skinName + ' ' + widget.datas.vBucks + 'VBucks');
 }
 
@@ -54,6 +54,10 @@ export function getSchema() {
                     label: "SkinName"
 				}
 			}
+        },
+        reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
 		}
 	}
 }

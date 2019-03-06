@@ -11,8 +11,9 @@ export const id = 53;
 
 export async function run(widget) {
 	const config = widget.datas;
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createRepo(widget.config_reaction.access_token, config.title);
+	github.createRepo(token, config.title);
 }
 
 export async function subscribe(subscribeId, userId, bodyParam) {
@@ -32,6 +33,14 @@ export function getSchema() {
 		id: id,
         name: "Github Issue To Github Repo",
 		description: "Créé un repo avec la derniere issue github",
-		url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        action: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
+        },
+        reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
+		}
 	}
 }
