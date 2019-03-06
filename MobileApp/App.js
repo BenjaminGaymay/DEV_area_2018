@@ -18,10 +18,10 @@ import LinkAction from "./src/pages/Link/Action";
 import LinkReaction from "./src/pages/Link/Reaction";
 
 const AppNavigator = createStackNavigator({
-  Dashboard: {screen: Dashboard},
   Home: {screen: Home},
   Login: {screen: Login},
   Register: {screen: Register},
+  Dashboard: {screen: Dashboard},
   Logout: {screen: Logout},
   LinkAction: {screen: LinkAction},
   LinkReaction: {screen: LinkReaction},

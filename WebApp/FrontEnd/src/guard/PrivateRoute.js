@@ -1,20 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 import Context from "../context/context";
 
-const PrivateRouteConsumer = ({ context, props }) => {
-  if (!context.isLogged) {
-    return <Redirect to="/login" />;
-  }
-  return <Route {...props} />;
-};
-
 const PrivateRoute = props => {
-  return (
-    <Context.Consumer>
-      {context => <PrivateRouteConsumer context={context} props={props} />}
-    </Context.Consumer>
-  );
+  const context = useContext(Context);
+  if (!context.isLogged) return <Redirect to="/login" />;
+  return <Route {...props} />;
 };
 
 export default PrivateRoute;
