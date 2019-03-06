@@ -1,10 +1,22 @@
 version: '2'
 services:
-  front-end:
+  client_web:
     build: ./WebApp/FrontEnd/
-    ports:
-      - "8080:8080"
-  back-end:
-    build: ./WebApp/BackEnd/Api
+    volumes:
+      - shared-volume:/app/Client/sharedDatas
+    depends_on:
+      - server
+      - client_mobile
     ports:
       - "8081:8081"
+  client_mobile:
+    build: ./MobileApp/
+    volumes:
+      - shared-volume:/app/sharedDatas
+  server:
+    build: ./WebApp/BackEnd/Api
+    ports:
+      - "8080:8080"
+
+volumes:
+     shared-volume:
