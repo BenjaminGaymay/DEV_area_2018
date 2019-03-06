@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import {
   Button,
   Card,
@@ -11,12 +10,19 @@ import {
   Typography
 } from "@material-ui/core";
 
-import MyDialog from './MyDialog';
+import MyDialog from "./MyDialog";
 
-const Service = (props) => {
-  const [item] = useState(props.item);
+const MyService = props => {
+  const [item] = useState(props.item.info);
+  const config = props.item.config;
   const [open, setOpen] = useState(false);
+
   const context = props.context;
+  console.log(item);
+
+  const handleDelete = () => {
+    props.deleteItem(config.id);
+  };
 
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -34,11 +40,14 @@ const Service = (props) => {
           <Button size="small" color="primary" onClick={() => setOpen(true)}>
             Configure
           </Button>
+          <Button size="small" color="secondary" onClick={handleDelete}>
+            Supprimer
+          </Button>
         </CardActions>
       </Card>
-      <MyDialog item={item} open={open} setOpen={setOpen} context={context}/>
+      <MyDialog item={item} open={open} setOpen={setOpen} context={context} />
     </Grid>
   );
 };
 
-export default Service;
+export default MyService;

@@ -4,12 +4,12 @@ import { Button } from "@material-ui/core";
 
 import createSchema from "./createSchema";
 
-const FormReaction = ({ reaction, dispatch, handleSubmit }) => {
+const FormReaction = ({ reaction, dispatch }) => {
   const schema = createSchema(reaction);
 
   schema.title = "Configurer la réaction";
 
-  const _handleSubmit = ({ formData }, e) => {
+  const handleSubmit = ({ formData }, e) => {
     for (const i in formData) {
       if (!formData[i]) {
         dispatch({ type: "alertError", value: true });
@@ -21,13 +21,13 @@ const FormReaction = ({ reaction, dispatch, handleSubmit }) => {
         return;
       }
     }
+    dispatch({ type: "mode", value: "confirm" });
     dispatch({ type: "dataReaction", value: formData });
-    handleSubmit();
   };
 
   return (
     <div className="form-style">
-      <Form schema={schema} onSubmit={_handleSubmit}>
+      <Form schema={schema} onSubmit={handleSubmit}>
         <Button type="submit" variant="contained" color="primary">
           Valider
         </Button>

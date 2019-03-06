@@ -3,7 +3,6 @@ import {
   AppBar,
   Dialog,
   Slide,
-  Grid,
   Toolbar,
   IconButton,
   Button,
@@ -20,35 +19,36 @@ import { Close } from "@material-ui/icons";
 import axios from "axios";
 import FormAction from "./FormAction";
 import FormReaction from "./FormReaction";
+import ConfirmConfig from "./ConfirmConfig";
 import "./MyDialog.css";
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "mode":
+      return { ...state, mode: action.value };
+    case "dataAction":
+      return { ...state, dataAction: action.value };
+    case "dataReaction":
+      return { ...state, dataReaction: action.value };
+    case "alertError":
+      return { ...state, errorOpen: action.value };
+    case "setError":
+      return {
+        ...state,
+        error: {
+          title: action.title,
+          subtitle: action.subtitle
+        }
+      };
+    default:
+      return state;
+  }
+};
 
 const Transition = props => <Slide direction="up" {...props} />;
 
 const MyDialog = ({ open, setOpen, item, context }) => {
   const { action, reaction, id } = item;
-
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "mode":
-        return { ...state, mode: action.value };
-      case "dataAction":
-        return { ...state, dataAction: action.value };
-      case "dataReaction":
-        return { ...state, dataReaction: action.value };
-      case "alertError":
-        return { ...state, errorOpen: action.value };
-      case "setError":
-        return {
-          ...state,
-          error: {
-            title: action.title,
-            subtitle: action.subtitle
-          }
-        };
-      default:
-        return state;
-    }
-  };
 
   const [
     { mode, error, errorOpen, dataAction, dataReaction },
@@ -61,11 +61,15 @@ const MyDialog = ({ open, setOpen, item, context }) => {
     errorOpen: false
   });
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    dispatch({ type: "mode", value: "action" });
+    setOpen(false);
+  };
   const handleCloseError = () => dispatch({ type: "alertError", value: false });
 
   const handleSubmit = () => {
     setOpen(false);
+    dispatch({ type: "mode", value: "action" });
     axios
       .post(
         `${process.env.REACT_APP_API}/subscribe`,
@@ -85,11 +89,10 @@ const MyDialog = ({ open, setOpen, item, context }) => {
       .then(r => {
         dispatch({
           type: "setError",
-          title: "Alerte",
+          title: "Youpi !",
           subtitle: "Demande envoyée"
         });
         dispatch({ type: "alertError", value: true });
-        console.log("success");
       })
       .catch(err => {
         dispatch({
@@ -98,7 +101,6 @@ const MyDialog = ({ open, setOpen, item, context }) => {
           subtitle: "Une erreur est survenue"
         });
         dispatch({ type: "alertError", value: true });
-        console.log("error");
       });
   };
 
@@ -130,27 +132,23 @@ const MyDialog = ({ open, setOpen, item, context }) => {
         <List>
           <ListItem>
             {mode === "action" ? (
-              <FormAction action={action} dispatch={dispatch} />
-            ) : reaction ? (
-              <FormReaction
+              <FormAction
                 reaction={reaction}
+                action={action}
                 dispatch={dispatch}
-                handleSubmit={handleSubmit}
               />
             ) : (
-              <Grid container justify="center">
-                <Grid item style={{ textAlign: "center" }}>
-                  <p>Pas de réaction à configurer</p>
-                  <Button
-                    style={{ margin: "0 auto" }}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                  >
-                    Valider
-                  </Button>
-                </Grid>
-              </Grid>
+              reaction &&
+              mode === "reaction" && (
+                <FormReaction reaction={reaction} dispatch={dispatch} />
+              )
+            )}
+            {mode === "confirm" && (
+              <ConfirmConfig
+                dataAction={dataAction}
+                dataReaction={dataReaction}
+                handleSubmit={handleSubmit}
+              />
             )}
           </ListItem>
           <Divider />

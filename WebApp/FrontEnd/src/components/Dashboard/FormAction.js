@@ -3,7 +3,7 @@ import Form from "react-jsonschema-form";
 import { Button } from "@material-ui/core";
 import createSchema from "./createSchema";
 
-const FormAction = ({ action, dispatch }) => {
+const FormAction = ({ action, reaction, dispatch }) => {
   const schema = createSchema(action);
 
   const handleSubmit = ({ formData }, e) => {
@@ -18,7 +18,11 @@ const FormAction = ({ action, dispatch }) => {
         return;
       }
     }
-    dispatch({ type: "mode", value: "reaction" });
+    if (reaction) {
+      dispatch({ type: "mode", value: "reaction" });
+    } else {
+      dispatch({ type: "mode", value: "confirm" });
+    }
     dispatch({ type: "dataAction", value: formData });
   };
 
