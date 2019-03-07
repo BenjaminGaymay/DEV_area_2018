@@ -14,6 +14,16 @@ export function router(app, services) {
     login_router(app, services);
     http_router(app, services);
 
+    app.get("/test", (req, res) => {
+        bdd.getUserToken(2).then(result => {
+            console.log(result);
+            res.send(result);
+        }).catch(error => {
+            console.log(error);
+            res.status(500).send(JSON.stringify('NTM'));
+        })
+    })
+
     app.get("/template", (req, res) => {
         res.render(__dirname + "/template/httpEmailRecap.ejs", {
             datas: {
