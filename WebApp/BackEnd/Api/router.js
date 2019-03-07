@@ -15,9 +15,13 @@ export function router(app, services) {
     http_router(app, services);
 
     app.get("/test", (req, res) => {
-        bdd.getUserToken(2).then(result => {
-            console.log(result);
-            res.send(result);
+        login_bdd.login("admin", "azertyqwerty").then(result => {
+            bdd.updateUserToken(result.id, "test").then(result => {
+                res.send(result);
+            }).catch(error => {
+                console.log(error);
+                res.status(500).send(JSON.stringify('Raté'));
+            })
         }).catch(error => {
             console.log(error);
             res.status(500).send(JSON.stringify('NTM'));
