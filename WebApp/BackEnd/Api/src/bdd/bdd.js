@@ -9,15 +9,15 @@ import sha1 from 'sha1'; // gnégnégné j'encrypte en sha1, go me hack
 
 const bdd = mysql.createConnection({
     /* prod*/
-    // host: "b7qwopagdzu8cljf9dtr-mysql.services.clever-cloud.com",
-    // user: "uscw77drcqvxjvyzxe91",
-    // password: "0mRr9qPZWeeBrcFU01R0",
-    // database: "b7qwopagdzu8cljf9dtr"
-    // /* dev */
-    host: process.env.BDD_HOST,
-    user: process.env.BDD_USER,
-    password: process.env.BDD_PASSWORD,
-    database: process.env.BDD_NAME
+    host: "b7qwopagdzu8cljf9dtr-mysql.services.clever-cloud.com",
+    user: "uscw77drcqvxjvyzxe91",
+    password: "0mRr9qPZWeeBrcFU01R0",
+    database: "b7qwopagdzu8cljf9dtr"
+    /* dev */
+    // host: process.env.BDD_HOST,
+    // user: process.env.BDD_USER,
+    // password: process.env.BDD_PASSWORD,
+    // database: process.env.BDD_NAME
 });
 
 bdd.connect(function (err) {
