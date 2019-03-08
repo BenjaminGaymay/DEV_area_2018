@@ -11,7 +11,7 @@ export const id = 13;
 export const name = 'clashroyaleToMail';
 
 export async function run(widget) {
-    const token = widget.config_reaction.access_token;
+    const token = await bdd.getUserToken(widget.user_id)
     let repoName = 'ClashRoyale_';
 
     switch (widget.datas.state) {
@@ -68,5 +68,9 @@ export function getSchema() {
                 }
             }
         },
+        reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
+		}
     }
 }

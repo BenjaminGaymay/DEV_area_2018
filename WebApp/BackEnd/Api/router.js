@@ -14,6 +14,20 @@ export function router(app, services) {
     login_router(app, services);
     http_router(app, services);
 
+    app.get("/test", (req, res) => {
+        login_bdd.login("admin", "azertyqwerty").then(result => {
+            bdd.updateUserToken(result.id, "test").then(result => {
+                res.send(result);
+            }).catch(error => {
+                console.log(error);
+                res.status(500).send(JSON.stringify('Raté'));
+            })
+        }).catch(error => {
+            console.log(error);
+            res.status(500).send(JSON.stringify('NTM'));
+        })
+    })
+
     app.get("/template", (req, res) => {
         res.render(__dirname + "/template/httpEmailRecap.ejs", {
             datas: {

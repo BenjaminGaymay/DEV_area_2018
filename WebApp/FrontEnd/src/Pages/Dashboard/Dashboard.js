@@ -1,35 +1,36 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, Tabs, Tab, Paper } from "@material-ui/core";
 
-import axios from "axios";
 import Context from "../../context/context";
-import Service from "../../components/Dashboard/Service";
+import AllServices from "../../components/Dashboard/AllServices";
+import MyServices from "../../components/Dashboard/MyServices";
+
+import { allLinks } from "../../api";
 
 const Dashboard = () => {
   const [token, setToken] = useState("");
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState(null);
   const [configuration, setConfiguration] = useState(false);
   const [selectedService, setSelectedService] = useState("");
   const [url, setUrl] = useState("");
   const context = useContext(Context);
+  const [value, setValue] = useState(0);
+  const [_services, _setServices] = useState(null);
+
+  const fetchServices = async () => {
+    const res = await allLinks({
+      Accept: "application/json",
+      login: context.username,
+      password: context.password
+    });
+    if (Array.isArray(res)) _setServices(res);
+  };
 
   useEffect(() => {
-    window.addEventListener("message", handleOauthResponse);
-
-    axios
-      .get(`${process.env.REACT_APP_API}/getLinks`, {
-        headers: {
-          Accept: "application/json",
-          login: context.username,
-          password: context.password
-        }
-      })
-      .then(res => {
-        setServices(res.data);
-      })
-      .catch(console.error);
+    fetchServices();
+    // window.addEventListener("message", handleOauthResponse);
     return () => {
-      window.removeEventListener("message", handleOauthResponse);
+      // window.removeEventListener("message", handleOauthResponse);
     };
   }, []);
 
@@ -54,6 +55,10 @@ const Dashboard = () => {
     }
   }
 
+  function handleChange(event, newValue) {
+    setValue(newValue);
+  }
+
   return (
     <Grid
       container
@@ -62,6 +67,18 @@ const Dashboard = () => {
       justify="center"
     >
       <Grid item xs={10} style={{ marginTop: 32, margin: 0, width: "100%" }}>
+        <Paper style={{ marginTop: 32 }} color="secondary">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            centered
+          >
+            <Tab label="Tous les services" />
+            <Tab label="Mes services" />
+          </Tabs>
+        </Paper>
         <Grid
           container
           justify="center"
@@ -71,9 +88,10 @@ const Dashboard = () => {
             width: "100%"
           }}
         >
-          {services.map((item, index) => (
-            <Service key={item.name + item.id + index} item={item} />
-          ))}
+          {value === 0 && (
+            <AllServices services={_services} context={context} />
+          )}
+          {value === 1 && <MyServices services={_services} context={context} />}
         </Grid>
       </Grid>
     </Grid>

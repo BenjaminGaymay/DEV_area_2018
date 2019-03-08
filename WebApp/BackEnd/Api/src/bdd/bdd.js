@@ -250,3 +250,43 @@ export async function getAllUserLinks(userId) {
         return result;
     })
 }
+
+export async function updateUserToken(userId, token) {
+    return query(`SELECT * FROM tokens where user_id = '${userId}'`).catch(error => {
+        console.log(error);
+        return Promise.reject('KO');
+    }).then(result => {
+        if (result.length == 0) {
+            return query(`INSERT INTO tokens (user_id, service_id, token)
+            VALUES ('${userId}', '8', '${token}')`)
+            .catch(error => {
+                console.log(error);
+                return Promise.reject('KO');
+            }).then(result => {
+                return 'OK';
+            });
+
+        }
+        else {
+            return query(`UPDATE tokens SET token='${token}' WHERE user_id='${userId}';`)
+            .catch(error => {
+                console.log(error);
+                return Promise.reject('Service or token not found.');
+            })
+            .then(result => {
+                return true;
+            });
+        }
+        return result;
+    })
+}
+
+export async function getUserToken(userId) {
+    return await query(`SELECT token FROM tokens where user_id = '${userId}'`).catch(error => {
+        console.log(error);
+        return Promise.reject('KO');
+    }).then(result => {
+        let datas = JSON.parse(JSON.stringify(result))[0];
+        return datas.token;
+    })
+}

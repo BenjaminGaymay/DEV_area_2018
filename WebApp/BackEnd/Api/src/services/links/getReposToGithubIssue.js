@@ -10,14 +10,15 @@ export const id = 34;
 
 export async function run(widget) {
 	const config = widget.datas;
-	// console.log(widget)
+    const token = await bdd.getUserToken(widget.user_id)
+
 	let str = "";
 
 	for (const a in config) {
 		str += config[a].name + ' ';
 	}
 
-	github.createIssue(widget.config_reaction.access_token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouveau repo créé', 'Liste des repos:' + str);
+	github.createIssue(token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouveau repo créé', 'Liste des repos:' + str);
 }
 
 // function checkConfigAction(params) {
@@ -53,7 +54,13 @@ export function getSchema() {
         name: "get Github Repos To Github Issue",
 		description: "Créé une issue avec le dernier repo créé",
 		url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        action: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
+		},
 		reaction: {
+			authorizationUrl: "/auth/github",
+			callbackUrl: "/auth/github/callback",
 			title: "GithubIssue",
 			config: {
 				username : {

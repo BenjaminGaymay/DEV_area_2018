@@ -11,8 +11,9 @@ export const id = 24;
 
 export async function run(widget) {
 	const config = widget.datas;
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createIssue(widget.config_reaction.access_token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouveau post de ' + widget.config_action.name + ' sur Reddit', 'Titre : ' + config.title + ' Auteur : ' + config.author + ' url: ' + config.url);
+	github.createIssue(token, widget.config_reaction.username, widget.config_reaction.repoName, 'Nouveau post de ' + widget.config_action.name + ' sur Reddit', 'Titre : ' + config.title + ' Auteur : ' + config.author + ' url: ' + config.url);
 }
 
 function checkConfigAction(params) {
@@ -61,6 +62,8 @@ export function getSchema() {
             }
 		},
         reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
             title: "GithubIssue",
             config: {
                 username : {

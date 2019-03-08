@@ -11,8 +11,9 @@ export const id = 63;
 
 export async function run(widget) {
 	const config = widget.datas;
+    const token = await bdd.getUserToken(widget.user_id)
 
-	github.createRepo(widget.config_reaction.access_token, config.name + ' ' + config.rank + ' Win-Lose' + config.win + '-' + config.lose);
+	github.createRepo(token, config.name + ' ' + config.rank + ' Win-Lose' + config.win + '-' + config.lose);
 }
 
 function checkConfigAction(params) {
@@ -56,6 +57,10 @@ export function getSchema() {
                     label: "Name"
 				}
 			},
+        },
+        reaction: {
+            authorizationUrl: "/auth/github",
+            callbackUrl: "/auth/github/callback",
 		}
 	}
 }
