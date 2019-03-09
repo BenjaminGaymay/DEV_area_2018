@@ -11,10 +11,11 @@ import {
   Typography
 } from "@material-ui/core";
 
-import MyDialog from './MyDialog';
+import MyDialog from "./MyDialog";
 
-const Service = (props) => {
+const Service = props => {
   const [item] = useState(props.item);
+
   const [open, setOpen] = useState(false);
   const context = props.context;
 
@@ -31,12 +32,35 @@ const Service = (props) => {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary" onClick={() => setOpen(true)}>
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              if (item.action && item.action.authorizationUrl) {
+                window.open(
+                  `${process.env.REACT_APP_API}${item.action.authorizationUrl}`
+                );
+              }
+              if (
+                item.reaction &&
+                item.reaction.authorizationUrl &&
+                item.action &&
+                item.action.authorizationUrl !== item.reaction.authorizationUrl
+              ) {
+                window.open(
+                  `${process.env.REACT_APP_API}${
+                    item.reaction.authorizationUrl
+                  }`
+                );
+              }
+              setOpen(true);
+            }}
+          >
             Configure
           </Button>
         </CardActions>
       </Card>
-      <MyDialog item={item} open={open} setOpen={setOpen} context={context}/>
+      <MyDialog item={item} open={open} setOpen={setOpen} context={context} />
     </Grid>
   );
 };

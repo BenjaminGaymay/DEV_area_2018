@@ -35,7 +35,7 @@ const Login = () => {
     });
     setOpen(true);
     if (!r) {
-      setErr("Oops, something bad happened");
+      setErr("Oups, une erreur est survenue");
     } else {
       setErr("Vous êtes enregistré ! Vous pouvez vous connecter !");
     }
@@ -53,7 +53,7 @@ const Login = () => {
       context.setUser({ isLogged: true, username: login, password });
     } else {
       setOpen(true);
-      setErr("Oops, something bad happened !");
+      setErr("Oups, une erreur est survenue !");
       setAnimation(false);
     }
   };

@@ -28,10 +28,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchServices();
-    // window.addEventListener("message", handleOauthResponse);
-    return () => {
-      // window.removeEventListener("message", handleOauthResponse);
-    };
   }, []);
 
   function handleOauthResponse(e) {
