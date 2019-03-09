@@ -8,11 +8,6 @@ import MyServices from "../../components/Dashboard/MyServices";
 import { allLinks } from "../../api";
 
 const Dashboard = () => {
-  const [token, setToken] = useState("");
-  const [services, setServices] = useState(null);
-  const [configuration, setConfiguration] = useState(false);
-  const [selectedService, setSelectedService] = useState("");
-  const [url, setUrl] = useState("");
   const context = useContext(Context);
   const [value, setValue] = useState(0);
   const [_services, _setServices] = useState(null);
@@ -30,26 +25,6 @@ const Dashboard = () => {
     fetchServices();
   }, []);
 
-  function handleOauthResponse(e) {
-    if (e.origin !== "http://localhost:8081") {
-      return;
-    }
-    const res = services.find(obj => obj.name === selectedService);
-    if (res) setToken(res.options.accessToken);
-  }
-
-  function oauth(service) {
-    setUrl(`http://localhost:8081/auth/${service.name}`);
-    setConfiguration(true);
-    setSelectedService(service.name);
-  }
-
-  function getToken() {
-    const res = services.find(o => o.name === selectedService);
-    if (res) {
-      console.log(res);
-    }
-  }
 
   function handleChange(event, newValue) {
     setValue(newValue);
