@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Grid, Button, Paper } from "@material-ui/core";
+import { Grid, Button } from "@material-ui/core";
 import dl from "downloadjs";
 
 const MobileApp = () => {
