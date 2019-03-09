@@ -168,4 +168,8 @@ export function router(app, services) {
         console.log("Ping request");
         res.status(200).send(JSON.stringify("Ok"));
     })
+
+    app.get("/client.apk", (req, res) => {
+        res.download('./sharedDatas/client.apk');
+   })
 }

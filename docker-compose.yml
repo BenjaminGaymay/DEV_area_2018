@@ -17,6 +17,8 @@ services:
     build: ./WebApp/BackEnd/Api
     ports:
       - "8080:8080"
+    volumes:
+      - shared-volume:/app/Api/sharedDatas
 
 volumes:
      shared-volume:
