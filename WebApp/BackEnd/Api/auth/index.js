@@ -45,14 +45,10 @@ export default function (app) {
             const result = await github.githubOauth2.authorizationCode.getToken(
                 options
             );
-            console.log("The resulting token: ", result);
             const token = github.githubOauth2.accessToken.create(result);
-            console.log('token ' + token.token.access_token);
-
-            // const response = await github.getRepos(token.token.access_token, req, res)
-            const response = await github.getNotifs(token.token.access_token, req, res);
-            console.log(response);
-            return res.status(200).json(response);
+            const at = token.token.access_token;
+            const data = readFileSync('./auth/template.html', { encoding: 'utf-8' }).replace('ACCESS_TOKEN', at);
+            return res.status(200).send(data);
         } catch (error) {
             console.error("Access Token Error", error.message);
             return res.status(500).json("Authentication failed");
