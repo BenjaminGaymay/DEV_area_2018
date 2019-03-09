@@ -15,6 +15,7 @@ import Error from "./Pages/Error/Error";
 import Home from "./Pages/Home/Home";
 import Login from "./Pages/Login/Login";
 import Logout from "./Pages/Logout/Logout";
+import MobileApp from "./Pages/MobileApp/MobileApp";
 
 const App = () => {
   const context = useContext(Context);
@@ -49,6 +50,7 @@ const App = () => {
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/logout" component={Logout} />
+            <Route exact path="/client.apk" component={MobileApp} />
             <Route component={Error} />
           </Switch>
           <Footer />
