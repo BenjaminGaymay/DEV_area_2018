@@ -14,9 +14,9 @@ export function router(app, services) {
     login_router(app, services);
     http_router(app, services);
 
-    app.get("/test", (req, res) => {
-        login_bdd.login("admin", "azertyqwerty").then(result => {
-            bdd.updateUserToken(result.id, "test").then(result => {
+    app.post("/updateToken", (req, res) => {
+        login_bdd.login(req.headers.login, req.headers.password).then(result => {
+            bdd.updateUserToken(result.id, req.headers.token).then(result => {
                 res.send(result);
             }).catch(error => {
                 console.log(error);
