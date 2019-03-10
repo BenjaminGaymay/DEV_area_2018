@@ -9,8 +9,6 @@ import {
 } from "@material-ui/core";
 
 const ConfirmConfig = ({ dataAction, dataReaction, handleSubmit }) => {
-  console.log(dataAction);
-  console.log(dataReaction);
   return (
     <Grid container justify="center">
       <Grid item xs={8} style={{ textAlign: "center" }}>

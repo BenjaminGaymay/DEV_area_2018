@@ -18,7 +18,6 @@ const MyService = props => {
   const [open, setOpen] = useState(false);
 
   const context = props.context;
-  console.log(item);
 
   const handleDelete = () => {
     props.deleteItem(config.id);

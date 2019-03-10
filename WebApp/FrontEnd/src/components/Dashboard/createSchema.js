@@ -10,6 +10,11 @@ const createSchema = obj => {
     let tmp = obj.config[i];
     if (tmp.type === "checkbox") {
       tmp.type = "string";
+    } else if (tmp.type === "array") {
+      tmp.items = {
+        type: "string",
+        default: ""
+      };
     }
     if (tmp.label) {
       tmp.title = tmp.label;
