@@ -5,8 +5,8 @@ class Facebook {
 	constructor() {
         this.facebookOauth2 = oauth2.create({
             client: {
-            id: "562433650890969",
-            secret: "841c5ea2417282f9144c7c737e43e40a"
+            id: "",
+            secret: ""
             },
             auth: {
             authorizeHost: 'https://facebook.com/',
