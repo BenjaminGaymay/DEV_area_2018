@@ -5,9 +5,9 @@ class Github {
 	constructor() {
         this.githubOauth2 = oauth2.create({
             client: {
-                id: '194cfee6fc3a10ed3719', //client_id
-                secret: 'bdb4a654bf231a30792c127f04d9b6aaf20d45ba', //client_secret,
-                // 6a5e2554c2e3ed9fa33131aa2ae0b0b5a07bb275
+                id: '', //client_id
+                secret: '', //client_secret,
+                // 
             },
             auth: {
                 tokenHost: 'https://github.com',
