@@ -16,7 +16,7 @@ function checkDataForUpdate(response, data, id) {
 
 export async function update() {
 	const widgets = await bdd.getLinkByActionLinkIdList(['63', '64']);
-	const key = 'RGAPI-9e644bdf-c46f-4297-bb5b-cc975a1f8ad3';
+	const key = '';
 
 	console.log('LolService: starting update..');
 
