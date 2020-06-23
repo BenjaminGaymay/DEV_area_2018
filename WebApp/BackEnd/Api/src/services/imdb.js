@@ -9,7 +9,7 @@ export async function update() {
 	// requete API pour avoir le dernier film sorti
 	const previous = await bdd.getServiceDatasByName('imdb');
 
-	request('http://api.themoviedb.org/3/movie/upcoming?page=1&api_key=8e0abe397ffd3af9ac5d115c0f815c2c&language=fr', (error, response, body) => {
+	request('http://api.themoviedb.org/3/movie/upcoming?page=1&api_key=&language=fr', (error, response, body) => {
 		if (error) {
 			return Promise.reject(error);
 		}
