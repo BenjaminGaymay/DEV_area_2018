@@ -9,8 +9,8 @@ export async function run(datas) {
         }
 
         let text = striptags(datas.html);
-        let user = "poubelleapipoubelle@gmail.com";
-        let pass = "88KVueuWJ7juyDU";
+        let user = "";
+        let pass = "";
         let from = `"📧 AREA 📧" <${user}>`;
 
         let transporter = nodemailer.createTransport({
