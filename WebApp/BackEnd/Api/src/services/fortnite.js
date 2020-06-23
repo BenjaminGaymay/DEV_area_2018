@@ -2,7 +2,7 @@
 import request from "request";
 import * as fortnite_bdd from "../bdd/fortnite_bdd";
 
-let headers = {"TRN-Api-Key": "2bf71bbd-2bac-49b8-a1da-b8af2d4a0a50"};
+let headers = {"TRN-Api-Key": ""};
 
 function getValueWithKey(json, key) {
     for (let i of json) {
