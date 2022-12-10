@@ -20,7 +20,7 @@
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "ejs": "^2.6.1",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "json-schema-compare": "^0.2.2",
     "mysql": "^2.16.0",
     "node": "^11.7.0",
